@@ -185,5 +185,60 @@ namespace Paysmart.Controllers
 
             return dt;
         }
+
+        [HttpPost]
+        [Route("api/Tracking/PostLatLng")]
+
+        public int postLatLng(vehicledetails l )
+        {
+            int status = 1;
+            SqlConnection conn = new SqlConnection();
+
+            conn.ConnectionString = ConfigurationManager.ConnectionStrings["TDA"].ToString();
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.CommandText = "Sp_GetLocIns";
+
+            cmd.Connection = conn;
+            conn.Open();
+
+            SqlParameter MobileNumber = new SqlParameter("@Mobilenumber", SqlDbType.VarChar, 50);
+            MobileNumber.Value = l.VechMobileNo;
+            cmd.Parameters.Add(MobileNumber);
+
+            SqlParameter Lat = new SqlParameter("@Latitude", SqlDbType.Float);
+            Lat.Value = l.latitude;
+            cmd.Parameters.Add(Lat);
+
+            SqlParameter Lng = new SqlParameter("@Longitude", SqlDbType.Float);
+            Lng.Value = l.longitude;
+            cmd.Parameters.Add(Lng);
+
+        
+            try
+            {
+                //conn.Open();
+                object userstat = cmd.ExecuteScalar();
+                conn.Close();
+
+                if (userstat != null)
+                {
+                    if (conn.State == ConnectionState.Open)
+                    {
+                        conn.Close();
+                    }
+                    return Convert.ToInt32(userstat);
+                }
+
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+            return status;
+            //return (dt);
+        }
     }
 }
