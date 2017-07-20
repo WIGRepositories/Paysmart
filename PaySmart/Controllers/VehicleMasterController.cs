@@ -187,22 +187,22 @@ namespace Paysmart.Controllers
         }
 
         [HttpPost]
-        [Route("api/Tracking/PostLatLng")]
+        [Route("api/VehicleMaster/TrackVehicle")]
 
-        public int postLatLng(vehicledetails l )
+        public int postLatLng(vehicledetails l)
         {
             int status = 1;
             SqlConnection conn = new SqlConnection();
 
-            conn.ConnectionString = ConfigurationManager.ConnectionStrings["TDA"].ToString();
+            conn.ConnectionString = ConfigurationManager.ConnectionStrings["btposdb"].ToString();
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = CommandType.StoredProcedure;
-            cmd.CommandText = "Sp_GetLocIns";
+            cmd.CommandText = "PSTrackVehicleHistory";
 
             cmd.Connection = conn;
             conn.Open();
 
-            SqlParameter MobileNumber = new SqlParameter("@Mobilenumber", SqlDbType.VarChar, 50);
+            SqlParameter MobileNumber = new SqlParameter("@Mobilenumber", SqlDbType.VarChar,50);
             MobileNumber.Value = l.VechMobileNo;
             cmd.Parameters.Add(MobileNumber);
 

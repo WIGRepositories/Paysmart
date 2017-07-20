@@ -266,7 +266,8 @@ namespace Paysmart.Models
 
         public float lat { get; set; }
         public float lng { get; set; }
-        public string Mobileotp { get; set; }
+        public string  Mobileotp { get; set; }
+        
 
     }
     public class driverdetails
@@ -324,8 +325,8 @@ namespace Paysmart.Models
         public string deletedVech { get; set; }
         public string Carrier { get; set; }
         public string PayGroup { get; set; }
-        public string latitude { get; set; }
-        public string longitude { get; set; }
+        public float latitude { get; set; }
+        public float longitude { get; set; }
     }
 
     public class travels

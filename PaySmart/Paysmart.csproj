@@ -104,6 +104,7 @@
     <Compile Include="Controllers\allocatedriverController.cs" />
     <Compile Include="Controllers\AvailableSeatsController.cs" />
     <Compile Include="Controllers\BookAVehicleController.cs" />
+    <Compile Include="Controllers\BookedHistoryController.cs" />
     <Compile Include="Controllers\BookingHistoryController.cs" />
     <Compile Include="Controllers\CancelBookingController.cs" />
     <Compile Include="Controllers\CancellationController.cs" />
