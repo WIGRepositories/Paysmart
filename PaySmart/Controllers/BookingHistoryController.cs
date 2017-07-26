@@ -16,7 +16,7 @@ namespace Paysmart.Controllers
         [Route("api/BookingHistory/GetBookingHistory")]
         public DataTable GetBookingHistory(string PhoneNo)
         {
-                DataTable dt = new DataTable();
+           DataTable dt = new DataTable();
 
             SqlConnection conn = new SqlConnection();
 
