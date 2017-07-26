@@ -83,6 +83,7 @@
     <Content Include="css\parentcss.css" />
     <Content Include="css\themeredcss.css" />
     <Content Include="DBScripts\SProcs.sql" />
+    <Content Include="DBScripts\Stops.sql" />
     <Content Include="DBScripts\Tables.sql" />
     <Content Include="Global.asax" />
     <Content Include="js\button.js" />
