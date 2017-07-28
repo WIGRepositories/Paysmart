@@ -266,7 +266,8 @@ namespace Paysmart.Models
     public class UserLocation
     {
         public string flag { get; set; }
-
+        public int Id { get; set; }
+        public int CompanyId { get; set; }
         public int BNo { get; set; }
         public string BookingType { get; set; }
 
@@ -298,12 +299,14 @@ namespace Paysmart.Models
         public float lat { get; set; }
         public float lng { get; set; }
         public string  Mobileotp { get; set; }
-        
 
+        public object BNO { get; set; }
     }
     public class driverdetails
     {
+        public string flag { get; set; }
         public int id { get; set; }
+        public int CompanyId { get; set; }
         public string Name { get; set; }
         public string Address { get; set; }
         public string City { get; set; }
@@ -325,8 +328,10 @@ namespace Paysmart.Models
 
     public class vehicledetails
     {
-        public int SrNo { get; set; }
+        public string flag { get; set; }
+        public int Id { get; set; }
         public int VID { get; set; }
+        public int CompanyId { get; set; }
         public string RegistrationNo { get; set; }
         public string Type { get; set; }
         public string OwnerName { get; set; }
@@ -386,10 +391,8 @@ namespace Paysmart.Models
     public class allocatedriver
     {
         public string flag { get; set; }
-        public int SlNo { get; set; }
-
-
-
+        public int Id { get; set; }
+        public int CompanyId { get; set; }
         public int BookingNo { get; set; }
 
         public string CustomerName { get; set; }
@@ -407,8 +410,12 @@ namespace Paysmart.Models
         public int VechID { get; set; }
         public string RegistrationNo { get; set; }
         public string DriverName { get; set; }
+        public int DriverId { get; set; }
         public string PresentDriverLandMark { get; set; }
         public string ExecutiveName { get; set; }
+
+        public DateTime EffectiveDate { get; set; }
+        public DateTime EffectiveTill {get;set;}
     }
     public class cancel
     {

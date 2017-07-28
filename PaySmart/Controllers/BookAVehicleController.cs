@@ -33,6 +33,14 @@ namespace Paysmart.Controllers
             i.Value = b.flag;
             cmd.Parameters.Add(i);
 
+            SqlParameter fd = new SqlParameter("@Id", SqlDbType.Int);
+            fd.Value = b.Id;
+            cmd.Parameters.Add(fd);
+
+            SqlParameter fdfd = new SqlParameter("@CompanyId", SqlDbType.Int);
+            fdfd.Value = b.CompanyId;
+            cmd.Parameters.Add(fdfd);
+
             SqlParameter cm = new SqlParameter("@BNo", SqlDbType.Int);
             cm.Value = b.BNo;
             cmd.Parameters.Add(cm);
