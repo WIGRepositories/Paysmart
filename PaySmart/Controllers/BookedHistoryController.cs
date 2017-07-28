@@ -13,7 +13,7 @@ namespace Paysmart.Controllers
     {
         [HttpGet]
         [Route("api/BookedHistory/GetBookedHistory")]
-        public DataTable GetBookedHistory(string emailid, string mobileno)
+        public DataTable GetBookedHistory(string emailid = "", string MobileNo = "")
         {
             DataTable dt = new DataTable();
 
@@ -25,17 +25,10 @@ namespace Paysmart.Controllers
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.CommandText = "PSGetBookedHistory";
+            cmd.Parameters.Add("@emailAddress", SqlDbType.VarChar, 50).Value = (emailid == null) ? "-1" : emailid;
+           // cmd.Parameters.Add("@emailAddress", SqlDbType.VarChar,50).Value = emailid;
+            cmd.Parameters.Add("@mobileno", SqlDbType.VarChar, 15).Value = MobileNo;
             cmd.Connection = conn;
-
-            SqlParameter psw = new SqlParameter("@emailAddress", SqlDbType.VarChar, 20);
-            psw.Value = emailid;
-            cmd.Parameters.Add(psw);
-
-            SqlParameter mno = new SqlParameter("@mobileno", SqlDbType.VarChar,15);
-            mno.Value = mobileno;
-            cmd.Parameters.Add(mno);
-
-
             SqlDataAdapter db = new SqlDataAdapter(cmd);
             db.Fill(dt);
 

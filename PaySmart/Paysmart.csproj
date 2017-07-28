@@ -109,6 +109,8 @@
     <Compile Include="Controllers\CancelBookingController.cs" />
     <Compile Include="Controllers\CancellationController.cs" />
     <Compile Include="Controllers\ChangePwdController.cs" />
+    <Compile Include="Controllers\DriverChangePwdController.cs" />
+    <Compile Include="Controllers\DriverForgotpasswordController.cs" />
     <Compile Include="Controllers\DriverMasterController.cs" />
     <Compile Include="Controllers\Email.cs" />
     <Compile Include="Controllers\EOTPverficationController.cs" />
@@ -120,6 +122,7 @@
     <Compile Include="Controllers\prebookController.cs" />
     <Compile Include="Controllers\prebookingdetailsController.cs" />
     <Compile Include="Controllers\pricedetailsController.cs" />
+    <Compile Include="Controllers\RegisterDriverController.cs" />
     <Compile Include="Controllers\ResetPwdController.cs" />
     <Compile Include="Controllers\TicketBookingController.cs" />
     <Compile Include="Controllers\loginController.cs">
