@@ -15,8 +15,8 @@ namespace Paysmart.Controllers
     {
 
         [HttpPost]
-        [Route("api/BookAVehicle/booking")]
-        public int booking(UserLocation b)
+        [Route("api/BookAVehicle/SaveBookingDetails")]
+        public int SaveBookingDetails(VehicleBooking b)
         {
             int Status = 0;
             SqlConnection conn = new SqlConnection();
@@ -33,13 +33,13 @@ namespace Paysmart.Controllers
             i.Value = b.flag;
             cmd.Parameters.Add(i);
 
-            SqlParameter fd = new SqlParameter("@Id", SqlDbType.Int);
-            fd.Value = b.Id;
-            cmd.Parameters.Add(fd);
+            SqlParameter ie = new SqlParameter("@Id", SqlDbType.Int);
+            ie.Value = b.Id;
+            cmd.Parameters.Add(ie);
 
-            SqlParameter fdfd = new SqlParameter("@CompanyId", SqlDbType.Int);
-            fdfd.Value = b.CompanyId;
-            cmd.Parameters.Add(fdfd);
+            SqlParameter cd = new SqlParameter("@CompanyId", SqlDbType.Int);
+            cd.Value = b.CompanyId;
+            cmd.Parameters.Add(cd);
 
             SqlParameter cm = new SqlParameter("@BNo", SqlDbType.Int);
             cm.Value = b.BNo;
@@ -58,7 +58,7 @@ namespace Paysmart.Controllers
             cmd.Parameters.Add(v1);
 
 
-            SqlParameter v2 = new SqlParameter("@CusID", SqlDbType.VarChar, 255);
+            SqlParameter v2 = new SqlParameter("@CusID", SqlDbType.VarChar,255);
             v2.Value = b.CusID;
             cmd.Parameters.Add(v2);
 
@@ -155,6 +155,8 @@ namespace Paysmart.Controllers
             SqlParameter ce = new SqlParameter("@longitude", SqlDbType.Float);
             ce.Value = b.lng;
             cmd.Parameters.Add(ce);
+
+            
             
             DataTable dt = new DataTable();
             SqlDataAdapter da = new SqlDataAdapter(cmd);

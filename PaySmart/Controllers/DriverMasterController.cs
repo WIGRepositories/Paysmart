@@ -16,7 +16,7 @@ namespace Paysmart.Controllers
 
         [HttpGet]
 
-        [Route("api/DriverMaster/GetMaster")]
+        [Route("api/DriverMaster/Master")]
         public DataTable Master(int DId)
         {
             DataTable dt = new DataTable();
@@ -39,8 +39,8 @@ namespace Paysmart.Controllers
 
         }
 
-        [HttpPost]
-        [Route("api/DriverMaster/Driver")]
+          [HttpPost]
+          [Route("api/DriverMaster/Driver")]
 
         public DataTable Driver(driverdetails d)
         {
@@ -52,17 +52,18 @@ namespace Paysmart.Controllers
             cmd.CommandText = "HVInsUpddrivers";
             cmd.Connection = conn;
 
-            SqlParameter ff = new SqlParameter("@flag", SqlDbType.VarChar);
-            ff.Value = d.flag;
-            cmd.Parameters.Add(ff);
+
+            SqlParameter f = new SqlParameter("@flag", SqlDbType.VarChar);
+            f.Value = d.flag;
+            cmd.Parameters.Add(f);
 
             SqlParameter i = new SqlParameter("@DId", SqlDbType.Int);
             i.Value = d.id;
             cmd.Parameters.Add(i);
 
-            SqlParameter di = new SqlParameter("@CompanyId", SqlDbType.Int);
-            di.Value = d.CompanyId;
-            cmd.Parameters.Add(di);
+            SqlParameter ie = new SqlParameter("@CompanyId", SqlDbType.Int);
+            ie.Value = d.CompanyId;
+            cmd.Parameters.Add(ie);
 
             SqlParameter n = new SqlParameter("@NAme", SqlDbType.VarChar, 50);
             n.Value = d.Name;
@@ -72,73 +73,73 @@ namespace Paysmart.Controllers
             r.Value = d.Address;
             cmd.Parameters.Add(r);
 
+            
 
-
-            SqlParameter a = new SqlParameter("@City", SqlDbType.VarChar, 50);
+            SqlParameter a = new SqlParameter("@City", SqlDbType.VarChar,50);
             a.Value = d.City;
             cmd.Parameters.Add(a);
 
-            SqlParameter s = new SqlParameter("@Pin", SqlDbType.VarChar, 50);
-            s.Value = d.Pin;
+               SqlParameter s = new SqlParameter("@Pin", SqlDbType.VarChar,50);
+               s.Value = d.Pin;
             cmd.Parameters.Add(s);
 
-            SqlParameter f = new SqlParameter("@PAddress", SqlDbType.VarChar, 50);
-            f.Value = d.PAddress;
-            cmd.Parameters.Add(f);
+               SqlParameter ff = new SqlParameter("@PAddress", SqlDbType.VarChar,50);
+               ff.Value = d.PAddress;
+            cmd.Parameters.Add(ff);
 
-            SqlParameter j2 = new SqlParameter("@PCity", SqlDbType.VarChar, 255);
+            SqlParameter j2 = new SqlParameter("@PCity", SqlDbType.VarChar,255);
             j2.Value = d.PCity;
             cmd.Parameters.Add(j2);
 
-            SqlParameter g = new SqlParameter("@PPin", SqlDbType.VarChar, 50);
-            g.Value = d.PPin;
+               SqlParameter g = new SqlParameter("@PPin", SqlDbType.VarChar,50);
+               g.Value = d.PPin;
             cmd.Parameters.Add(g);
 
-            SqlParameter h = new SqlParameter("@OffMobileNo", SqlDbType.Float);
-            h.Value = d.OffMobileNo;
+               SqlParameter h = new SqlParameter("@OffMobileNo", SqlDbType.Float);
+               h.Value = d.OffMobileNo;
             cmd.Parameters.Add(h);
-
-            SqlParameter j = new SqlParameter("@PMobNo", SqlDbType.VarChar, 255);
-            j.Value = d.PMobNo;
+            
+               SqlParameter j = new SqlParameter("@PMobNo", SqlDbType.VarChar,255);
+               j.Value = d.PMobNo;
             cmd.Parameters.Add(j);
 
             SqlParameter k = new SqlParameter("@DOB", SqlDbType.Date);
-            k.Value = d.DOB;
+               k.Value = d.DOB;
             cmd.Parameters.Add(k);
 
             SqlParameter y = new SqlParameter("@DOJ", SqlDbType.Date);
-            y.Value = d.DOJ;
+               y.Value = d.DOJ;
             cmd.Parameters.Add(y);
 
-            SqlParameter rj = new SqlParameter("@BloodGroup", SqlDbType.VarChar, 50);
-            rj.Value = d.BloodGroup;
+               SqlParameter rj = new SqlParameter("@BloodGroup", SqlDbType.VarChar,50);
+               rj.Value = d.BloodGroup;
             cmd.Parameters.Add(rj);
 
-            SqlParameter t = new SqlParameter("@LicenceNo", SqlDbType.VarChar, 50);
-            t.Value = d.LicenceNo;
+               SqlParameter t = new SqlParameter("@LicenceNo", SqlDbType.VarChar,50);
+               t.Value = d.LicenceNo;
             cmd.Parameters.Add(t);
 
             SqlParameter u = new SqlParameter("@LiCExpDate", SqlDbType.Date);
-            u.Value = d.LiCExpDate;
+               u.Value = d.LiCExpDate;
             cmd.Parameters.Add(u);
 
-            SqlParameter o = new SqlParameter("@BadgeNo", SqlDbType.VarChar, 50);
-            o.Value = d.BadgeNo;
+               SqlParameter o = new SqlParameter("@BadgeNo", SqlDbType.VarChar,50);
+               o.Value = d.BadgeNo;
             cmd.Parameters.Add(o);
 
             SqlParameter p = new SqlParameter("@BadgeExpDate", SqlDbType.Date);
-            p.Value = d.BadgeExpDate;
+               p.Value = d.BadgeExpDate;
             cmd.Parameters.Add(p);
 
-            SqlParameter w = new SqlParameter("@Remarks", SqlDbType.VarChar, 50);
-            w.Value = d.Remarks;
+               SqlParameter w = new SqlParameter("@Remarks", SqlDbType.VarChar,50);
+               w.Value = d.Remarks;
             cmd.Parameters.Add(w);
 
 
             DataTable dt = new DataTable();
             SqlDataAdapter da = new SqlDataAdapter(cmd);
             da.Fill(dt);
-
+            
             return dt;
         }
     }

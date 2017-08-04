@@ -17,7 +17,7 @@ namespace Paysmart.Controllers
         [HttpPost]
         [Route("api/UserLocation/location")]
 
-        public DataTable location(UserLocation l)
+        public DataTable location(VehicleBooking l)
         {
             SqlConnection conn = new SqlConnection();
 

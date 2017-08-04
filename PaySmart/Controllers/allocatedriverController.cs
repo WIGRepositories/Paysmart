@@ -14,6 +14,7 @@ namespace Paysmart.Controllers
 {
     public class allocatedriverController : ApiController
     {
+
         [HttpGet]
         [Route("api/allocatedriver/Getallocatedriver")]
         public DataTable Getallocatedriver(int VID)
@@ -47,6 +48,8 @@ namespace Paysmart.Controllers
             SqlCommand cmd = new SqlCommand();
             try
             {
+
+
                 conn.ConnectionString = ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -68,6 +71,8 @@ namespace Paysmart.Controllers
                 SqlParameter BookingNo = new SqlParameter("@BookingNo", SqlDbType.Int);
                 BookingNo.Value = A.BookingNo;
                 cmd.Parameters.Add(BookingNo);
+
+
 
                 SqlParameter CustomerName = new SqlParameter("@CustomerName", SqlDbType.NVarChar, 255);
                 CustomerName.Value = A.CustomerName;
@@ -149,6 +154,18 @@ namespace Paysmart.Controllers
                 de.Value = A.EffectiveTill;
                 cmd.Parameters.Add(de);
 
+                SqlParameter d = new SqlParameter("@VehicleModelId", SqlDbType.Int);
+                d.Value = A.ServiceTypeId;
+                cmd.Parameters.Add(d);
+
+                SqlParameter ds = new SqlParameter("@ServiceTypeId", SqlDbType.Int);
+                ds.Value = A.ServiceTypeId;
+                cmd.Parameters.Add(ds);
+
+                SqlParameter dg = new SqlParameter("@VehicleGroupId", SqlDbType.Int);
+                dg.Value = A.VehicleGroupId;
+                cmd.Parameters.Add(dg);
+
             }
             catch
             {
@@ -160,7 +177,6 @@ namespace Paysmart.Controllers
 
             return dt;
         }
-
         public int Max { get; set; }
 
     }

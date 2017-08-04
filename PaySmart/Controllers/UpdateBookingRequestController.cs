@@ -1,22 +1,22 @@
-﻿using Paysmart.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using Paysmart.Models;
+using System.Data.SqlClient;
+using System.Configuration;
+using System.Data;
 
 namespace Paysmart.Controllers
 {
-    public class pricedetailsController : ApiController
+    public class UpdateBookingRequestController : ApiController
     {
         [HttpPost]
 
-        [Route("api/pricedetailse/GetPricing")]
-        public int GetPricing(VehicleBooking b)
+        [Route("api/UpdateBookingRequest/confirmation")]
+        public int confirmation(VehicleBooking b)
         {
             int status = 1;
             SqlConnection conn = new SqlConnection();
