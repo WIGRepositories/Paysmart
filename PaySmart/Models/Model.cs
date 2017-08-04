@@ -285,7 +285,7 @@ namespace Paysmart.Models
         public string DropPalce { get; set; }
         public string ReqType { get; set; }
         public int ExtraCharge { get; set; }
-        public int NoofVehicle { get; set; }
+        public int NoofVehicles { get; set; }
         public string ExecutiveName { get; set; }
         public int VID { get; set; }
         public string BookingStatus { get; set; }
@@ -311,13 +311,33 @@ namespace Paysmart.Models
         public float longitude { get; set; }
         public int SrcId { get; set; }
         public int DestId { get; set; }
+        public string Src { get; set; }
+        public string Dest { get; set; }
         public int PackageId { get; set; }
-        public DateTime Time { get; set; }
-        public DateTime Date { get; set; }
-        public DateTime ETA { get; set; }
+        public DateTime? Time { get; set; }
+        public DateTime? Date { get; set; }
+        public DateTime? ETA { get; set; }
         public string BookingId { get; set; }
-        
-        
+        public DateTime? BookedDate { get; set; }
+        public DateTime? BookedTime { get; set; }
+        public DateTime? DepartueDate { get; set; }
+        public DateTime? DepartueTime { get; set; }
+        public float SrcLatitude { get; set; }
+        public float SrcLongitude { get; set; }
+        public float DestLatitude { get; set; }
+        public float DestLongitude { get; set; }
+        public int VechId { get; set; }
+        public decimal Pricing { get; set; }
+        public int DriverId { get; set; }
+        public string DriverPhoneNo { get; set; }
+        public string CustomerPhoneNo { get; set; }
+        public int CustomerId { get; set; }
+        public int NoofSeats { get; set; }
+        public DateTime? ClosingDate { get; set; }
+        public DateTime? CancelledOn { get; set; }
+        public string CancelledBy { get; set; }
+        public string BookingChannel { get; set; }
+        public string Reasons { get; set; }
        
     }
 

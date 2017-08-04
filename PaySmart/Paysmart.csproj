@@ -148,6 +148,7 @@
     <Compile Include="Controllers\UserInfoController.cs" />
     <Compile Include="Controllers\UserlocationController.cs" />
     <Compile Include="Controllers\UserpreferencesController.cs" />
+    <Compile Include="Controllers\VehicleBookingController.cs" />
     <Compile Include="Controllers\VehicleDistPricingController.cs" />
     <Compile Include="Controllers\VehicleloginController.cs" />
     <Compile Include="Controllers\VehicleLogoutController.cs" />

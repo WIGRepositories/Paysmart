@@ -102,8 +102,8 @@ namespace Paysmart.Controllers
             E.Value = b.ExtraCharge;
             cmd.Parameters.Add(E);
 
-            SqlParameter N = new SqlParameter("@NoofVehicle", SqlDbType.Int);
-            N.Value = b.NoofVehicle;
+            SqlParameter N = new SqlParameter("@NoofVehicles", SqlDbType.Int);
+            N.Value = b.NoofVehicles;
             cmd.Parameters.Add(N);
 
             SqlParameter rt = new SqlParameter("@ExecutiveName", SqlDbType.VarChar, 255);
