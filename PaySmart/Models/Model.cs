@@ -119,8 +119,8 @@ namespace Paysmart.Models
         public DateTime CreatedOn { get; set; }
 
         public string Onbehalfofph { get; set; }
-       
-       
+
+
         public int Catid { get; set; }
 
         public string Description { get; set; }
@@ -129,7 +129,7 @@ namespace Paysmart.Models
         public int TicketTypeId { get; set; }
         public string PhoneNumber { get; set; }
         public int StatusId { get; set; }
-       
+
     }
 
     public class faqs
@@ -261,7 +261,7 @@ namespace Paysmart.Models
         public int Age { get; set; }
         public string Blocked { get; set; }
 
-       
+
     }
 
     public class VehicleBooking
@@ -299,7 +299,7 @@ namespace Paysmart.Models
 
         public float lat { get; set; }
         public float lng { get; set; }
-        public string  Mobileotp { get; set; }
+        public string Mobileotp { get; set; }
 
         public int VehicleGroupId { get; set; }
         public int VehicleTypeId { get; set; }
@@ -338,7 +338,7 @@ namespace Paysmart.Models
         public string CancelledBy { get; set; }
         public string BookingChannel { get; set; }
         public string Reasons { get; set; }
-       
+
     }
 
     public class driverdetails
@@ -577,12 +577,12 @@ namespace Paysmart.Models
     public class Vechlogin
     {
         public string flag { get; set; }
-        public int Id {get;set;}
-        public int CompanyId {get;set;}      
-       
-        public int VechId {get;set;}
-        public string RegNo {get;set;}
-        public string DriverName {get;set;}
+        public int Id { get; set; }
+        public int CompanyId { get; set; }
+
+        public int VechId { get; set; }
+        public string RegNo { get; set; }
+        public string DriverName { get; set; }
         public string LoginLandMark { get; set; }
         public string CurrentLandMark { get; set; }
         public string StartKiloMtr { get; set; }
@@ -590,24 +590,24 @@ namespace Paysmart.Models
         public string DriverMobileNo { get; set; }
         public string ExecutiveName { get; set; }
         public string Remarks { get; set; }
-        public int GenratedAmount {get;set;}
-        public int NoofTimesLogin {get;set;}       
-        public int TotalGeneratedAmount {get;set;}       
+        public int GenratedAmount { get; set; }
+        public int NoofTimesLogin { get; set; }
+        public int TotalGeneratedAmount { get; set; }
         public string VechType { get; set; }
         public int VehicleModelId { get; set; }
         public int ServiceTypeId { get; set; }
         public int VehicleGroupId { get; set; }
-       
+
     }
 
     public class vechlogout
     {
         public string flag { get; set; }
-        public int Id {get;set;}
-        public int CompanyId {get;set;}      
-        public int VechId {get;set;}
-        public string RegNo {get;set;}
-        public string DriverName {get;set;}
+        public int Id { get; set; }
+        public int CompanyId { get; set; }
+        public int VechId { get; set; }
+        public string RegNo { get; set; }
+        public string DriverName { get; set; }
         public string LoginLandMark { get; set; }
         public string CurrentLandMark { get; set; }
         public string EndMtr { get; set; }
@@ -615,35 +615,36 @@ namespace Paysmart.Models
         public string DriverMobileNo { get; set; }
         public string ExecutiveName { get; set; }
         public string Remarks { get; set; }
-        public int GenratedAmount {get;set;}
-        public int NoofTimesLogin {get;set;}
-       
-        public int TotalGeneratedAmount {get;set;}
-       
+        public int GenratedAmount { get; set; }
+        public int NoofTimesLogin { get; set; }
+
+        public int TotalGeneratedAmount { get; set; }
+
         public string VechType { get; set; }
         public int VehicleModelId { get; set; }
         public int ServiceTypeId { get; set; }
         public int VehicleGroupId { get; set; }
-        
-     
+
+
     }
-     public class drivers
-     {
-         public string flag { get; set;}
-         public int Id {get;set;}
-           public int DId {get;set;}
-           public int VId {get;set;}
-          public String Reason {get;set;}
-         public String Status {get;set;}
+    public class drivers
+    {
+        public string flag { get; set; }
+        public int Id { get; set; }
+        public int DId { get; set; }
+        public int VId { get; set; }
+        public String Reason { get; set; }
+        public String Status { get; set; }
 
-         public float LoginLatitude {get;set;}
+        public float LoginLatitude { get; set; }
 
-          public float LoginLongitude {get;set;}
-          public float LogoutLatitude {get;set;}
+        public float LoginLongitude { get; set; }
+        public float LogoutLatitude { get; set; }
 
-    public float LogoutLongitude {get;set;}
-   
+        public float LogoutLongitude { get; set; }
 
+
+    }
 }
 
 
