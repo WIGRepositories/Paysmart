@@ -130,8 +130,6 @@
     <Compile Include="Controllers\RateTheTripController.cs" />
     <Compile Include="Controllers\RegisterDriverController.cs" />
     <Compile Include="Controllers\ResetPwdController.cs" />
-    <Compile Include="Controllers\SendBookingRequestToDriver.cs" />
-    <Compile Include="Controllers\StartTripController.cs" />
     <Compile Include="Controllers\TicketBookingController.cs" />
     <Compile Include="Controllers\loginController.cs">
       <SubType>Code</SubType>
