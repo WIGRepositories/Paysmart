@@ -16,7 +16,6 @@ namespace Paysmart.Controllers
     {
         [HttpGet]
         [Route("api/allocatedriver/Getallocatedriver")]
-
         public DataTable Getallocatedriver(int VID)
         {
             SqlConnection conn = new SqlConnection();
@@ -36,6 +35,9 @@ namespace Paysmart.Controllers
             return dt;
 
         }
+
+
+
         [HttpPost]
         [Route("api/allocatedriver/AllocateDriver")]
 

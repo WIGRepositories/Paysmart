@@ -505,7 +505,23 @@ namespace Paysmart.Models
         public string TicketContent { get; set; }
         public string insupddelflag { get; set; }
     }
-
+    public class drivers
+    {
+        public string flag { get; set; }
+       public int Id {get;set;}
+     public int DId {get;set;}
+     public int VId {get;set;}
+     public DateTime LoginDate {get;set;}
+      public DateTime LoginTime {get;set;}
+      public DateTime LogoutDate { get; set; }
+      public DateTime LogoutTime { get; set; }
+      public string Reason {get;set;}
+      public string Status {get;set;}
+      public float LoginLatitude {get;set;}
+      public float LoginLongitude { get; set; }
+      public float LogoutLatitude { get; set; }
+      public float LogoutLongitude { get; set; }
+    }
 
 }
 
