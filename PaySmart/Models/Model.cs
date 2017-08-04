@@ -69,6 +69,7 @@ namespace Paysmart.Models
 
         public object Emailotp { get; set; }
     }
+
     public class DriverAccount
     {
 
@@ -263,10 +264,11 @@ namespace Paysmart.Models
        
     }
 
-    public class UserLocation
+    public class VehicleBooking
     {
         public string flag { get; set; }
-
+        public int Id { get; set; }
+        public int CompanyId { get; set; }
         public int BNo { get; set; }
         public string BookingType { get; set; }
 
@@ -298,12 +300,32 @@ namespace Paysmart.Models
         public float lat { get; set; }
         public float lng { get; set; }
         public string  Mobileotp { get; set; }
-        
 
+        public int VehicleGroupId { get; set; }
+        public int VehicleTypeId { get; set; }
+        public float Rating { get; set; }
+        public string RatedBy { get; set; }
+        public string Comments { get; set; }
+        public string PMobNo { get; set; }
+        public float latitude { get; set; }
+        public float longitude { get; set; }
+        public int SrcId { get; set; }
+        public int DestId { get; set; }
+        public int PackageId { get; set; }
+        public DateTime Time { get; set; }
+        public DateTime Date { get; set; }
+        public DateTime ETA { get; set; }
+        public string BookingId { get; set; }
+        
+        
+       
     }
+
     public class driverdetails
     {
+        public string flag { get; set; }
         public int id { get; set; }
+        public int CompanyId { get; set; }
         public string Name { get; set; }
         public string Address { get; set; }
         public string City { get; set; }
@@ -325,7 +347,9 @@ namespace Paysmart.Models
 
     public class vehicledetails
     {
-        public int SrNo { get; set; }
+        public string flag { get; set; }
+        public int Id { get; set; }
+        public int CompanyId { get; set; }
         public int VID { get; set; }
         public string RegistrationNo { get; set; }
         public string Type { get; set; }
@@ -358,6 +382,11 @@ namespace Paysmart.Models
         public string PayGroup { get; set; }
         public float latitude { get; set; }
         public float longitude { get; set; }
+        public string PMobNo { get; set; }
+
+        public int VehicleModelId { get; set; }
+        public int ServiceTypeId { get; set; }
+        public int VehicleGroupId { get; set; }
     }
 
     public class travels
@@ -386,12 +415,10 @@ namespace Paysmart.Models
     public class allocatedriver
     {
         public string flag { get; set; }
-        public int SlNo { get; set; }
-
-
+        public int Id { get; set; }
+        public int CompanyId { get; set; }
 
         public int BookingNo { get; set; }
-
         public string CustomerName { get; set; }
         public string CusID { get; set; }
         public string PhoneNo { get; set; }
@@ -409,6 +436,12 @@ namespace Paysmart.Models
         public string DriverName { get; set; }
         public string PresentDriverLandMark { get; set; }
         public string ExecutiveName { get; set; }
+        public DateTime EffectiveDate { get; set; }
+        public DateTime EffectiveTill { get; set; }
+        public int DriverId { get; set; }
+        public int VehicleModelId { get; set; }
+        public int ServiceTypeId { get; set; }
+        public int VehicleGroupId { get; set; }
     }
     public class cancel
     {
@@ -498,7 +531,83 @@ namespace Paysmart.Models
         public string TicketContent { get; set; }
         public string insupddelflag { get; set; }
     }
+    public class HourBase
+    {
+        public string insupddelflag { get; set; }
+        public int Id { get; set; }
+        public int VehicleModelId { get; set; }
+        //public string VehicleModel { get; set; }
+        public string Hours { get; set; }
+        public DateTime FromTime { get; set; }
+        public DateTime ToTime { get; set; }
+        public decimal Price { get; set; }
 
+    }
+    public class VehicleDist
+    {
+        public string insupddelflag { get; set; }
+        public int Id { get; set; }
+        public string VehicleModelId { get; set; }
+        public int FromKm { get; set; }
+        public int ToKm { get; set; }
+        public decimal Pricing { get; set; }
+        public DateTime FromTime { get; set; }
+        public DateTime ToTime { get; set; }
+    }
+    public class Vechlogin
+    {
+        public string flag { get; set; }
+        public int Id {get;set;}
+        public int CompanyId {get;set;}      
+       
+        public int VechId {get;set;}
+        public string RegNo {get;set;}
+        public string DriverName {get;set;}
+        public string LoginLandMark { get; set; }
+        public string CurrentLandMark { get; set; }
+        public string StartKiloMtr { get; set; }
+        public string CurStatus { get; set; }
+        public string DriverMobileNo { get; set; }
+        public string ExecutiveName { get; set; }
+        public string Remarks { get; set; }
+        public int GenratedAmount {get;set;}
+        public int NoofTimesLogin {get;set;}       
+        public int TotalGeneratedAmount {get;set;}       
+        public string VechType { get; set; }
+        public int VehicleModelId { get; set; }
+        public int ServiceTypeId { get; set; }
+        public int VehicleGroupId { get; set; }
+       
+    }
+
+    public class vechlogout
+    {
+        public string flag { get; set; }
+        public int Id {get;set;}
+        public int CompanyId {get;set;}      
+        public int VechId {get;set;}
+        public string RegNo {get;set;}
+        public string DriverName {get;set;}
+        public string LoginLandMark { get; set; }
+        public string CurrentLandMark { get; set; }
+        public string EndMtr { get; set; }
+        public string CurStatus { get; set; }
+        public string DriverMobileNo { get; set; }
+        public string ExecutiveName { get; set; }
+        public string Remarks { get; set; }
+        public int GenratedAmount {get;set;}
+        public int NoofTimesLogin {get;set;}
+       
+        public int TotalGeneratedAmount {get;set;}
+       
+        public string VechType { get; set; }
+        public int VehicleModelId { get; set; }
+        public int ServiceTypeId { get; set; }
+        public int VehicleGroupId { get; set; }
+        
+     
+    }
+   
 
 }
 
