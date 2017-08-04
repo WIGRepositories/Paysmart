@@ -113,6 +113,7 @@
     <Compile Include="Controllers\CurrentLocationDetailsController.cs" />
     <Compile Include="Controllers\DriverChangePwdController.cs" />
     <Compile Include="Controllers\DriverForgotpasswordController.cs" />
+    <Compile Include="Controllers\DriverloginController.cs" />
     <Compile Include="Controllers\DriverMasterController.cs" />
     <Compile Include="Controllers\Email.cs" />
     <Compile Include="Controllers\EndTripController.cs" />
@@ -129,8 +130,6 @@
     <Compile Include="Controllers\RateTheTripController.cs" />
     <Compile Include="Controllers\RegisterDriverController.cs" />
     <Compile Include="Controllers\ResetPwdController.cs" />
-    <Compile Include="Controllers\SendBookingRequestToDriver.cs" />
-    <Compile Include="Controllers\StartTripController.cs" />
     <Compile Include="Controllers\TicketBookingController.cs" />
     <Compile Include="Controllers\loginController.cs">
       <SubType>Code</SubType>

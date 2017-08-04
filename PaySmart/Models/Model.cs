@@ -627,6 +627,21 @@ namespace Paysmart.Models
         
      
     }
+     public class drivers
+     {
+         public string flag { get; set;}
+         public int Id {get;set;}
+           public int DId {get;set;}
+           public int VId {get;set;}
+          public String Reason {get;set;}
+         public String Status {get;set;}
+
+         public float LoginLatitude {get;set;}
+
+          public float LoginLongitude {get;set;}
+          public float LogoutLatitude {get;set;}
+
+    public float LogoutLongitude {get;set;}
    
 
 }
