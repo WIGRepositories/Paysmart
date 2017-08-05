@@ -178,9 +178,9 @@ namespace Paysmart.Controllers
         [HttpPost]
         [Route("api/VehicleMaster/TrackVehicle")]
 
-        public int TrackVehicle(vehicledetails l)
+        public DataTable TrackVehicle(vehicledetails l)
         {
-            int status = 1;
+            
             SqlConnection conn = new SqlConnection();
 
             conn.ConnectionString = ConfigurationManager.ConnectionStrings["btposdb"].ToString();
@@ -203,30 +203,11 @@ namespace Paysmart.Controllers
             Lng.Value = l.longitude;
             cmd.Parameters.Add(Lng);
 
-        
-            try
-            {
-                //conn.Open();
-                object userstat = cmd.ExecuteScalar();
-                conn.Close();
+            DataTable currTripList = new DataTable();
+            SqlDataAdapter db = new SqlDataAdapter(cmd);
+            db.Fill(currTripList);
 
-                if (userstat != null)
-                {
-                    if (conn.State == ConnectionState.Open)
-                    {
-                        conn.Close();
-                    }
-                    return Convert.ToInt32(userstat);
-                }
-
-            }
-            catch (Exception ex)
-            {
-
-                throw ex;
-            }
-
-            return status;
+            return currTripList;
             //return (dt);
         }
     }

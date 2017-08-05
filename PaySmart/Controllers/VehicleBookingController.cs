@@ -62,7 +62,7 @@ namespace Paysmart.Controllers
             dt.Value = b.DepartueTime;
             cmd.Parameters.Add(dt);
 
-            SqlParameter q1 = new SqlParameter("@BookingType", SqlDbType.VarChar, 10);
+            SqlParameter q1 = new SqlParameter("@BookingType", SqlDbType.VarChar, 50);
             q1.Value = b.BookingType;
             cmd.Parameters.Add(q1);
 
@@ -162,11 +162,24 @@ namespace Paysmart.Controllers
             r.Value = b.Reasons;
             cmd.Parameters.Add(r);
 
-            
+            SqlParameter bo = new SqlParameter("@BooKingOTP", SqlDbType.VarChar,20);
+            bo.Value = b.BookingOTP;
+            cmd.Parameters.Add(bo);
+            SqlParameter o = new SqlParameter("@OTPVerification", SqlDbType.VarChar,20);
+            o.Value = b.OTPVerification;
+            cmd.Parameters.Add(o);
+            SqlParameter a = new SqlParameter("@Amount", SqlDbType.Decimal);
+            a.Value = b.Amount;
+            cmd.Parameters.Add(a);
+            SqlParameter ps = new SqlParameter("@PaymentStatus", SqlDbType.VarChar,50);
+            ps.Value = b.PaymentStatus;
+            cmd.Parameters.Add(ps);
+
             SqlDataAdapter da = new SqlDataAdapter(cmd);
             da.Fill(Tbl);
 
             return Tbl;
         }
+
     }
 }

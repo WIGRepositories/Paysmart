@@ -62,6 +62,10 @@ namespace Paysmart.Controllers
             di.Value = dl.DId;
             cmd.Parameters.Add(di);
 
+            SqlParameter dic = new SqlParameter("@CompanyId", SqlDbType.Int);
+            dic.Value = dl.CompanyId;
+            cmd.Parameters.Add(dic);
+
             SqlParameter n = new SqlParameter("@VId", SqlDbType.Int);
             n.Value = dl.VId;
             cmd.Parameters.Add(n);           

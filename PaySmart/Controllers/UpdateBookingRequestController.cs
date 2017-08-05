@@ -45,11 +45,11 @@ namespace Paysmart.Controllers
             vv.Value = b.VehicleTypeId;
             cmd.Parameters.Add(vv);
 
-            SqlParameter src = new SqlParameter("@SrcId", SqlDbType.Int);
+            SqlParameter src = new SqlParameter("@Src", SqlDbType.VarChar,50);
             src.Value = b.SrcId;
             cmd.Parameters.Add(src);
 
-            SqlParameter dest = new SqlParameter("@DestId", SqlDbType.Int);
+            SqlParameter dest = new SqlParameter("@Dest", SqlDbType.VarChar, 50);
             dest.Value = b.DestId;
             cmd.Parameters.Add(dest);
 

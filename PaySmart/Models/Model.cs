@@ -338,6 +338,10 @@ namespace Paysmart.Models
         public string CancelledBy { get; set; }
         public string BookingChannel { get; set; }
         public string Reasons { get; set; }
+        public string BookingOTP { get; set; }
+        public string OTPVerification { get; set; }
+        public decimal Amount { get; set; }
+        public string PaymentStatus { get; set; }
 
     }
 
@@ -633,6 +637,7 @@ namespace Paysmart.Models
         public int Id { get; set; }
         public int DId { get; set; }
         public int VId { get; set; }
+        public int CompanyId { get; set; }
         public String Reason { get; set; }
         public String Status { get; set; }
 
