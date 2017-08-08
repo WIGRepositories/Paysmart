@@ -8,6 +8,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using Paysmart.Models;
+using System.Net.Mail;
 namespace Paysmart.Controllers
 {
     public class StartTripController : ApiController
@@ -43,7 +44,7 @@ namespace Paysmart.Controllers
 
             SqlDataAdapter da = new SqlDataAdapter(cmd);
             da.Fill(dt);
-
+            
             return dt;
 
         }
@@ -70,7 +71,7 @@ namespace Paysmart.Controllers
             cmd.Parameters.Add(q1);
 
             SqlParameter e = new SqlParameter("@BookingOTP", SqlDbType.VarChar, 20);
-            e.Value = b.BookingOTP;
+            e.Value = b.BVerificationCode;
             cmd.Parameters.Add(e);
 
             try

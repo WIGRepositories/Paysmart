@@ -162,16 +162,15 @@ namespace Paysmart.Controllers
             SqlParameter r = new SqlParameter("@Reasons", SqlDbType.VarChar, 500);
             r.Value = b.Reasons;
             cmd.Parameters.Add(r);
-
-            SqlParameter bo = new SqlParameter("@BooKingOTP", SqlDbType.VarChar,20);
-            bo.Value = b.BookingOTP;
-            cmd.Parameters.Add(bo);
+            
             SqlParameter o = new SqlParameter("@OTPVerification", SqlDbType.VarChar,20);
             o.Value = b.OTPVerification;
             cmd.Parameters.Add(o);
+
             SqlParameter a = new SqlParameter("@Amount", SqlDbType.Decimal);
             a.Value = b.Amount;
             cmd.Parameters.Add(a);
+
             SqlParameter ps = new SqlParameter("@PaymentStatus", SqlDbType.VarChar,50);
             ps.Value = b.PaymentStatus;
             cmd.Parameters.Add(ps);
@@ -244,12 +243,12 @@ namespace Paysmart.Controllers
                     SmtpServer.EnableSsl = true;
                     //SmtpServer.TargetName = "STARTTLS/smtp.gmail.com";
                     SmtpServer.Send(mail);
-                   
+
 
                 }
                 catch (Exception ex)
                 {
-                   // return Tbl;
+                    // return Tbl;
                 }
             }
             #endregion Mobile OTP
