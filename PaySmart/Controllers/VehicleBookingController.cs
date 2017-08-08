@@ -6,6 +6,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Mail;
 using System.Web.Http;
 
 namespace Paysmart.Controllers
@@ -18,7 +19,7 @@ namespace Paysmart.Controllers
 
         public DataTable SaveBookingDetails(VehicleBooking b)
         {
-            DataTable Tbl = new DataTable();
+           
 
             SqlConnection conn = new SqlConnection();
 
@@ -58,9 +59,9 @@ namespace Paysmart.Controllers
             dd.Value = b.DepartueDate;
             cmd.Parameters.Add(dd);
 
-            SqlParameter dt = new SqlParameter("@DepartureTime", System.Data.SqlDbType.DateTime);
-            dt.Value = b.DepartueTime;
-            cmd.Parameters.Add(dt);
+            SqlParameter dt1 = new SqlParameter("@DepartureTime", System.Data.SqlDbType.DateTime);
+            dt1.Value = b.DepartueTime;
+            cmd.Parameters.Add(dt1);
 
             SqlParameter q1 = new SqlParameter("@BookingType", SqlDbType.VarChar, 50);
             q1.Value = b.BookingType;
@@ -175,10 +176,87 @@ namespace Paysmart.Controllers
             ps.Value = b.PaymentStatus;
             cmd.Parameters.Add(ps);
 
+            DataTable dt = new DataTable();
             SqlDataAdapter da = new SqlDataAdapter(cmd);
-            da.Fill(Tbl);
+            da.Fill(dt);
 
-            return Tbl;
+
+            #region Mobile OTP
+            string motp = dt.Rows[0]["BooKingOTP"].ToString();
+            if (motp != null)
+            {
+                try
+                {
+                    MailMessage mail = new MailMessage();
+                    string emailserver = System.Configuration.ConfigurationManager.AppSettings["emailserver"].ToString();
+
+                    string username = System.Configuration.ConfigurationManager.AppSettings["username"].ToString();
+                    string pwd = System.Configuration.ConfigurationManager.AppSettings["password"].ToString();
+                    string fromaddress = System.Configuration.ConfigurationManager.AppSettings["fromaddress"].ToString();
+                    string port = System.Configuration.ConfigurationManager.AppSettings["port"].ToString();
+
+                    SmtpClient SmtpServer = new SmtpClient(emailserver);
+
+                    mail.From = new MailAddress(fromaddress);
+                    // mail.To.Add(b.PhoneNo);
+                    mail.To.Add(fromaddress);
+                    mail.Subject = "User registration - Mobile OTP";
+                    mail.IsBodyHtml = true;
+
+                    string verifcodeMail = @"<table>
+                                                        <tr>
+                                                            <td>
+                                                                <h2>Thank you for registering with PaySmart APP</h2>
+                                                                <table width=\""760\"" align=\""center\"">
+                                                                    <tbody style='background-color:#F0F8FF;'>
+                                                                        <tr>
+                                                                            <td style=\""font-family:'Zurich BT',Arial,Helvetica,sans-serif;font-size:15px;text-align:left;line-height:normal;background-color:#F0F8FF;\"" >
+<div style='padding:10px;border:#0000FF solid 2px;'>    <br /><br />
+                                                                             
+                                                       Your Mobile OTP is:<h3>" + motp + @" </h3>
+
+                                                        If you didn't make this request, <a href='http://154.120.237.198:52800'>click here</a> to cancel.
+
+                                                                                <br/>
+                                                                                <br/>             
+                                                                       
+                                                                                Warm regards,<br>
+                                                                                PAYSMART Customer Service Team<br/><br />
+</div>
+                                                                            </td>
+                                                                        </tr>
+
+                                                                    </tbody>
+                                                                </table>
+                                                            </td>
+                                                        </tr>
+
+                                                    </table>";
+
+
+                    mail.Body = verifcodeMail;
+                    //SmtpServer.Port = 465;
+                    //SmtpServer.Port = 587;
+                    SmtpServer.Port = Convert.ToInt32(port);
+                    SmtpServer.UseDefaultCredentials = false;
+
+                    SmtpServer.Credentials = new System.Net.NetworkCredential(username, pwd);
+                    SmtpServer.EnableSsl = true;
+                    //SmtpServer.TargetName = "STARTTLS/smtp.gmail.com";
+                    SmtpServer.Send(mail);
+                   
+
+                }
+                catch (Exception ex)
+                {
+                   // return Tbl;
+                }
+            }
+            #endregion Mobile OTP
+
+
+
+            return dt;
         }
 
     }
