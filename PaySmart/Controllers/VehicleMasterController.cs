@@ -136,11 +136,6 @@ namespace Paysmart.Controllers
             wf.Value = v.DayOnly;
             cmd.Parameters.Add(wf);
 
-            SqlParameter wd = new SqlParameter("@DayNight", SqlDbType.VarChar, 50);
-            wd.Value = v.DayNight;
-            cmd.Parameters.Add(wd);
-
-
             SqlParameter ca = new SqlParameter("@VechMobileNo", SqlDbType.VarChar, 50);
             ca.Value = v.VechMobileNo;
             cmd.Parameters.Add(ca);
@@ -157,7 +152,6 @@ namespace Paysmart.Controllers
             vv.Value = v.VehicleModelId;
             cmd.Parameters.Add(vv);
 
-
             SqlParameter vf = new SqlParameter("@ServiceTypeId", SqlDbType.Int);
             vf.Value = v.ServiceTypeId;
             cmd.Parameters.Add(vf);
@@ -166,15 +160,15 @@ namespace Paysmart.Controllers
             vg.Value = v.VehicleGroupId;
             cmd.Parameters.Add(vg);
 
-
-
-
             DataTable dt = new DataTable();
             SqlDataAdapter da = new SqlDataAdapter(cmd);
             da.Fill(dt);
 
             return dt;
         }
+
+
+
         [HttpPost]
         [Route("api/VehicleMaster/TrackVehicle")]
 

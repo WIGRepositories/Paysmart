@@ -14,7 +14,7 @@ namespace Paysmart.Controllers
     {
         [HttpPost]
 
-        [Route("api/CancelBooking/cncelbkng")]
+        [Route("api/CancelBooking/CancelBooking")]
         public DataTable cncelbkng(cancel c)
         {
             DataTable dt = new DataTable();
@@ -31,7 +31,7 @@ namespace Paysmart.Controllers
             i.Value = c.BNo;
             cmd.Parameters.Add(i);
 
-            SqlParameter n = new SqlParameter("@BookingStatus", SqlDbType.VarChar,255);
+            SqlParameter n = new SqlParameter("@cancellationType", SqlDbType.Int);
             n.Value = c.BookingStatus;
             cmd.Parameters.Add(n);
 
@@ -53,5 +53,56 @@ namespace Paysmart.Controllers
             return dt;
 
         }
+
+        [Route("api/CancelBooking/BookingExpiry")]
+        public int BookingExpiry(VehicleBooking vb) 
+        {
+            int status = 0;
+            SqlConnection conn = new SqlConnection();
+
+            try
+            {               
+
+                conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = "HVInsUpdcancelbooking";
+
+                SqlParameter i = new SqlParameter("@BNo", SqlDbType.VarChar,20);
+                i.Value = vb.BNo;
+                cmd.Parameters.Add(i);
+
+                SqlParameter n = new SqlParameter("@cancellationType", SqlDbType.Int);
+                n.Value = 2;
+                cmd.Parameters.Add(n);
+
+                SqlParameter r = new SqlParameter("@CancelReason", SqlDbType.VarChar, 255);
+                r.Value = "No reponse";
+                cmd.Parameters.Add(r);
+
+
+                SqlParameter a = new SqlParameter("@CancelledBy", SqlDbType.VarChar, 50);
+                a.Value = vb.CustomerPhoneNo;
+                cmd.Parameters.Add(a);
+
+                cmd.Connection = conn;
+                conn.Open();
+                object result = cmd.ExecuteScalar();
+                conn.Close();
+                if (result.ToString() == "1")
+                {
+                    status = 1;
+                }
+                return status;
+            }
+            catch (Exception ex) {
+                if (conn.State == ConnectionState.Open) {
+                    conn.Close();
+                }
+                return status;
+            }
+        }
+
     }
 }

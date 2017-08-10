@@ -335,6 +335,7 @@ namespace Paysmart.Models
         public int NoofSeats { get; set; }
         public DateTime? ClosingDate { get; set; }
         public DateTime? CancelledOn { get; set; }
+        public int cancellationType { get; set; }
         public string CancelledBy { get; set; }
         public string BookingChannel { get; set; }
         public string Reasons { get; set; }

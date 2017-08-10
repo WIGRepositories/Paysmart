@@ -16,9 +16,9 @@ namespace Paysmart.Controllers
         [HttpPost]
 
         [Route("api/StartTrip/AcceptBooking")]
-        public DataTable AcceptBooking(VehicleBooking b)
+        public DataSet AcceptBooking(VehicleBooking b)
         {
-            DataTable dt = new DataTable();
+           
             SqlConnection conn = new SqlConnection();
 
             conn.ConnectionString = ConfigurationManager.ConnectionStrings["btposdb"].ToString();
@@ -42,10 +42,15 @@ namespace Paysmart.Controllers
             dp.Value = b.VID;
             cmd.Parameters.Add(dp);
 
+            SqlParameter drid = new SqlParameter("@DID", SqlDbType.Int);
+            drid.Value = b.DriverId;
+            cmd.Parameters.Add(drid);
+
             SqlDataAdapter da = new SqlDataAdapter(cmd);
-            da.Fill(dt);
+            DataSet ds = new DataSet();
+            da.Fill(ds);
             
-            return dt;
+            return ds;
 
         }
 
