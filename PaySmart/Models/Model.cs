@@ -343,11 +343,9 @@ namespace Paysmart.Models
         public string OTPVerification { get; set; }
         public decimal Amount { get; set; }
         public string PaymentStatus { get; set; }
-
-        public object BooKingOTP { get; set; }
-
-       
-
+        public string BookingOTP { get; set; }
+        public int UpdatedBy { get; set; }
+        public int UpdatedUserId { get; set; }
     }
 
     public class driverdetails

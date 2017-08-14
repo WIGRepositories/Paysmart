@@ -116,13 +116,11 @@
     <Compile Include="Controllers\DriverloginController.cs" />
     <Compile Include="Controllers\DriverMasterController.cs" />
     <Compile Include="Controllers\Email.cs" />
-    <Compile Include="Controllers\EndTripController.cs" />
     <Compile Include="Controllers\EOTPverficationController.cs" />
     <Compile Include="Controllers\FaqsController.cs" />
     <Compile Include="Controllers\ForgotpasswordController.cs" />
     <Compile Include="Controllers\HourBasedPricingController.cs" />
     <Compile Include="Controllers\MVerificationController.cs" />
-    <Compile Include="Controllers\nearestvehiclesController.cs" />
     <Compile Include="Controllers\PasswordverificationController.cs" />
     <Compile Include="Controllers\prebookController.cs" />
     <Compile Include="Controllers\prebookingdetailsController.cs" />
@@ -131,7 +129,6 @@
     <Compile Include="Controllers\RegisterDriverController.cs" />
     <Compile Include="Controllers\ResetPwdController.cs" />
     <Compile Include="Controllers\SendBookingRequestToDriver.cs" />
-    <Compile Include="Controllers\StartTripController.cs" />
     <Compile Include="Controllers\TicketBookingController.cs" />
     <Compile Include="Controllers\loginController.cs">
       <SubType>Code</SubType>
