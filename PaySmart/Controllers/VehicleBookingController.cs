@@ -1,6 +1,7 @@
 ﻿using Paysmart.Models;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
@@ -257,7 +258,7 @@ namespace Paysmart.Controllers
         }
 
         [HttpPost]
-        [Route("api/VehicleBooking/GetBookingStatus")]
+        [Route("api/VehicleBooking/BookingStatus")]
         public DataSet BookingStatus(VehicleBooking b)
         {
 
@@ -286,6 +287,353 @@ namespace Paysmart.Controllers
             da.Fill(ds);
 
             return ds;
+        }
+
+        [HttpPost]
+        [Route("api/VehicleBooking/CalculatePrice")]
+        public DataTable CalculatePrice(VehicleBooking b)
+        {
+            SqlConnection conn = new SqlConnection();
+
+            conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.CommandText = "PSTripCost";
+
+            cmd.Connection = conn;
+
+            SqlParameter cm = new SqlParameter("@BNo", SqlDbType.VarChar, 20);
+            cm.Value = b.BNo;
+            cmd.Parameters.Add(cm);
+
+            SqlParameter m = new SqlParameter("@packageId", SqlDbType.Int);
+            m.Value = 0;
+            cmd.Parameters.Add(m);
+
+            DataTable dt = new DataTable();
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
+            da.Fill(dt);
+
+            return dt;
+        }
+
+        [HttpGet]
+        [Route("api/VehicleBooking/AvailableVehicles")]
+        public DataTable AvailableVehicles(VehicleBooking vb)
+        {
+            DataTable dt = new DataTable();
+
+            SqlConnection conn = new SqlConnection();
+
+            conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.CommandText = "HVgetnearestvehicles";
+            cmd.Parameters.Add("@Mobilenumber", SqlDbType.VarChar, 50).Value = vb.CustomerPhoneNo;
+            cmd.Parameters.Add("@lat", SqlDbType.Float).Value = vb.SrcLatitude;
+            cmd.Parameters.Add("@lng", SqlDbType.Float).Value = vb.SrcLongitude;
+            cmd.Parameters.Add("@vehicleGroupId", SqlDbType.Int).Value = vb.VehicleGroupId;
+
+            cmd.Connection = conn;
+            DataSet ds = new DataSet();
+            SqlDataAdapter db = new SqlDataAdapter(cmd);
+            db.Fill(ds);
+            dt = ds.Tables[0];
+
+            return dt;
+        }
+
+        [HttpGet]
+        [Route("api/VehicleBooking/RateTheRide")]
+        public DataTable RateTheRide(VehicleBooking vb)
+        {
+            DataTable dt = new DataTable();
+
+            SqlConnection conn = new SqlConnection();
+
+            conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.CommandText = "HVRateTheTrip";
+            cmd.Parameters.Add("@Mobilenumber", SqlDbType.VarChar, 50).Value = vb.CustomerPhoneNo;
+            cmd.Parameters.Add("@BNo", SqlDbType.VarChar, 50).Value = vb.BNo;
+            cmd.Parameters.Add("@rating", SqlDbType.Decimal).Value = vb.Rating;
+            cmd.Parameters.Add("@RatedBy", SqlDbType.Int).Value = vb.RatedBy;
+            cmd.Parameters.Add("@Comment", SqlDbType.VarChar, 150).Value = vb.Comments;
+
+            cmd.Connection = conn;
+            DataSet ds = new DataSet();
+            SqlDataAdapter db = new SqlDataAdapter(cmd);
+            db.Fill(ds);
+            dt = ds.Tables[0];
+
+            return dt;
+        }
+
+        [HttpGet]
+        [Route("api/VehicleBooking/RideDetails")]
+        public DataSet RideDetails(VehicleBooking vb)
+        {  
+            SqlConnection conn = new SqlConnection();
+
+            conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.CommandText = "HVGetRideDetails";
+            cmd.Parameters.Add("@BNo", SqlDbType.VarChar, 50).Value = vb.BNo;
+            cmd.Connection = conn;
+            DataSet ds = new DataSet();
+            SqlDataAdapter db = new SqlDataAdapter(cmd);
+            db.Fill(ds);
+           
+            return ds;
+        }
+
+        [HttpGet]
+        [Route("api/VehicleBooking/RidesList")]
+        public DataTable RidesList(VehicleBooking vb)
+        {
+            DataTable dt = new DataTable();
+
+            SqlConnection conn = new SqlConnection();
+
+            conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.CommandText = "HVGetRidesList";
+            cmd.Parameters.Add("@Mobilenumber", SqlDbType.VarChar, 50).Value = vb.CustomerPhoneNo;
+            cmd.Parameters.Add("@RideStatus", SqlDbType.Float).Value = vb.SrcLatitude;            
+
+            cmd.Connection = conn;
+            
+            SqlDataAdapter db = new SqlDataAdapter(cmd);
+            db.Fill(dt);
+            
+            return dt;
+        }
+
+        [HttpGet]
+        [Route("api/VehicleBooking/UpdateBookingStatus")]
+        public DataTable UpdateBookingStatus(VehicleBooking vb)
+        {
+            DataTable dt = new DataTable();
+
+            SqlConnection conn = new SqlConnection();
+
+            conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.CommandText = "HVUpdateBookingStatus";
+            cmd.Parameters.Add("@BNo", SqlDbType.VarChar, 50).Value = vb.BNo;
+            cmd.Parameters.Add("@Status", SqlDbType.VarChar,50).Value = vb.BookingStatus;
+            cmd.Parameters.Add("@UpdatedBy", SqlDbType.Int).Value = vb.UpdatedBy;
+            cmd.Parameters.Add("@UpdatedUserId", SqlDbType.Int).Value = vb.UpdatedUserId;
+            cmd.Parameters.Add("@Comments", SqlDbType.VarChar,150).Value = vb.Comments;
+
+            cmd.Connection = conn;         
+            SqlDataAdapter db = new SqlDataAdapter(cmd);
+            db.Fill(dt);            
+
+            return dt;
+        }
+
+        [HttpPost]
+        [Route("api/VehicleBooking/AcceptRejectBooking")]
+        public DataSet AcceptBooking(VehicleBooking b)
+        {
+
+            SqlConnection conn = new SqlConnection();
+
+            conn.ConnectionString = ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.CommandText = "PSAcceptRejectBooking";
+
+            cmd.Connection = conn;
+            conn.Open();
+
+
+            SqlParameter bb = new SqlParameter("@BookingId", SqlDbType.VarChar, 50);
+            bb.Value = b.BookingId;
+            cmd.Parameters.Add(bb);
+
+            SqlParameter s = new SqlParameter("@BookingStatus", SqlDbType.VarChar, 50);
+            s.Value = b.BookingStatus;
+            cmd.Parameters.Add(s);
+
+            SqlParameter dp = new SqlParameter("@Vid", SqlDbType.Int);
+            dp.Value = b.VID;
+            cmd.Parameters.Add(dp);
+
+            SqlParameter drid = new SqlParameter("@DID", SqlDbType.Int);
+            drid.Value = b.DriverId;
+            cmd.Parameters.Add(drid);
+
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
+            DataSet ds = new DataSet();
+            da.Fill(ds);
+
+            return ds;
+
+        }
+
+
+        [HttpPost]
+        [Route("api/VehicleBooking/StartTrip")]
+        public int StartTrip(VehicleBooking b)
+        {
+
+            int status = 0;
+            SqlConnection conn = new SqlConnection();
+
+            conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.CommandText = "PSStartTrip";
+            cmd.Connection = conn;
+
+
+            SqlParameter q1 = new SqlParameter("@BNo", SqlDbType.VarChar, 20);
+            q1.Value = b.BNo;
+            cmd.Parameters.Add(q1);
+
+            SqlParameter d1 = new SqlParameter("@DriverNo", SqlDbType.VarChar, 20);
+            d1.Value = b.DriverPhoneNo;
+            cmd.Parameters.Add(d1);
+
+            SqlParameter e = new SqlParameter("@BookingOTP", SqlDbType.VarChar, 5);
+            e.Value = b.BVerificationCode;
+            cmd.Parameters.Add(e);
+
+            try
+            {
+                conn.Open();
+                object statusres = cmd.ExecuteScalar();
+                conn.Close();
+                if (statusres != null)
+                {
+                    if (conn.State == ConnectionState.Open)
+                    {
+                        conn.Close();
+                    }
+                    return Convert.ToInt32(statusres);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            //Verify mobile otp
+
+            return status;
+
+        }
+
+        [HttpPost]
+        [Route("api/VehicleBooking/EndTrip")]
+        public int EndTrip(VehicleBooking b)
+        {
+
+            int status = 0;
+            SqlConnection conn = new SqlConnection();
+
+            conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.CommandText = "PSEndTrip";
+            cmd.Connection = conn;
+
+
+            SqlParameter q1 = new SqlParameter("@BNo", SqlDbType.VarChar, 20);
+            q1.Value = b.BNo ;
+            cmd.Parameters.Add(q1);
+
+            SqlParameter d1 = new SqlParameter("@DriverNo", SqlDbType.VarChar, 20);
+            d1.Value = b.DriverPhoneNo;
+            cmd.Parameters.Add(d1);
+
+            SqlParameter e = new SqlParameter("@BookingOTP", SqlDbType.VarChar, 5);
+            e.Value = b.BVerificationCode;
+            cmd.Parameters.Add(e);
+
+            try
+            {
+                conn.Open();
+                object statusres = cmd.ExecuteScalar();
+                conn.Close();
+                if (statusres != null)
+                {
+                    if (conn.State == ConnectionState.Open)
+                    {
+                        conn.Close();
+                    }
+                    return Convert.ToInt32(statusres);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            //Verify mobile otp
+
+            return status;
+
+        }
+
+        [HttpPost]
+        [Route("api/VehicleBooking/ProcessPayment")]
+        public int ProcessPayment(VehicleBooking b)
+        {
+
+            int status = 0;
+            SqlConnection conn = new SqlConnection();
+
+            conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.CommandText = "PSProcessPayment";
+            cmd.Connection = conn;
+
+
+            SqlParameter q1 = new SqlParameter("@BNo", SqlDbType.VarChar, 20);
+            q1.Value = b.BNo;
+            cmd.Parameters.Add(q1);
+
+            SqlParameter e = new SqlParameter("@Amount", SqlDbType.Decimal);
+            e.Value = b.Amount;
+            cmd.Parameters.Add(e);
+
+            try
+            {
+                conn.Open();
+                object statusres = cmd.ExecuteScalar();
+                conn.Close();
+                if (statusres != null)
+                {
+                    if (conn.State == ConnectionState.Open)
+                    {
+                        conn.Close();
+                    }
+                    return Convert.ToInt32(statusres);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            //Verify mobile otp
+
+            return status;
+
         }
     }
 }
