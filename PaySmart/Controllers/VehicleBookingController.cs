@@ -179,7 +179,7 @@ namespace Paysmart.Controllers
             da.Fill(dt);
 
 
-//            #region Mobile OTP
+            #region Mobile OTP
 //            string motp = dt.Rows[0]["bookingNumber"].ToString();
 //            if (motp != null)
 //            {
@@ -250,7 +250,7 @@ namespace Paysmart.Controllers
 //                    // return Tbl;
 //                }
 //            }
-//            #endregion Mobile OTP
+            #endregion Mobile OTP
 
 
 
@@ -261,7 +261,6 @@ namespace Paysmart.Controllers
         [Route("api/VehicleBooking/BookingStatus")]
         public DataSet BookingStatus(VehicleBooking b)
         {
-
             DataSet ds = new DataSet();
 
             SqlConnection conn = new SqlConnection();
@@ -303,12 +302,12 @@ namespace Paysmart.Controllers
 
             cmd.Connection = conn;
 
-            SqlParameter cm = new SqlParameter("@BNo", SqlDbType.VarChar, 20);
+            SqlParameter cm = new SqlParameter("@BNo", SqlDbType.VarChar,20);
             cm.Value = b.BNo;
             cmd.Parameters.Add(cm);
 
             SqlParameter m = new SqlParameter("@packageId", SqlDbType.Int);
-            m.Value = 0;
+            m.Value = b.PackageId;
             cmd.Parameters.Add(m);
 
             DataTable dt = new DataTable();
@@ -318,7 +317,7 @@ namespace Paysmart.Controllers
             return dt;
         }
 
-        [HttpGet]
+       [HttpPost]
         [Route("api/VehicleBooking/AvailableVehicles")]
         public DataTable AvailableVehicles(VehicleBooking vb)
         {
@@ -345,7 +344,7 @@ namespace Paysmart.Controllers
             return dt;
         }
 
-        [HttpGet]
+        [HttpPost]
         [Route("api/VehicleBooking/RateTheRide")]
         public DataTable RateTheRide(VehicleBooking vb)
         {
@@ -373,7 +372,7 @@ namespace Paysmart.Controllers
             return dt;
         }
 
-        [HttpGet]
+        [HttpPost]
         [Route("api/VehicleBooking/RideDetails")]
         public DataSet RideDetails(VehicleBooking vb)
         {  
@@ -393,7 +392,7 @@ namespace Paysmart.Controllers
             return ds;
         }
 
-        [HttpGet]
+       [HttpPost]
         [Route("api/VehicleBooking/RidesList")]
         public DataTable RidesList(VehicleBooking vb)
         {
@@ -406,8 +405,7 @@ namespace Paysmart.Controllers
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.CommandText = "HVGetRidesList";
-            cmd.Parameters.Add("@Mobilenumber", SqlDbType.VarChar, 50).Value = vb.CustomerPhoneNo;
-            cmd.Parameters.Add("@RideStatus", SqlDbType.Float).Value = vb.SrcLatitude;            
+            cmd.Parameters.Add("@Mobilenumber", SqlDbType.VarChar, 50).Value = vb.CustomerPhoneNo;                     
 
             cmd.Connection = conn;
             
@@ -417,7 +415,7 @@ namespace Paysmart.Controllers
             return dt;
         }
 
-        [HttpGet]
+        [HttpPost]
         [Route("api/VehicleBooking/UpdateBookingStatus")]
         public DataTable UpdateBookingStatus(VehicleBooking vb)
         {
@@ -431,10 +429,10 @@ namespace Paysmart.Controllers
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.CommandText = "HVUpdateBookingStatus";
             cmd.Parameters.Add("@BNo", SqlDbType.VarChar, 50).Value = vb.BNo;
-            cmd.Parameters.Add("@Status", SqlDbType.VarChar,50).Value = vb.BookingStatus;
+            cmd.Parameters.Add("@BookingStatus", SqlDbType.VarChar, 50).Value = vb.BookingStatus;
             cmd.Parameters.Add("@UpdatedBy", SqlDbType.Int).Value = vb.UpdatedBy;
             cmd.Parameters.Add("@UpdatedUserId", SqlDbType.Int).Value = vb.UpdatedUserId;
-            cmd.Parameters.Add("@Comments", SqlDbType.VarChar,150).Value = vb.Comments;
+            //cmd.Parameters.Add("@Comments", SqlDbType.VarChar,150).Value = vb.Comments;
 
             cmd.Connection = conn;         
             SqlDataAdapter db = new SqlDataAdapter(cmd);
@@ -445,7 +443,7 @@ namespace Paysmart.Controllers
 
         [HttpPost]
         [Route("api/VehicleBooking/AcceptRejectBooking")]
-        public DataSet AcceptBooking(VehicleBooking b)
+        public DataTable AcceptBooking(VehicleBooking b)
         {
 
             SqlConnection conn = new SqlConnection();
@@ -475,11 +473,15 @@ namespace Paysmart.Controllers
             drid.Value = b.DriverId;
             cmd.Parameters.Add(drid);
 
-            SqlDataAdapter da = new SqlDataAdapter(cmd);
-            DataSet ds = new DataSet();
-            da.Fill(ds);
+            SqlParameter c = new SqlParameter("@comment", SqlDbType.VarChar, 150);
+            c.Value = b.Reasons;
+            cmd.Parameters.Add(c);
 
-            return ds;
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+
+            return dt;
 
         }
 
@@ -504,7 +506,7 @@ namespace Paysmart.Controllers
             q1.Value = b.BNo;
             cmd.Parameters.Add(q1);
 
-            SqlParameter d1 = new SqlParameter("@DriverNo", SqlDbType.VarChar, 20);
+            SqlParameter d1 = new SqlParameter("@DriverPhoneNo", SqlDbType.VarChar, 20);
             d1.Value = b.DriverPhoneNo;
             cmd.Parameters.Add(d1);
 
@@ -553,17 +555,14 @@ namespace Paysmart.Controllers
 
 
             SqlParameter q1 = new SqlParameter("@BNo", SqlDbType.VarChar, 20);
-            q1.Value = b.BNo ;
+            q1.Value = b.BNo;
             cmd.Parameters.Add(q1);
 
-            SqlParameter d1 = new SqlParameter("@DriverNo", SqlDbType.VarChar, 20);
+            SqlParameter d1 = new SqlParameter("@DriverPhoneNo", SqlDbType.VarChar, 20);
             d1.Value = b.DriverPhoneNo;
             cmd.Parameters.Add(d1);
 
-            SqlParameter e = new SqlParameter("@BookingOTP", SqlDbType.VarChar, 5);
-            e.Value = b.BVerificationCode;
-            cmd.Parameters.Add(e);
-
+           
             try
             {
                 conn.Open();
