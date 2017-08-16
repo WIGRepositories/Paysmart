@@ -321,7 +321,7 @@ namespace Paysmart.Models
         public DateTime? BookedDate { get; set; }
         public DateTime? BookedTime { get; set; }
         public DateTime? DepartueDate { get; set; }
-        public DateTime? DepartueTime { get; set; }
+        public DateTime? DepartureTime { get; set; }
         public float SrcLatitude { get; set; }
         public float SrcLongitude { get; set; }
         public float DestLatitude { get; set; }

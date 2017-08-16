@@ -59,7 +59,7 @@ namespace Paysmart.Controllers
             cmd.Parameters.Add(dd);
 
             SqlParameter dt1 = new SqlParameter("@DepartureTime", System.Data.SqlDbType.DateTime);
-            dt1.Value = b.DepartueTime;
+            dt1.Value = b.DepartureTime;
             cmd.Parameters.Add(dt1);
 
             SqlParameter q1 = new SqlParameter("@BookingType", SqlDbType.VarChar, 50);
@@ -161,10 +161,6 @@ namespace Paysmart.Controllers
             SqlParameter r = new SqlParameter("@Reasons", SqlDbType.VarChar, 500);
             r.Value = b.Reasons;
             cmd.Parameters.Add(r);
-            
-            SqlParameter o = new SqlParameter("@OTPVerification", SqlDbType.VarChar,20);
-            o.Value = b.OTPVerification;
-            cmd.Parameters.Add(o);
 
             SqlParameter a = new SqlParameter("@Amount", SqlDbType.Decimal);
             a.Value = b.Amount;
