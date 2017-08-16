@@ -38,7 +38,7 @@ namespace Paysmart.Controllers
 
 
         [HttpPost]
-        [Route("api/Driverlogin/Driverinn")]
+        [Route("api/Driverlogin/Driverlogin")]
 
         public DataTable Driverinn(drivers dl)
         {
@@ -50,33 +50,19 @@ namespace Paysmart.Controllers
             cmd.CommandText = "PSInsUpdDriverLogin";
             cmd.Connection = conn;
 
-            SqlParameter ff = new SqlParameter("@flag", SqlDbType.VarChar);
-            ff.Value = dl.flag;
+            SqlParameter ff = new SqlParameter("@loginlogout", SqlDbType.Int);
+            ff.Value = dl.loginlogout;
             cmd.Parameters.Add(ff);
 
-            SqlParameter i = new SqlParameter("@Id", SqlDbType.Int);
-            i.Value = dl.Id;
-            cmd.Parameters.Add(i);
-
-            SqlParameter di = new SqlParameter("@DId", SqlDbType.Int);
-            di.Value = dl.DId;
-            cmd.Parameters.Add(di);
-
-            SqlParameter dic = new SqlParameter("@CompanyId", SqlDbType.Int);
-            dic.Value = dl.CompanyId;
-            cmd.Parameters.Add(dic);
-
-            SqlParameter n = new SqlParameter("@VId", SqlDbType.Int);
-            n.Value = dl.VId;
+           
+            SqlParameter n = new SqlParameter("@DriverNo", SqlDbType.VarChar,20);
+            n.Value = dl.DriverNo;
             cmd.Parameters.Add(n);           
 
             SqlParameter j2 = new SqlParameter("@Reason", SqlDbType.VarChar,500);
             j2.Value = dl.Reason;
             cmd.Parameters.Add(j2);
-
-            SqlParameter g = new SqlParameter("@Status", SqlDbType.VarChar,50);
-            g.Value = dl.Status;
-            cmd.Parameters.Add(g);
+           
 
             SqlParameter h = new SqlParameter("@LoginLatitude", SqlDbType.Float);
             h.Value = dl.LoginLatitude;
@@ -85,15 +71,6 @@ namespace Paysmart.Controllers
             SqlParameter j = new SqlParameter("@LoginLongitude", SqlDbType.Float);
             j.Value = dl.LoginLongitude;
             cmd.Parameters.Add(j);
-
-            SqlParameter k = new SqlParameter("@LogoutLatitude", SqlDbType.Float);
-            k.Value = dl.LogoutLatitude;
-            cmd.Parameters.Add(k);
-
-            SqlParameter y = new SqlParameter("@LogoutLongitude", SqlDbType.Float);
-            y.Value = dl.LogoutLongitude;
-            cmd.Parameters.Add(y);           
-
 
             DataTable dt = new DataTable();
             SqlDataAdapter da = new SqlDataAdapter(cmd);

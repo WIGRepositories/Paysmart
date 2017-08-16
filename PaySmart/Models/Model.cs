@@ -650,8 +650,8 @@ namespace Paysmart.Models
         public float LogoutLatitude { get; set; }
 
         public float LogoutLongitude { get; set; }
-
-
+        public int loginlogout { get; set; }
+        public string DriverNo { get; set; }
     }
 }
 
