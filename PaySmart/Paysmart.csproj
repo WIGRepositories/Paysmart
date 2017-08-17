@@ -122,6 +122,7 @@
     <Compile Include="Controllers\HourBasedPricingController.cs" />
     <Compile Include="Controllers\MVerificationController.cs" />
     <Compile Include="Controllers\PasswordverificationController.cs" />
+    <Compile Include="Controllers\PaymentDetailsController.cs" />
     <Compile Include="Controllers\prebookController.cs" />
     <Compile Include="Controllers\prebookingdetailsController.cs" />
     <Compile Include="Controllers\pricedetailsController.cs" />

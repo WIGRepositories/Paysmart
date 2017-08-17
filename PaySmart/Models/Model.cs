@@ -212,6 +212,10 @@ namespace Paysmart.Models
 
     public class payments
     {
+        public string flag { get; set; }
+        public int Id { get; set; }
+        public string servicetype { get; set; }
+        public string status { get; set; }
         public int Transactionid { get; set; }
         public string Transaction_Number { get; set; }
         public int Amount { get; set; }
@@ -652,6 +656,16 @@ namespace Paysmart.Models
         public float LogoutLongitude { get; set; }
         public int loginlogout { get; set; }
         public string DriverNo { get; set; }
+    }
+    public class paymentdetails
+    {
+        public string flag { get; set; }
+        public int Id { get; set; }
+        public int PaymentId { get; set; }
+        public int servicetypeid { get; set; }
+        public string status { get; set; }
+        public int gatewayid { get; set; }
+        public string transactiontype { get; set; }
     }
 }
 
