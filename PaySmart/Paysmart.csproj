@@ -111,10 +111,12 @@
     <Compile Include="Controllers\CancellationController.cs" />
     <Compile Include="Controllers\ChangePwdController.cs" />
     <Compile Include="Controllers\CurrentLocationDetailsController.cs" />
+    <Compile Include="Controllers\CustomerTripController.cs" />
     <Compile Include="Controllers\DriverChangePwdController.cs" />
     <Compile Include="Controllers\DriverForgotpasswordController.cs" />
     <Compile Include="Controllers\DriverloginController.cs" />
     <Compile Include="Controllers\DriverMasterController.cs" />
+    <Compile Include="Controllers\DriverTripController.cs" />
     <Compile Include="Controllers\Email.cs" />
     <Compile Include="Controllers\EOTPverficationController.cs" />
     <Compile Include="Controllers\FaqsController.cs" />

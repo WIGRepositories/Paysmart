@@ -38,7 +38,7 @@ namespace Paysmart.Controllers
 
         [HttpPost]
         [Route("api/Payment/Pay")]
-        public DataTable Pay(payments s)
+        public DataTable Pay(paymentdetails s)
         {
             SqlConnection conn = new SqlConnection();
 
@@ -74,8 +74,7 @@ namespace Paysmart.Controllers
 
             return (dt);
 
-            //Verify Passwordotp
-
+            
         }
     }
 }

@@ -210,24 +210,7 @@ namespace Paysmart.Models
 
     }
 
-    public class payments
-    {
-        public string flag { get; set; }
-        public int Id { get; set; }
-        public string servicetype { get; set; }
-        public string status { get; set; }
-        public int Transactionid { get; set; }
-        public string Transaction_Number { get; set; }
-        public int Amount { get; set; }
-        public int Paymentmode { get; set; }
-
-        public int Pnr_Id { get; set; }
-        public string Pnr_No { get; set; }
-        public string Gateway_transId { get; set; }
-        public int TransactionStatus { get; set; }
-
-    }
-
+  
     public class passenger
     {
         public string Fname { get; set; }
@@ -350,6 +333,9 @@ namespace Paysmart.Models
         public string BookingOTP { get; set; }
         public int UpdatedBy { get; set; }
         public int UpdatedUserId { get; set; }
+        public float DriverRating { get; set; }
+        public int DriverRated { get; set; }
+        public string DriverComments { get; set; }
     }
 
     public class driverdetails
@@ -666,6 +652,19 @@ namespace Paysmart.Models
         public string status { get; set; }
         public int gatewayid { get; set; }
         public string transactiontype { get; set; }
+
+        
+        public string servicetype { get; set; }
+        
+        public int Transactionid { get; set; }
+        public string Transaction_Number { get; set; }
+        public int Amount { get; set; }
+        public int Paymentmode { get; set; }
+
+        public int Pnr_Id { get; set; }
+        public string Pnr_No { get; set; }
+        public string Gateway_transId { get; set; }
+        public int TransactionStatus { get; set; }
     }
 }
 
