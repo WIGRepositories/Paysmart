@@ -666,6 +666,13 @@ namespace Paysmart.Models
         public string Gateway_transId { get; set; }
         public int TransactionStatus { get; set; }
     }
+
+    public class balance
+    {
+        public string flag { get; set; }
+        public string mobileno { get; set; }
+        public decimal Amount { get; set; }
+    }
 }
 
 

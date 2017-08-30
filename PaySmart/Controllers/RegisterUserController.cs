@@ -35,7 +35,7 @@ namespace Paysmart.Controllers
 
             SqlParameter f = new SqlParameter("@flag", SqlDbType.VarChar);
             f.Value = ocr.flag;
-            cmd.Parameters.Add(f);           
+            cmd.Parameters.Add(f);
 
             SqlParameter c = new SqlParameter("@Username", SqlDbType.VarChar, 20);
             c.Value = ocr.Username;
@@ -54,7 +54,7 @@ namespace Paysmart.Controllers
             q1.Value = ocr.Password;
             cmd.Parameters.Add(q1);
 
-          SqlParameter v = new SqlParameter("@Firstname", SqlDbType.VarChar, 50);
+            SqlParameter v = new SqlParameter("@Firstname", SqlDbType.VarChar, 50);
             v.Value = ocr.Firstname;
             cmd.Parameters.Add(v);
 
@@ -62,7 +62,7 @@ namespace Paysmart.Controllers
             v1.Value = ocr.lastname;
             cmd.Parameters.Add(v1);
 
-           
+
 
             SqlParameter v2 = new SqlParameter("@AuthTypeId", SqlDbType.VarChar, 50);
             v2.Value = ocr.AuthTypeId;
@@ -79,7 +79,7 @@ namespace Paysmart.Controllers
             SqlParameter i = new SqlParameter("@AccountNo", SqlDbType.VarChar, 50);
             i.Value = ocr.AccountNo;
             cmd.Parameters.Add(i);
-                       
+
 
             DataTable dt = new DataTable();
             SqlDataAdapter da = new SqlDataAdapter(cmd);
@@ -87,27 +87,27 @@ namespace Paysmart.Controllers
             //[Mobileotp] ,[Emailotp]
             //send email otp\
             #region email opt
-                    string eotp =  dt.Rows[0]["Emailotp"].ToString();
-                if (eotp != null)
+            string eotp = dt.Rows[0]["Emailotp"].ToString();
+            if (eotp != null)
+            {
+                try
                 {
-                    try
-                    {
-                        MailMessage mail = new MailMessage();
-                        string emailserver = System.Configuration.ConfigurationManager.AppSettings["emailserver"].ToString();
-                                                
-                        string username = System.Configuration.ConfigurationManager.AppSettings["username"].ToString();
-                        string pwd = System.Configuration.ConfigurationManager.AppSettings["password"].ToString();
-                        string fromaddress = System.Configuration.ConfigurationManager.AppSettings["fromaddress"].ToString();
-                        string port = System.Configuration.ConfigurationManager.AppSettings["port"].ToString();
+                    MailMessage mail = new MailMessage();
+                    string emailserver = System.Configuration.ConfigurationManager.AppSettings["emailserver"].ToString();
 
-                        SmtpClient SmtpServer = new SmtpClient(emailserver);
+                    string username = System.Configuration.ConfigurationManager.AppSettings["username"].ToString();
+                    string pwd = System.Configuration.ConfigurationManager.AppSettings["password"].ToString();
+                    string fromaddress = System.Configuration.ConfigurationManager.AppSettings["fromaddress"].ToString();
+                    string port = System.Configuration.ConfigurationManager.AppSettings["port"].ToString();
 
-                        mail.From = new MailAddress(fromaddress);
-                        mail.To.Add(ocr.Email);
-                        mail.Subject = "User registration - Email OTP";
-                        mail.IsBodyHtml = true;
-                             
-                        string verifcodeMail = @"<table>
+                    SmtpClient SmtpServer = new SmtpClient(emailserver);
+
+                    mail.From = new MailAddress(fromaddress);
+                    mail.To.Add(ocr.Email);
+                    mail.Subject = "User registration - Email OTP";
+                    mail.IsBodyHtml = true;
+
+                    string verifcodeMail = @"<table>
                                                         <tr>
                                                             <td>
                                                                 <h2>Thank you for registering with PaySmart APP</h2>
@@ -117,7 +117,7 @@ namespace Paysmart.Controllers
                                                                             <td style=\""font-family:'Zurich BT',Arial,Helvetica,sans-serif;font-size:15px;text-align:left;line-height:normal;background-color:#F0F8FF;\"" >
 <div style='padding:10px;border:#0000FF solid 2px;'>    <br /><br />
                                                                              
-                                                       Your email OTP is:<h3>"+eotp+@" </h3>
+                                                       Your email OTP is:<h3>" + eotp + @" </h3>
 
                                                         If you didn't make this request, <a href='http://154.120.237.198:52800'>click here</a> to cancel.
 
@@ -138,55 +138,55 @@ namespace Paysmart.Controllers
                                                     </table>";
 
 
-                        mail.Body = verifcodeMail;
-                        //SmtpServer.Port = 465;
-                        //SmtpServer.Port = 587;
-                        SmtpServer.Port = Convert.ToInt32(port);
-                        SmtpServer.UseDefaultCredentials = false;
+                    mail.Body = verifcodeMail;
+                    //SmtpServer.Port = 465;
+                    //SmtpServer.Port = 587;
+                    SmtpServer.Port = Convert.ToInt32(port);
+                    SmtpServer.UseDefaultCredentials = false;
 
-                        SmtpServer.Credentials = new System.Net.NetworkCredential(username, pwd);
-                        SmtpServer.EnableSsl = true;
-                        //SmtpServer.TargetName = "STARTTLS/smtp.gmail.com";
-                        SmtpServer.Send(mail);
-
-                    }
-                    catch (Exception ex)
-                    {
-                        //throw ex;
-                    }
+                    SmtpServer.Credentials = new System.Net.NetworkCredential(username, pwd);
+                    SmtpServer.EnableSsl = true;
+                    //SmtpServer.TargetName = "STARTTLS/smtp.gmail.com";
+                    SmtpServer.Send(mail);
 
                 }
+                catch (Exception ex)
+                {
+                    //throw ex;
+                }
 
-                        //send mobile otp
+            }
 
-        
-                       // return dt;
+            //send mobile otp
+
+
+            // return dt;
 
             #endregion email otp
 
-             //send mobile otp as SMS
+            //send mobile otp as SMS
             #region Mobile OTP
-                        string motp =  dt.Rows[0]["Mobileotp"].ToString();
-                if (motp != null)
+            string motp = dt.Rows[0]["Mobileotp"].ToString();
+            if (motp != null)
+            {
+                try
                 {
-                     try
-                    {
-                        MailMessage mail = new MailMessage();
-                        string emailserver = System.Configuration.ConfigurationManager.AppSettings["emailserver"].ToString();
-                                                
-                        string username = System.Configuration.ConfigurationManager.AppSettings["username"].ToString();
-                        string pwd = System.Configuration.ConfigurationManager.AppSettings["password"].ToString();
-                        string fromaddress = System.Configuration.ConfigurationManager.AppSettings["fromaddress"].ToString();
-                        string port = System.Configuration.ConfigurationManager.AppSettings["port"].ToString();
+                    MailMessage mail = new MailMessage();
+                    string emailserver = System.Configuration.ConfigurationManager.AppSettings["emailserver"].ToString();
 
-                        SmtpClient SmtpServer = new SmtpClient(emailserver);
+                    string username = System.Configuration.ConfigurationManager.AppSettings["username"].ToString();
+                    string pwd = System.Configuration.ConfigurationManager.AppSettings["password"].ToString();
+                    string fromaddress = System.Configuration.ConfigurationManager.AppSettings["fromaddress"].ToString();
+                    string port = System.Configuration.ConfigurationManager.AppSettings["port"].ToString();
 
-                        mail.From = new MailAddress(fromaddress);
-                        mail.To.Add(ocr.Email);
-                        mail.Subject = "User registration - Mobile OTP";
-                        mail.IsBodyHtml = true;
-                             
-                        string verifcodeMail = @"<table>
+                    SmtpClient SmtpServer = new SmtpClient(emailserver);
+
+                    mail.From = new MailAddress(fromaddress);
+                    mail.To.Add(ocr.Email);
+                    mail.Subject = "User registration - Mobile OTP";
+                    mail.IsBodyHtml = true;
+
+                    string verifcodeMail = @"<table>
                                                         <tr>
                                                             <td>
                                                                 <h2>Thank you for registering with PaySmart APP</h2>
@@ -196,7 +196,7 @@ namespace Paysmart.Controllers
                                                                             <td style=\""font-family:'Zurich BT',Arial,Helvetica,sans-serif;font-size:15px;text-align:left;line-height:normal;background-color:#F0F8FF;\"" >
 <div style='padding:10px;border:#0000FF solid 2px;'>    <br /><br />
                                                                              
-                                                       Your Mobile OTP is:<h3>"+motp+@" </h3>
+                                                       Your Mobile OTP is:<h3>" + motp + @" </h3>
 
                                                         If you didn't make this request, <a href='http://154.120.237.198:52800'>click here</a> to cancel.
 
@@ -217,25 +217,25 @@ namespace Paysmart.Controllers
                                                     </table>";
 
 
-                        mail.Body = verifcodeMail;
-                        //SmtpServer.Port = 465;
-                        //SmtpServer.Port = 587;
-                        SmtpServer.Port = Convert.ToInt32(port);
-                        SmtpServer.UseDefaultCredentials = false;
+                    mail.Body = verifcodeMail;
+                    //SmtpServer.Port = 465;
+                    //SmtpServer.Port = 587;
+                    SmtpServer.Port = Convert.ToInt32(port);
+                    SmtpServer.UseDefaultCredentials = false;
 
-                        SmtpServer.Credentials = new System.Net.NetworkCredential(username, pwd);
-                        SmtpServer.EnableSsl = true;
-                        //SmtpServer.TargetName = "STARTTLS/smtp.gmail.com";
-                        SmtpServer.Send(mail);
+                    SmtpServer.Credentials = new System.Net.NetworkCredential(username, pwd);
+                    SmtpServer.EnableSsl = true;
+                    //SmtpServer.TargetName = "STARTTLS/smtp.gmail.com";
+                    SmtpServer.Send(mail);
 
-                    }
-                    catch (Exception ex)
-                    {
-                        //throw ex;
-                    }
                 }
+                catch (Exception ex)
+                {
+                    //throw ex;
+                }
+            }
             #endregion Mobile OTP
-                   
+
             return dt;
         }
 
@@ -344,7 +344,46 @@ namespace Paysmart.Controllers
             //Verify Emailotp
         }
 
-       
+
+
+        [HttpPost]
+        [Route("api/UserAccount/Addbalance")]
+        public DataTable Addbalance(balance ocr)
+        {
+
+
+            SqlConnection conn = new SqlConnection();
+
+            conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.CommandText = "PSInsUpdAddbalance";
+
+            cmd.Connection = conn;
+
+            SqlParameter f = new SqlParameter("@flag", SqlDbType.VarChar);
+            f.Value = ocr.flag ;
+            cmd.Parameters.Add(f);
+
+            SqlParameter q1 = new SqlParameter("@Mobileno", SqlDbType.VarChar, 20);
+            q1.Value = ocr.mobileno;
+            cmd.Parameters.Add(q1);
+
+            SqlParameter e = new SqlParameter("@Amount", SqlDbType.Decimal);
+            e.Value = ocr.Amount;
+            cmd.Parameters.Add(e);
+
+
+            DataTable dt = new DataTable();
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
+            da.Fill(dt);
+
+            return (dt);
+
+            //Verify Passwordotp
+
+        }
 
         [HttpPost]
         [Route("api/UserAccount/Passwordverification")]
@@ -361,7 +400,7 @@ namespace Paysmart.Controllers
             cmd.CommandText = "PSPasswordverification";
 
             cmd.Connection = conn;
-           
+
 
             SqlParameter q1 = new SqlParameter("@Password", SqlDbType.VarChar, 50);
             q1.Value = ocr.Password;
@@ -369,7 +408,7 @@ namespace Paysmart.Controllers
 
             SqlParameter e = new SqlParameter("@Passwordotp", SqlDbType.VarChar, 10);
             e.Value = ocr.Passwordotp;
-            cmd.Parameters.Add(e);         
+            cmd.Parameters.Add(e);
 
 
             DataTable dt = new DataTable();
