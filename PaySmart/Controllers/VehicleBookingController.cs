@@ -581,6 +581,30 @@ namespace Paysmart.Controllers
         }
 
         [HttpPost]
+        [Route("api/VehicleBooking/VehiclePosition")]
+        public DataTable NearestVehicle(VehicleBooking vb)
+        {
+            DataTable dt = new DataTable();
+
+            SqlConnection conn = new SqlConnection();
+
+            conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.CommandText = "HVgetnearvehicle";
+            
+            cmd.Parameters.Add("@bno", SqlDbType.VarChar).Value = vb.BNo;            
+
+            cmd.Connection = conn;
+          
+            SqlDataAdapter db = new SqlDataAdapter(cmd);
+            db.Fill(dt);
+            
+            return dt;
+        }
+
+        [HttpPost]
         [Route("api/VehicleBooking/RateTheRide")]
         public DataTable RateTheRide(VehicleBooking vb)
         {

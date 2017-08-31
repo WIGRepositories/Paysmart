@@ -167,8 +167,6 @@ namespace Paysmart.Controllers
             return dt;
         }
 
-
-
         [HttpPost]
         [Route("api/VehicleMaster/TrackVehicle")]
 
