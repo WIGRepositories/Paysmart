@@ -9,6 +9,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Mail;
 using System.Web.Http;
+using System.Web.Http.Tracing;
 
 namespace Paysmart.Controllers
 {
@@ -18,238 +19,250 @@ namespace Paysmart.Controllers
         [Route("api/VehicleBooking/SaveBookingDetails")]
         public DataTable SaveBookingDetails(VehicleBooking b)
         {
-
-
+            LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
-
-            conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
-
-            SqlCommand cmd = new SqlCommand();
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.CommandText = "PSInsUpdVehicleBookingDetails";
-
-            cmd.Connection = conn;
-
-            SqlParameter i = new SqlParameter("@flag", SqlDbType.VarChar);
-            i.Value = b.flag;
-            cmd.Parameters.Add(i);
-
-            SqlParameter ie = new SqlParameter("@Id", SqlDbType.Int);
-            ie.Value = b.Id;
-            cmd.Parameters.Add(ie);
-
-            SqlParameter co = new SqlParameter("@CompanyId", SqlDbType.Int);
-            co.Value = b.CompanyId;
-            cmd.Parameters.Add(co);
-
-            SqlParameter cm = new SqlParameter("@BNo", SqlDbType.VarChar, 20);
-            cm.Value = b.BNo;
-            cmd.Parameters.Add(cm);
-
-            SqlParameter bd = new SqlParameter("@BookedDate", SqlDbType.Date);
-            bd.Value = b.BookedDate;
-            cmd.Parameters.Add(bd);
-
-            SqlParameter bt = new SqlParameter("@BookedTime", System.Data.SqlDbType.DateTime);
-            bt.Value = b.BookedTime;
-            cmd.Parameters.Add(bt);
-
-            SqlParameter dd = new SqlParameter("@DepartureDate", SqlDbType.Date);
-            dd.Value = b.DepartueDate;
-            cmd.Parameters.Add(dd);
-
-            SqlParameter dt1 = new SqlParameter("@DepartureTime", System.Data.SqlDbType.DateTime);
-            dt1.Value = b.DepartureTime;
-            cmd.Parameters.Add(dt1);
-
-            SqlParameter q1 = new SqlParameter("@BookingType", SqlDbType.VarChar, 50);
-            q1.Value = b.BookingType;
-            cmd.Parameters.Add(q1);
-
-            SqlParameter src = new SqlParameter("@Src", SqlDbType.VarChar, 50);
-            src.Value = b.Src;
-            cmd.Parameters.Add(src);
-
-            SqlParameter dest = new SqlParameter("@Dest", SqlDbType.VarChar, 50);
-            dest.Value = b.Dest;
-            cmd.Parameters.Add(dest);
-
-            SqlParameter sr = new SqlParameter("@SrcId", SqlDbType.Int);
-            sr.Value = b.SrcId;
-            cmd.Parameters.Add(sr);
-
-            SqlParameter des = new SqlParameter("@DestId", SqlDbType.Int);
-            des.Value = b.DestId;
-            cmd.Parameters.Add(des);
-
-            SqlParameter sl = new SqlParameter("@SrcLatitude", SqlDbType.Float);
-            sl.Value = b.SrcLatitude;
-            cmd.Parameters.Add(sl);
-
-            SqlParameter so = new SqlParameter("@SrcLongitude", SqlDbType.Float);
-            so.Value = b.SrcLongitude;
-            cmd.Parameters.Add(so);
-
-            SqlParameter dl = new SqlParameter("@DestLatitude", SqlDbType.Float);
-            dl.Value = b.DestLatitude;
-            cmd.Parameters.Add(dl);
-
-            SqlParameter d = new SqlParameter("@DestLongitude", SqlDbType.Float);
-            d.Value = b.DestLongitude;
-            cmd.Parameters.Add(d);
-
-            SqlParameter vi = new SqlParameter("@VechId", SqlDbType.Int);
-            vi.Value = b.VechId;
-            cmd.Parameters.Add(vi);
-
-            SqlParameter p = new SqlParameter("@PackageId", SqlDbType.Int);
-            p.Value = b.PackageId;
-            cmd.Parameters.Add(p);
-
-            SqlParameter pa = new SqlParameter("@Pricing", SqlDbType.Decimal);
-            pa.Value = b.Pricing;
-            cmd.Parameters.Add(pa);
-
-            SqlParameter di = new SqlParameter("@DriverId", SqlDbType.Int);
-            di.Value = b.DriverId;
-            cmd.Parameters.Add(di);
-
-            SqlParameter dp = new SqlParameter("@DriverPhoneNo", SqlDbType.VarChar, 20);
-            dp.Value = b.DriverPhoneNo;
-            cmd.Parameters.Add(dp);
-
-            SqlParameter cp = new SqlParameter("@CustomerPhoneNo", SqlDbType.VarChar, 20);
-            cp.Value = b.CustomerPhoneNo;
-            cmd.Parameters.Add(cp);
-
-            SqlParameter c = new SqlParameter("@CustomerId", SqlDbType.Int);
-            c.Value = b.CustomerId;
-            cmd.Parameters.Add(c);
-
-            SqlParameter bs = new SqlParameter("@BookingStatus", SqlDbType.VarChar, 50);
-            bs.Value = b.BookingStatus;
-            cmd.Parameters.Add(bs);
-
-            SqlParameter n = new SqlParameter("@NoofVehicles", SqlDbType.Int);
-            n.Value = b.NoofVehicles;
-            cmd.Parameters.Add(n);
-
-            SqlParameter ns = new SqlParameter("@NoofSeats", SqlDbType.Int);
-            ns.Value = b.NoofSeats;
-            cmd.Parameters.Add(ns);
-
-            SqlParameter cd = new SqlParameter("@ClosingDate", SqlDbType.Date);
-            cd.Value = b.ClosingDate;
-            cmd.Parameters.Add(cd);
-
-            SqlParameter ct = new SqlParameter("@ClosingTime", System.Data.SqlDbType.DateTime);
-            ct.Value = b.ClosingDate;
-            cmd.Parameters.Add(ct);
-
-            SqlParameter cto = new SqlParameter("@CancelledOn", SqlDbType.DateTime);
-            cto.Value = b.CancelledOn;
-            cmd.Parameters.Add(cto);
-
-            SqlParameter cb = new SqlParameter("@CancelledBy", SqlDbType.VarChar, 50);
-            cb.Value = b.CancelledBy;
-            cmd.Parameters.Add(cb);
-
-            SqlParameter bc = new SqlParameter("@BookingChannel", SqlDbType.VarChar, 50);
-            bc.Value = b.BookingChannel;
-            cmd.Parameters.Add(bc);
-
-            SqlParameter r = new SqlParameter("@Reasons", SqlDbType.VarChar, 500);
-            r.Value = b.Reasons;
-            cmd.Parameters.Add(r);
-
-            SqlParameter a = new SqlParameter("@Amount", SqlDbType.Decimal);
-            a.Value = b.Amount;
-            cmd.Parameters.Add(a);
-
-            SqlParameter ps = new SqlParameter("@PaymentStatus", SqlDbType.VarChar, 50);
-            ps.Value = b.PaymentStatus;
-            cmd.Parameters.Add(ps);
-
             DataTable dt = new DataTable();
-            SqlDataAdapter da = new SqlDataAdapter(cmd);
-            da.Fill(dt);
+            try
+            {
+                
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "SaveBookingDetails....");
+
+               
+
+                conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = "PSInsUpdVehicleBookingDetails";
+
+                cmd.Connection = conn;
+
+                SqlParameter i = new SqlParameter("@flag", SqlDbType.VarChar);
+                i.Value = b.flag;
+                cmd.Parameters.Add(i);
+
+                SqlParameter ie = new SqlParameter("@Id", SqlDbType.Int);
+                ie.Value = b.Id;
+                cmd.Parameters.Add(ie);
+
+                SqlParameter co = new SqlParameter("@CompanyId", SqlDbType.Int);
+                co.Value = b.CompanyId;
+                cmd.Parameters.Add(co);
+
+                SqlParameter cm = new SqlParameter("@BNo", SqlDbType.VarChar, 20);
+                cm.Value = b.BNo;
+                cmd.Parameters.Add(cm);
+
+                SqlParameter bd = new SqlParameter("@BookedDate", SqlDbType.Date);
+                bd.Value = b.BookedDate;
+                cmd.Parameters.Add(bd);
+
+                SqlParameter bt = new SqlParameter("@BookedTime", System.Data.SqlDbType.DateTime);
+                bt.Value = b.BookedTime;
+                cmd.Parameters.Add(bt);
+
+                SqlParameter dd = new SqlParameter("@DepartureDate", SqlDbType.Date);
+                dd.Value = b.DepartueDate;
+                cmd.Parameters.Add(dd);
+
+                SqlParameter dt1 = new SqlParameter("@DepartureTime", System.Data.SqlDbType.DateTime);
+                dt1.Value = b.DepartureTime;
+                cmd.Parameters.Add(dt1);
+
+                SqlParameter q1 = new SqlParameter("@BookingType", SqlDbType.VarChar, 50);
+                q1.Value = b.BookingType;
+                cmd.Parameters.Add(q1);
+
+                SqlParameter src = new SqlParameter("@Src", SqlDbType.VarChar, 50);
+                src.Value = b.Src;
+                cmd.Parameters.Add(src);
+
+                SqlParameter dest = new SqlParameter("@Dest", SqlDbType.VarChar, 50);
+                dest.Value = b.Dest;
+                cmd.Parameters.Add(dest);
+
+                SqlParameter sr = new SqlParameter("@SrcId", SqlDbType.Int);
+                sr.Value = b.SrcId;
+                cmd.Parameters.Add(sr);
+
+                SqlParameter des = new SqlParameter("@DestId", SqlDbType.Int);
+                des.Value = b.DestId;
+                cmd.Parameters.Add(des);
+
+                SqlParameter sl = new SqlParameter("@SrcLatitude", SqlDbType.Float);
+                sl.Value = b.SrcLatitude;
+                cmd.Parameters.Add(sl);
+
+                SqlParameter so = new SqlParameter("@SrcLongitude", SqlDbType.Float);
+                so.Value = b.SrcLongitude;
+                cmd.Parameters.Add(so);
+
+                SqlParameter dl = new SqlParameter("@DestLatitude", SqlDbType.Float);
+                dl.Value = b.DestLatitude;
+                cmd.Parameters.Add(dl);
+
+                SqlParameter d = new SqlParameter("@DestLongitude", SqlDbType.Float);
+                d.Value = b.DestLongitude;
+                cmd.Parameters.Add(d);
+
+                SqlParameter vi = new SqlParameter("@VechId", SqlDbType.Int);
+                vi.Value = b.VechId;
+                cmd.Parameters.Add(vi);
+
+                SqlParameter p = new SqlParameter("@PackageId", SqlDbType.Int);
+                p.Value = b.PackageId;
+                cmd.Parameters.Add(p);
+
+                SqlParameter pa = new SqlParameter("@Pricing", SqlDbType.Decimal);
+                pa.Value = b.Pricing;
+                cmd.Parameters.Add(pa);
+
+                SqlParameter di = new SqlParameter("@DriverId", SqlDbType.Int);
+                di.Value = b.DriverId;
+                cmd.Parameters.Add(di);
+
+                SqlParameter dp = new SqlParameter("@DriverPhoneNo", SqlDbType.VarChar, 20);
+                dp.Value = b.DriverPhoneNo;
+                cmd.Parameters.Add(dp);
+
+                SqlParameter cp = new SqlParameter("@CustomerPhoneNo", SqlDbType.VarChar, 20);
+                cp.Value = b.CustomerPhoneNo;
+                cmd.Parameters.Add(cp);
+
+                SqlParameter c = new SqlParameter("@CustomerId", SqlDbType.Int);
+                c.Value = b.CustomerId;
+                cmd.Parameters.Add(c);
+
+                SqlParameter bs = new SqlParameter("@BookingStatus", SqlDbType.VarChar, 50);
+                bs.Value = b.BookingStatus;
+                cmd.Parameters.Add(bs);
+
+                SqlParameter n = new SqlParameter("@NoofVehicles", SqlDbType.Int);
+                n.Value = b.NoofVehicles;
+                cmd.Parameters.Add(n);
+
+                SqlParameter ns = new SqlParameter("@NoofSeats", SqlDbType.Int);
+                ns.Value = b.NoofSeats;
+                cmd.Parameters.Add(ns);
+
+                SqlParameter cd = new SqlParameter("@ClosingDate", SqlDbType.Date);
+                cd.Value = b.ClosingDate;
+                cmd.Parameters.Add(cd);
+
+                SqlParameter ct = new SqlParameter("@ClosingTime", System.Data.SqlDbType.DateTime);
+                ct.Value = b.ClosingDate;
+                cmd.Parameters.Add(ct);
+
+                SqlParameter cto = new SqlParameter("@CancelledOn", SqlDbType.DateTime);
+                cto.Value = b.CancelledOn;
+                cmd.Parameters.Add(cto);
+
+                SqlParameter cb = new SqlParameter("@CancelledBy", SqlDbType.VarChar, 50);
+                cb.Value = b.CancelledBy;
+                cmd.Parameters.Add(cb);
+
+                SqlParameter bc = new SqlParameter("@BookingChannel", SqlDbType.VarChar, 50);
+                bc.Value = b.BookingChannel;
+                cmd.Parameters.Add(bc);
+
+                SqlParameter r = new SqlParameter("@Reasons", SqlDbType.VarChar, 500);
+                r.Value = b.Reasons;
+                cmd.Parameters.Add(r);
+
+                SqlParameter a = new SqlParameter("@Amount", SqlDbType.Decimal);
+                a.Value = b.Amount;
+                cmd.Parameters.Add(a);
+
+                SqlParameter ps = new SqlParameter("@PaymentStatus", SqlDbType.VarChar, 50);
+                ps.Value = b.PaymentStatus;
+                cmd.Parameters.Add(ps);
+
+              
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(dt);
 
 
-            #region Mobile OTP
-            //            string motp = dt.Rows[0]["bookingNumber"].ToString();
-            //            if (motp != null)
-            //            {
-            //                try
-            //                {
-            //                    MailMessage mail = new MailMessage();
-            //                    string emailserver = System.Configuration.ConfigurationManager.AppSettings["emailserver"].ToString();
+                #region Mobile OTP
+                //            string motp = dt.Rows[0]["bookingNumber"].ToString();
+                //            if (motp != null)
+                //            {
+                //                try
+                //                {
+                //                    MailMessage mail = new MailMessage();
+                //                    string emailserver = System.Configuration.ConfigurationManager.AppSettings["emailserver"].ToString();
 
-            //                    string username = System.Configuration.ConfigurationManager.AppSettings["username"].ToString();
-            //                    string pwd = System.Configuration.ConfigurationManager.AppSettings["password"].ToString();
-            //                    string fromaddress = System.Configuration.ConfigurationManager.AppSettings["fromaddress"].ToString();
-            //                    string port = System.Configuration.ConfigurationManager.AppSettings["port"].ToString();
+                //                    string username = System.Configuration.ConfigurationManager.AppSettings["username"].ToString();
+                //                    string pwd = System.Configuration.ConfigurationManager.AppSettings["password"].ToString();
+                //                    string fromaddress = System.Configuration.ConfigurationManager.AppSettings["fromaddress"].ToString();
+                //                    string port = System.Configuration.ConfigurationManager.AppSettings["port"].ToString();
 
-            //                    SmtpClient SmtpServer = new SmtpClient(emailserver);
+                //                    SmtpClient SmtpServer = new SmtpClient(emailserver);
 
-            //                    mail.From = new MailAddress(fromaddress);
-            //                    // mail.To.Add(b.PhoneNo);
-            //                    mail.To.Add(fromaddress);
-            //                    mail.Subject = "User registration - Mobile OTP";
-            //                    mail.IsBodyHtml = true;
+                //                    mail.From = new MailAddress(fromaddress);
+                //                    // mail.To.Add(b.PhoneNo);
+                //                    mail.To.Add(fromaddress);
+                //                    mail.Subject = "User registration - Mobile OTP";
+                //                    mail.IsBodyHtml = true;
 
-            //                    string verifcodeMail = @"<table>
-            //                                                        <tr>
-            //                                                            <td>
-            //                                                                <h2>Thank you for registering with PaySmart APP</h2>
-            //                                                                <table width=\""760\"" align=\""center\"">
-            //                                                                    <tbody style='background-color:#F0F8FF;'>
-            //                                                                        <tr>
-            //                                                                            <td style=\""font-family:'Zurich BT',Arial,Helvetica,sans-serif;font-size:15px;text-align:left;line-height:normal;background-color:#F0F8FF;\"" >
-            //<div style='padding:10px;border:#0000FF solid 2px;'>    <br /><br />
-            //                                                                             
-            //                                                       Your booking number is:<h3>" + motp + @" </h3>
-            //
-            //                                                        If you didn't make this request, <a href='http://154.120.237.198:52800'>click here</a> to cancel.
-            //
-            //                                                                                <br/>
-            //                                                                                <br/>             
-            //                                                                       
-            //                                                                                Warm regards,<br>
-            //                                                                                PAYSMART Customer Service Team<br/><br />
-            //</div>
-            //                                                                            </td>
-            //                                                                        </tr>
-            //
-            //                                                                    </tbody>
-            //                                                                </table>
-            //                                                            </td>
-            //                                                        </tr>
-            //
-            //                                                    </table>";
-
-
-            //                    mail.Body = verifcodeMail;
-            //                    //SmtpServer.Port = 465;
-            //                    //SmtpServer.Port = 587;
-            //                    SmtpServer.Port = Convert.ToInt32(port);
-            //                    SmtpServer.UseDefaultCredentials = false;
-
-            //                    SmtpServer.Credentials = new System.Net.NetworkCredential(username, pwd);
-            //                    SmtpServer.EnableSsl = true;
-            //                    //SmtpServer.TargetName = "STARTTLS/smtp.gmail.com";
-            //                    SmtpServer.Send(mail);
+                //                    string verifcodeMail = @"<table>
+                //                                                        <tr>
+                //                                                            <td>
+                //                                                                <h2>Thank you for registering with PaySmart APP</h2>
+                //                                                                <table width=\""760\"" align=\""center\"">
+                //                                                                    <tbody style='background-color:#F0F8FF;'>
+                //                                                                        <tr>
+                //                                                                            <td style=\""font-family:'Zurich BT',Arial,Helvetica,sans-serif;font-size:15px;text-align:left;line-height:normal;background-color:#F0F8FF;\"" >
+                //<div style='padding:10px;border:#0000FF solid 2px;'>    <br /><br />
+                //                                                                             
+                //                                                       Your booking number is:<h3>" + motp + @" </h3>
+                //
+                //                                                        If you didn't make this request, <a href='http://154.120.237.198:52800'>click here</a> to cancel.
+                //
+                //                                                                                <br/>
+                //                                                                                <br/>             
+                //                                                                       
+                //                                                                                Warm regards,<br>
+                //                                                                                PAYSMART Customer Service Team<br/><br />
+                //</div>
+                //                                                                            </td>
+                //                                                                        </tr>
+                //
+                //                                                                    </tbody>
+                //                                                                </table>
+                //                                                            </td>
+                //                                                        </tr>
+                //
+                //                                                    </table>";
 
 
-            //                }
-            //                catch (Exception ex)
-            //                {
-            //                    // return Tbl;
-            //                }
-            //            }
-            #endregion Mobile OTP
+                //                    mail.Body = verifcodeMail;
+                //                    //SmtpServer.Port = 465;
+                //                    //SmtpServer.Port = 587;
+                //                    SmtpServer.Port = Convert.ToInt32(port);
+                //                    SmtpServer.UseDefaultCredentials = false;
+
+                //                    SmtpServer.Credentials = new System.Net.NetworkCredential(username, pwd);
+                //                    SmtpServer.EnableSsl = true;
+                //                    //SmtpServer.TargetName = "STARTTLS/smtp.gmail.com";
+                //                    SmtpServer.Send(mail);
 
 
+                //                }
+                //                catch (Exception ex)
+                //                {
+                //                    // return Tbl;
+                //                }
+                //            }
+                #endregion Mobile OTP
 
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "SaveBookingDetails successful....");
+               
+            }
+            catch (Exception ex) {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "SaveBookingDetails...."+ex.Message.ToString());
+                
+            }
             return dt;
         }
 
@@ -258,9 +271,14 @@ namespace Paysmart.Controllers
         [Route("api/VehicleBooking/AdvanceBookingDetails")]
         public DataTable AdvanceBookingDetails(VehicleBooking b)
         {
-
-
+            LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
+            DataTable dt = new DataTable();
+            try
+            {
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "AdvanceBookingDetails....");
+
 
             conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
@@ -410,7 +428,7 @@ namespace Paysmart.Controllers
             ps.Value = b.PaymentStatus;
             cmd.Parameters.Add(ps);
 
-            DataTable dt = new DataTable();
+           
             SqlDataAdapter da = new SqlDataAdapter(cmd);
             da.Fill(dt);
 
@@ -487,9 +505,14 @@ namespace Paysmart.Controllers
             //                }
             //            }
             #endregion Mobile OTP
+            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "AdvanceBookingDetails successful....");
 
+            }
+            catch (Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "AdvanceBookingDetails...." + ex.Message.ToString());
 
-
+            }
             return dt;
         }
 
@@ -499,7 +522,13 @@ namespace Paysmart.Controllers
         [Route("api/VehicleBooking/BookingStatus")]
         public DataTable BookingStatus(VehicleBooking b)
         {
+            LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
+            DataTable dt = new DataTable();
+            try
+            {
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "BookingStatus....");
 
             conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
@@ -517,10 +546,18 @@ namespace Paysmart.Controllers
             m.Value = 0;
             cmd.Parameters.Add(m);
 
-            DataTable dt = new DataTable();
+            
             SqlDataAdapter da = new SqlDataAdapter(cmd);
             da.Fill(dt);
 
+            
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "BookingStatus successful....");
+               
+            }
+            catch (Exception ex) {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "BookingStatus...." + ex.Message.ToString());
+                
+            }
             return dt;
         }
 
@@ -528,7 +565,13 @@ namespace Paysmart.Controllers
         [Route("api/VehicleBooking/CalculatePrice")]
         public DataTable CalculatePrice(VehicleBooking b)
         {
+            LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
+            DataTable dt = new DataTable();
+            try
+            {
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "CalculatePrice....");
 
             conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
@@ -546,10 +589,17 @@ namespace Paysmart.Controllers
             m.Value = b.PackageId;
             cmd.Parameters.Add(m);
 
-            DataTable dt = new DataTable();
+           
             SqlDataAdapter da = new SqlDataAdapter(cmd);
             da.Fill(dt);
+            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "CalculatePrice successful....");
 
+            }
+            catch (Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "CalculatePrice...." + ex.Message.ToString());
+
+            }
             return dt;
         }
 
@@ -557,9 +607,13 @@ namespace Paysmart.Controllers
         [Route("api/VehicleBooking/AvailableVehicles")]
         public DataTable AvailableVehicles(VehicleBooking vb)
         {
-            DataTable dt = new DataTable();
-
+             LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
+            DataTable dt = new DataTable();
+            try
+            {
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "AvailableVehicles....");
 
             conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
@@ -576,7 +630,14 @@ namespace Paysmart.Controllers
             SqlDataAdapter db = new SqlDataAdapter(cmd);
             db.Fill(ds);
             dt = ds.Tables[0];
+            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "AvailableVehicles successful....");
 
+            }
+            catch (Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "AvailableVehicles...." + ex.Message.ToString());
+
+            }
             return dt;
         }
 
@@ -584,9 +645,13 @@ namespace Paysmart.Controllers
         [Route("api/VehicleBooking/VehiclePosition")]
         public DataTable NearestVehicle(VehicleBooking vb)
         {
-            DataTable dt = new DataTable();
-
+             LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
+            DataTable dt = new DataTable();
+            try
+            {
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "VehiclePosition....");
 
             conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
@@ -600,7 +665,15 @@ namespace Paysmart.Controllers
           
             SqlDataAdapter db = new SqlDataAdapter(cmd);
             db.Fill(dt);
-            
+
+            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "VehiclePosition successful....");
+
+            }
+            catch (Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "VehiclePosition...." + ex.Message.ToString());
+
+            }
             return dt;
         }
 
@@ -608,9 +681,13 @@ namespace Paysmart.Controllers
         [Route("api/VehicleBooking/RateTheRide")]
         public DataTable RateTheRide(VehicleBooking vb)
         {
-            DataTable dt = new DataTable();
-
+            LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
+            DataTable dt = new DataTable();
+            try
+            {
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "RateTheRide....");
 
             conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
@@ -629,14 +706,28 @@ namespace Paysmart.Controllers
             db.Fill(ds);
             dt = ds.Tables[0];
 
+            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "RateTheRide successful....");
+
+            }
+            catch (Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "RateTheRide...." + ex.Message.ToString());
+
+            }
             return dt;
         }
 
         [HttpPost]
         [Route("api/VehicleBooking/RideDetails")]
         public DataSet RideDetails(VehicleBooking vb)
-        {
+        { 
+            LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
+            DataSet ds = new DataSet();
+            try
+            {
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "RideDetails....");
 
             conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
@@ -645,10 +736,19 @@ namespace Paysmart.Controllers
             cmd.CommandText = "HVGetRideDetails";
             cmd.Parameters.Add("@BNo", SqlDbType.VarChar, 50).Value = vb.BNo;
             cmd.Connection = conn;
-            DataSet ds = new DataSet();
+            
             SqlDataAdapter db = new SqlDataAdapter(cmd);
             db.Fill(ds);
 
+
+            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "RideDetails successful....");
+
+            }
+            catch (Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "RideDetails...." + ex.Message.ToString());
+
+            }
             return ds;
         }
 
@@ -656,9 +756,13 @@ namespace Paysmart.Controllers
         [Route("api/VehicleBooking/RidesList")]
         public DataTable RidesList(VehicleBooking vb)
         {
-            DataTable dt = new DataTable();
-
+            LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
+            DataTable dt = new DataTable();
+            try
+            {
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "RidesList....");
 
             conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
@@ -672,6 +776,14 @@ namespace Paysmart.Controllers
             SqlDataAdapter db = new SqlDataAdapter(cmd);
             db.Fill(dt);
 
+            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "RidesList successful....");
+
+            }
+            catch (Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "RidesList...." + ex.Message.ToString());
+
+            }
             return dt;
         }
 
@@ -679,9 +791,13 @@ namespace Paysmart.Controllers
         [Route("api/VehicleBooking/UpdateBookingStatus")]
         public DataTable UpdateBookingStatus(VehicleBooking vb)
         {
-            DataTable dt = new DataTable();
-
+           LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
+            DataTable dt = new DataTable();
+            try
+            {
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "UpdateBookingStatus....");
 
             conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
@@ -698,6 +814,14 @@ namespace Paysmart.Controllers
             SqlDataAdapter db = new SqlDataAdapter(cmd);
             db.Fill(dt);
 
+            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "UpdateBookingStatus successful....");
+
+            }
+            catch (Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "UpdateBookingStatus...." + ex.Message.ToString());
+
+            }
             return dt;
         }
 
@@ -706,7 +830,13 @@ namespace Paysmart.Controllers
         public DataTable AcceptBooking(VehicleBooking b)
         {
 
+             LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
+            DataTable dt = new DataTable();
+            try
+            {
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "AcceptRejectBooking....");
 
             conn.ConnectionString = ConfigurationManager.ConnectionStrings["btposdb"].ToString();
             SqlCommand cmd = new SqlCommand();
@@ -738,9 +868,17 @@ namespace Paysmart.Controllers
             cmd.Parameters.Add(c);
 
             SqlDataAdapter da = new SqlDataAdapter(cmd);
-            DataTable dt = new DataTable();
+           
             da.Fill(dt);
 
+            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "AcceptRejectBooking successful....");
+
+            }
+            catch (Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "AcceptRejectBooking...." + ex.Message.ToString());
+
+            }
             return dt;
 
         }
@@ -752,7 +890,13 @@ namespace Paysmart.Controllers
         {
 
             int status = 0;
+             LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
+           
+            try
+            {
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "StartTrip....");
 
             conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
@@ -794,6 +938,15 @@ namespace Paysmart.Controllers
             }
             //Verify mobile otp
 
+            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "StartTrip successful....");
+
+            }
+            catch (Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "StartTrip...." + ex.Message.ToString());
+
+            }
+
             return status;
 
         }
@@ -804,7 +957,13 @@ namespace Paysmart.Controllers
         {
 
             int status = 0;
+            LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
+           
+            try
+            {
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "EndTrip....");
 
             conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
@@ -843,6 +1002,14 @@ namespace Paysmart.Controllers
             }
             //Verify mobile otp
 
+            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "EndTrip successful....");
+
+            }
+            catch (Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "EndTrip...." + ex.Message.ToString());
+
+            }
             return status;
 
         }
@@ -853,7 +1020,13 @@ namespace Paysmart.Controllers
         {
 
             int status = 0;
+             LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
+           
+            try
+            {
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "ProcessPayment....");
 
             conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
@@ -891,6 +1064,14 @@ namespace Paysmart.Controllers
             }
             //Verify mobile otp
 
+            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "ProcessPayment successful....");
+
+            }
+            catch (Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "ProcessPayment...." + ex.Message.ToString());
+
+            }
             return status;
 
         }
@@ -900,8 +1081,14 @@ namespace Paysmart.Controllers
         public DataTable DriverRatingToRide(VehicleBooking vb)
         {
             DataTable dt = new DataTable();
-
+            DataSet ds = new DataSet();
+            LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
+           
+            try
+            {
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "DriverRatingToRide....");
 
             conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
@@ -915,11 +1102,19 @@ namespace Paysmart.Controllers
             cmd.Parameters.Add("@DriverComments", SqlDbType.VarChar, 150).Value = vb.DriverComments;
 
             cmd.Connection = conn;
-            DataSet ds = new DataSet();
+            
             SqlDataAdapter db = new SqlDataAdapter(cmd);
             db.Fill(ds);
             dt = ds.Tables[0];
 
+            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "DriverRatingToRide successful....");
+
+            }
+            catch (Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "DriverRatingToRide...." + ex.Message.ToString());
+
+            }
             return dt;
         }
     }
