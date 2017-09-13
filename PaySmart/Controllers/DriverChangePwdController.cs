@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Paysmart.Models;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -6,15 +7,14 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using Paysmart.Models;
+
 namespace Paysmart.Controllers
 {
-    public class ResetPwdController : ApiController
+    public class DriverChangePwdController : ApiController
     {
-
         [HttpPost]
-        [Route("api/ResetPwd/reset")]
-        public int reset(UserAccount U)
+        [Route("api/DriverChangePwd/ChangePassword")]
+        public int ChangePassword(DriverAccount U)
         {
             SqlConnection conn = new SqlConnection();
 
@@ -22,13 +22,11 @@ namespace Paysmart.Controllers
 
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = CommandType.StoredProcedure;
-            cmd.CommandText = "PSPasswordreset";
+            cmd.CommandText = "PSDriversChangePwd";
 
             cmd.Connection = conn;
 
-            SqlParameter b = new SqlParameter("@Passwordotp", SqlDbType.VarChar, 10);
-            b.Value = U.Passwordotp;
-            cmd.Parameters.Add(b);
+
 
             SqlParameter b1 = new SqlParameter("@Mobilenumber", SqlDbType.VarChar, 20);
             b1.Value = U.Mobilenumber;
@@ -39,9 +37,14 @@ namespace Paysmart.Controllers
             cmd.Parameters.Add(e);
 
 
-            SqlParameter m = new SqlParameter("@Password", SqlDbType.VarChar, 10);
+            SqlParameter m = new SqlParameter("@Password", SqlDbType.VarChar, 50);
             m.Value = U.Password;
             cmd.Parameters.Add(m);
+
+            SqlParameter m1 = new SqlParameter("@NewPassword", SqlDbType.VarChar, 50);
+            m1.Value = U.NewPassword;
+            cmd.Parameters.Add(m1);
+
 
 
 

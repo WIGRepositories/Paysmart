@@ -49,13 +49,21 @@ namespace Paysmart.Controllers
             conn.ConnectionString = ConfigurationManager.ConnectionStrings["btposdb"].ToString();
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = CommandType.StoredProcedure;
-            cmd.CommandText = "HVdrivers";
+            cmd.CommandText = "HVInsUpddrivers";
             cmd.Connection = conn;
-            
+
+
+            SqlParameter f = new SqlParameter("@flag", SqlDbType.VarChar);
+            f.Value = d.flag;
+            cmd.Parameters.Add(f);
 
             SqlParameter i = new SqlParameter("@DId", SqlDbType.Int);
             i.Value = d.id;
             cmd.Parameters.Add(i);
+
+            SqlParameter ie = new SqlParameter("@CompanyId", SqlDbType.Int);
+            ie.Value = d.CompanyId;
+            cmd.Parameters.Add(ie);
 
             SqlParameter n = new SqlParameter("@NAme", SqlDbType.VarChar, 50);
             n.Value = d.Name;
@@ -75,9 +83,9 @@ namespace Paysmart.Controllers
                s.Value = d.Pin;
             cmd.Parameters.Add(s);
 
-               SqlParameter f = new SqlParameter("@PAddress", SqlDbType.VarChar,50);
-               f.Value = d.PAddress;
-            cmd.Parameters.Add(f);
+               SqlParameter ff = new SqlParameter("@PAddress", SqlDbType.VarChar,50);
+               ff.Value = d.PAddress;
+            cmd.Parameters.Add(ff);
 
             SqlParameter j2 = new SqlParameter("@PCity", SqlDbType.VarChar,255);
             j2.Value = d.PCity;

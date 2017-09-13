@@ -46,17 +46,26 @@ namespace Paysmart.Controllers
             conn.ConnectionString = ConfigurationManager.ConnectionStrings["btposdb"].ToString();
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = CommandType.StoredProcedure;
-            cmd.CommandText = "HVVehicles";
+            cmd.CommandText = "HVInsUpdVehicles";
             cmd.Connection = conn;
 
-            SqlParameter s = new SqlParameter("@SrNo", SqlDbType.Int);
-            s.Value = v.SrNo;
-            cmd.Parameters.Add(s);
 
+            SqlParameter se = new SqlParameter("@flag", SqlDbType.VarChar);
+            se.Value = v.flag;
+            cmd.Parameters.Add(se);
+
+
+            SqlParameter s = new SqlParameter("@Id", SqlDbType.Int);
+            s.Value = v.Id;
+            cmd.Parameters.Add(s);
 
             SqlParameter i = new SqlParameter("@VID", SqlDbType.Int);
             i.Value = v.VID;
             cmd.Parameters.Add(i);
+
+            SqlParameter cd = new SqlParameter("@CompanyId", SqlDbType.Int);
+            cd.Value = v.CompanyId;
+            cmd.Parameters.Add(cd);
 
             SqlParameter n = new SqlParameter("@RegistrationNo", SqlDbType.VarChar, 50);
             n.Value = v.RegistrationNo;
@@ -65,8 +74,6 @@ namespace Paysmart.Controllers
             SqlParameter r = new SqlParameter("@Type", SqlDbType.VarChar, 50);
             r.Value = v.Type;
             cmd.Parameters.Add(r);
-
-
 
             SqlParameter a = new SqlParameter("@OwnerName", SqlDbType.VarChar, 50);
             a.Value = v.OwnerName;
@@ -80,23 +87,12 @@ namespace Paysmart.Controllers
             f.Value = v.Engineno;
             cmd.Parameters.Add(f);
 
-            SqlParameter g = new SqlParameter("@WirelessFleetNo", SqlDbType.VarChar, 50);
-            g.Value = v.WirelessFleetNo;
-            cmd.Parameters.Add(g);
-
-            SqlParameter h = new SqlParameter("@AllotmentType", SqlDbType.VarChar, 50);
-            h.Value = v.AllotmentType;
-            cmd.Parameters.Add(h);
-
-            SqlParameter j = new SqlParameter("@RoadNo", SqlDbType.VarChar,50);
-            j.Value = v.RoadNo;
-            cmd.Parameters.Add(j);
 
             SqlParameter k = new SqlParameter("@RoadTaxDate", System.Data.SqlDbType.Date);
             k.Value = v.RoadTaxDate;
             cmd.Parameters.Add(k);
 
-            SqlParameter y = new SqlParameter("@InsuranceNo", SqlDbType.VarChar,50);
+            SqlParameter y = new SqlParameter("@InsuranceNo", SqlDbType.VarChar, 50);
             y.Value = v.InsuranceNo;
             cmd.Parameters.Add(y);
 
@@ -140,14 +136,6 @@ namespace Paysmart.Controllers
             wf.Value = v.DayOnly;
             cmd.Parameters.Add(wf);
 
-            SqlParameter wd = new SqlParameter("@DayNight", SqlDbType.VarChar, 50);
-            wd.Value = v.DayNight;
-            cmd.Parameters.Add(wd);
-
-            SqlParameter wa = new SqlParameter("@InsProvider", SqlDbType.VarChar, 50);
-            wa.Value = v.InsProvider;
-            cmd.Parameters.Add(wa);
-
             SqlParameter ca = new SqlParameter("@VechMobileNo", SqlDbType.VarChar, 50);
             ca.Value = v.VechMobileNo;
             cmd.Parameters.Add(ca);
@@ -160,30 +148,59 @@ namespace Paysmart.Controllers
             wsd.Value = v.NewEntry;
             cmd.Parameters.Add(wsd);
 
-            SqlParameter ww = new SqlParameter("@AirPortCab", SqlDbType.VarChar, 50);
-            ww.Value = v.AirPortCab;
-            cmd.Parameters.Add(ww);
+            SqlParameter vv = new SqlParameter("@VehicleModelId", SqlDbType.Int);
+            vv.Value = v.VehicleModelId;
+            cmd.Parameters.Add(vv);
 
-            SqlParameter wq = new SqlParameter("@deletedVech", SqlDbType.VarChar, 50);
-            wq.Value = v.deletedVech;
-            cmd.Parameters.Add(wq);
+            SqlParameter vf = new SqlParameter("@ServiceTypeId", SqlDbType.Int);
+            vf.Value = v.ServiceTypeId;
+            cmd.Parameters.Add(vf);
 
-            SqlParameter wm = new SqlParameter("@Carrier", SqlDbType.VarChar, 50);
-            wm.Value = v.Carrier;
-            cmd.Parameters.Add(wm);
-
-            SqlParameter mw = new SqlParameter("@PayGroup", SqlDbType.VarChar, 50);
-            mw.Value = v.PayGroup;
-            cmd.Parameters.Add(mw);
-
-
-          
+            SqlParameter vg = new SqlParameter("@VehicleGroupId", SqlDbType.Int);
+            vg.Value = v.VehicleGroupId;
+            cmd.Parameters.Add(vg);
 
             DataTable dt = new DataTable();
             SqlDataAdapter da = new SqlDataAdapter(cmd);
             da.Fill(dt);
 
             return dt;
+        }
+
+        [HttpPost]
+        [Route("api/VehicleMaster/TrackVehicle")]
+
+        public DataTable TrackVehicle(vehicledetails l)
+        {
+            
+            SqlConnection conn = new SqlConnection();
+
+            conn.ConnectionString = ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.CommandText = "PSTrackVehicleHistory";
+
+            cmd.Connection = conn;
+            conn.Open();
+
+            SqlParameter MobileNumber = new SqlParameter("@Mobilenumber", SqlDbType.VarChar,50);
+            MobileNumber.Value = l.PMobNo;
+            cmd.Parameters.Add(MobileNumber);
+
+            SqlParameter Lat = new SqlParameter("@Latitude", SqlDbType.Float);
+            Lat.Value = l.latitude;
+            cmd.Parameters.Add(Lat);
+
+            SqlParameter Lng = new SqlParameter("@Longitude", SqlDbType.Float);
+            Lng.Value = l.longitude;
+            cmd.Parameters.Add(Lng);
+
+            DataTable currTripList = new DataTable();
+            SqlDataAdapter db = new SqlDataAdapter(cmd);
+            db.Fill(currTripList);
+
+            return currTripList;
+            //return (dt);
         }
     }
 }

@@ -15,9 +15,10 @@ namespace Paysmart.Controllers
     {
 
         [HttpPost]
-        [Route("api/BookAVehicle/booking")]
-        public DataTable booking(UserLocation b)
+        [Route("api/BookAVehicle/SaveBookingDetails")]
+        public int SaveBookingDetails(VehicleBooking b)
         {
+            int Status = 0;
             SqlConnection conn = new SqlConnection();
 
             conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
@@ -31,6 +32,14 @@ namespace Paysmart.Controllers
             SqlParameter i = new SqlParameter("@flag", SqlDbType.VarChar);
             i.Value = b.flag;
             cmd.Parameters.Add(i);
+
+            SqlParameter ie = new SqlParameter("@Id", SqlDbType.Int);
+            ie.Value = b.Id;
+            cmd.Parameters.Add(ie);
+
+            SqlParameter cd = new SqlParameter("@CompanyId", SqlDbType.Int);
+            cd.Value = b.CompanyId;
+            cmd.Parameters.Add(cd);
 
             SqlParameter cm = new SqlParameter("@BNo", SqlDbType.Int);
             cm.Value = b.BNo;
@@ -49,12 +58,12 @@ namespace Paysmart.Controllers
             cmd.Parameters.Add(v1);
 
 
-            SqlParameter v2 = new SqlParameter("@CusID", SqlDbType.VarChar, 255);
+            SqlParameter v2 = new SqlParameter("@CusID", SqlDbType.VarChar,255);
             v2.Value = b.CusID;
             cmd.Parameters.Add(v2);
 
 
-            SqlParameter f = new SqlParameter("@PhoneNo", SqlDbType.VarChar, 50);
+            SqlParameter f = new SqlParameter("@PhoneNo", SqlDbType.VarChar,50);
             f.Value = b.PhoneNo;
             cmd.Parameters.Add(f);
 
@@ -93,8 +102,8 @@ namespace Paysmart.Controllers
             E.Value = b.ExtraCharge;
             cmd.Parameters.Add(E);
 
-            SqlParameter N = new SqlParameter("@NoofVehicle", SqlDbType.Int);
-            N.Value = b.NoofVehicle;
+            SqlParameter N = new SqlParameter("@NoofVehicles", SqlDbType.Int);
+            N.Value = b.NoofVehicles;
             cmd.Parameters.Add(N);
 
             SqlParameter rt = new SqlParameter("@ExecutiveName", SqlDbType.VarChar, 255);
@@ -147,27 +156,22 @@ namespace Paysmart.Controllers
             ce.Value = b.lng;
             cmd.Parameters.Add(ce);
 
-
-
-
+            
+            
             DataTable dt = new DataTable();
             SqlDataAdapter da = new SqlDataAdapter(cmd);
             da.Fill(dt);
             
-       
-
-    //[Mobileotp] ,[Emailotp]
-    //send email otp\
-
+    
     #region Mobile OTP
-                string motp = dt.Rows[0]["Mobileotp"].ToString();
+            string motp = dt.Rows[0]["BNo"].ToString();
                 if (motp != null)
                 {
-                    try
+                     try
                     {
                         MailMessage mail = new MailMessage();
                         string emailserver = System.Configuration.ConfigurationManager.AppSettings["emailserver"].ToString();
-
+                                                
                         string username = System.Configuration.ConfigurationManager.AppSettings["username"].ToString();
                         string pwd = System.Configuration.ConfigurationManager.AppSettings["password"].ToString();
                         string fromaddress = System.Configuration.ConfigurationManager.AppSettings["fromaddress"].ToString();
@@ -176,39 +180,40 @@ namespace Paysmart.Controllers
                         SmtpClient SmtpServer = new SmtpClient(emailserver);
 
                         mail.From = new MailAddress(fromaddress);
-                        mail.To.Add(b.PhoneNo);
+                       // mail.To.Add(b.PhoneNo);
+                        mail.To.Add(fromaddress);
                         mail.Subject = "User registration - Mobile OTP";
                         mail.IsBodyHtml = true;
-
+                             
                         string verifcodeMail = @"<table>
-                                                            <tr>
-                                                                <td>
-                                                                    <h2>Thank you for registering with PaySmart APP</h2>
-                                                                    <table width=\""760\"" align=\""center\"">
-                                                                        <tbody style='background-color:#F0F8FF;'>
-                                                                            <tr>
-                                                                                <td style=\""font-family:'Zurich BT',Arial,Helvetica,sans-serif;font-size:15px;text-align:left;line-height:normal;background-color:#F0F8FF;\"" >
-    <div style='padding:10px;border:#0000FF solid 2px;'>    <br /><br />
-                                                                                 
-                                                           Your Mobile OTP is:<h3>" + motp + @" </h3>
-    
-                                                            If you didn't make this request, <a href='http://154.120.237.198:52800'>click here</a> to cancel.
-    
-                                                                                    <br/>
-                                                                                    <br/>             
-                                                                           
-                                                                                    Warm regards,<br>
-                                                                                    PAYSMART Customer Service Team<br/><br />
-    </div>
-                                                                                </td>
-                                                                            </tr>
-    
-                                                                        </tbody>
-                                                                    </table>
-                                                                </td>
-                                                            </tr>
-    
-                                                        </table>";
+                                                        <tr>
+                                                            <td>
+                                                                <h2>Thank you for registering with PaySmart APP</h2>
+                                                                <table width=\""760\"" align=\""center\"">
+                                                                    <tbody style='background-color:#F0F8FF;'>
+                                                                        <tr>
+                                                                            <td style=\""font-family:'Zurich BT',Arial,Helvetica,sans-serif;font-size:15px;text-align:left;line-height:normal;background-color:#F0F8FF;\"" >
+<div style='padding:10px;border:#0000FF solid 2px;'>    <br /><br />
+                                                                             
+                                                       Your Mobile OTP is:<h3>"+ motp +@" </h3>
+
+                                                        If you didn't make this request, <a href='http://154.120.237.198:52800'>click here</a> to cancel.
+
+                                                                                <br/>
+                                                                                <br/>             
+                                                                       
+                                                                                Warm regards,<br>
+                                                                                PAYSMART Customer Service Team<br/><br />
+</div>
+                                                                            </td>
+                                                                        </tr>
+
+                                                                    </tbody>
+                                                                </table>
+                                                            </td>
+                                                        </tr>
+
+                                                    </table>";
 
 
                         mail.Body = verifcodeMail;
@@ -221,17 +226,19 @@ namespace Paysmart.Controllers
                         SmtpServer.EnableSsl = true;
                         //SmtpServer.TargetName = "STARTTLS/smtp.gmail.com";
                         SmtpServer.Send(mail);
+                        Status = 1;
 
                     }
                     catch (Exception ex)
                     {
-                        //throw ex;
+                        Status = 0;
                     }
                 }
-                #endregion Mobile OTP
+            #endregion Mobile OTP
+            
+                return Status;
 
-                 return dt;
-
+            
         }
     }
 }

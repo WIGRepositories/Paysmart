@@ -14,7 +14,7 @@ namespace Paysmart.Controllers
     {
         [HttpPost]
         [Route("api/MVerification/MOTPverification")]
-        public DataTable MOTPverification(UserLocation ocr)
+        public DataTable MOTPverification(VehicleBooking ocr)
         {
 
 

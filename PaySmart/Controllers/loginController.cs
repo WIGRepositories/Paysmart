@@ -8,7 +8,6 @@ using System.Net.Http;
 using System.Web.Http;
 using Paysmart.Models;
 using System.Web.Http.Tracing;
-using Paysmart.Models;
 
 namespace Paysmart.Controllers
 {

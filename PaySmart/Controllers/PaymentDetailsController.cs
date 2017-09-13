@@ -11,12 +11,12 @@ using System.Configuration;
 
 namespace Paysmart.Controllers
 {
-    public class PaymentController : ApiController
+    public class PaymentDetailsController : ApiController
     {
 
         [HttpGet]
-        [Route("api/Payment/Getpayment")]
-        public DataTable Getpayment()
+        [Route("api/Payment/Getpayments")]
+        public DataTable Getpayments()
         {
             SqlConnection conn = new SqlConnection();
 
@@ -24,7 +24,7 @@ namespace Paysmart.Controllers
 
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = CommandType.StoredProcedure;
-            cmd.CommandText = "PSGetPayments";
+            cmd.CommandText = "PSGetPaymentdetails";
 
             cmd.Connection = conn;
 
@@ -37,8 +37,8 @@ namespace Paysmart.Controllers
         }
 
         [HttpPost]
-        [Route("api/Payment/Pay")]
-        public DataTable Pay(paymentdetails s)
+        [Route("api/Payment/Paydetails")]
+        public DataTable Paydetails(paymentdetails s)
         {
             SqlConnection conn = new SqlConnection();
 
@@ -46,7 +46,7 @@ namespace Paysmart.Controllers
 
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = CommandType.StoredProcedure;
-            cmd.CommandText = "PSInsUpdPayments";
+            cmd.CommandText = "PSInsUpdPaymentDetails";
 
             cmd.Connection = conn;
 
@@ -55,26 +55,35 @@ namespace Paysmart.Controllers
             T.Value = s.flag;
             cmd.Parameters.Add(T);
 
-            SqlParameter q = new SqlParameter("@ServiceType", SqlDbType.VarChar, 50);
-            q.Value = s.servicetype;
+            SqlParameter q = new SqlParameter("@PaymentId", SqlDbType.Int);
+            q.Value = s.PaymentId;
             cmd.Parameters.Add(q);
-            
-            SqlParameter e = new SqlParameter("@Status", SqlDbType.VarChar,50);
-            e.Value = s.status;
+
+            SqlParameter e = new SqlParameter("@ServiceTypeId", SqlDbType.Int);
+            e.Value = s.servicetypeid;
             cmd.Parameters.Add(e);
 
-            SqlParameter q1 = new SqlParameter("@Amount", SqlDbType.Decimal);
-            q1.Value = s.Amount;
+            SqlParameter q1 = new SqlParameter("@Status", SqlDbType.VarChar,50);
+            q1.Value = s.status;
             cmd.Parameters.Add(q1);
 
-                      
+            SqlParameter qq = new SqlParameter("@GatewayId", SqlDbType.Int);
+            qq.Value = s.gatewayid;
+            cmd.Parameters.Add(qq);
+
+            SqlParameter ss = new SqlParameter("@TransactionType", SqlDbType.VarChar,50);
+            ss.Value = s.transactiontype;
+            cmd.Parameters.Add(ss);
+
+
             DataTable dt = new DataTable();
             SqlDataAdapter da = new SqlDataAdapter(cmd);
             da.Fill(dt);
 
             return (dt);
 
-            
+            //Verify Passwordotp
+
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Paysmart.Models;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -8,20 +9,13 @@ using System.Net.Http;
 using System.Net.Mail;
 using System.Web.Http;
 
-
-
-using Paysmart.Models;
-
-
-
-
 namespace Paysmart.Controllers
 {
-    public class UserAccountController : ApiController
+    public class RegisterDriverController : ApiController
     {
         [HttpPost]
-        [Route("api/UserAccount/RegisterUser")]
-        public DataTable RegisterUser(UserAccount ocr)
+        [Route("api/RegisterDriver/RegisterDrivers")]
+        public DataTable RegisterDrivers(DriverAccount ocr)
         {
             SqlConnection conn = new SqlConnection();
 
@@ -29,7 +23,7 @@ namespace Paysmart.Controllers
 
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = CommandType.StoredProcedure;
-            cmd.CommandText = "PSInsUpdAppusers";
+            cmd.CommandText = "PSInsUpdAppDrivers";
 
             cmd.Connection = conn;
 
@@ -37,8 +31,8 @@ namespace Paysmart.Controllers
             f.Value = ocr.flag;
             cmd.Parameters.Add(f);
 
-            SqlParameter c = new SqlParameter("@Username", SqlDbType.VarChar, 20);
-            c.Value = ocr.Username;
+            SqlParameter c = new SqlParameter("@Drivername", SqlDbType.VarChar, 20);
+            c.Value = ocr.Drivername;
             cmd.Parameters.Add(c);
 
             SqlParameter ce = new SqlParameter("@Email", SqlDbType.VarChar, 50);
@@ -104,7 +98,7 @@ namespace Paysmart.Controllers
 
                     mail.From = new MailAddress(fromaddress);
                     mail.To.Add(ocr.Email);
-                    mail.Subject = "User registration - Email OTP";
+                    mail.Subject = "Driver registration - Email OTP";
                     mail.IsBodyHtml = true;
 
                     string verifcodeMail = @"<table>
@@ -183,7 +177,7 @@ namespace Paysmart.Controllers
 
                     mail.From = new MailAddress(fromaddress);
                     mail.To.Add(ocr.Email);
-                    mail.Subject = "User registration - Mobile OTP";
+                    mail.Subject = "Driver registration - Mobile OTP";
                     mail.IsBodyHtml = true;
 
                     string verifcodeMail = @"<table>
@@ -240,7 +234,7 @@ namespace Paysmart.Controllers
         }
 
         [HttpPost]
-        [Route("api/UserAccount/MOTPverifications")]
+        [Route("api/RegisterDriver/MOTPverifications")]
         public int MOTPverifications(UserAccount ocr)
         {
 
@@ -251,7 +245,7 @@ namespace Paysmart.Controllers
 
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = CommandType.StoredProcedure;
-            cmd.CommandText = "PSMOTPverifying";
+            cmd.CommandText = "PSDriversMOTPverifying";
 
             cmd.Connection = conn;
 
@@ -290,7 +284,7 @@ namespace Paysmart.Controllers
 
 
         [HttpPost]
-        [Route("api/UserAccount/EOTPVerification")]
+        [Route("api/RegisterDriver/EOTPVerification")]
 
         public int EOTPVerification(UserAccount ocr)
         {
@@ -303,7 +297,7 @@ namespace Paysmart.Controllers
 
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = CommandType.StoredProcedure;
-            cmd.CommandText = "PSEOTPverification";
+            cmd.CommandText = "PSDriversEOTPverification";
 
             cmd.Connection = conn;
 
@@ -347,46 +341,7 @@ namespace Paysmart.Controllers
 
 
         [HttpPost]
-        [Route("api/UserAccount/Addbalance")]
-        public DataTable Addbalance(balance ocr)
-        {
-
-
-            SqlConnection conn = new SqlConnection();
-
-            conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
-
-            SqlCommand cmd = new SqlCommand();
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.CommandText = "PSInsUpdAddbalance";
-
-            cmd.Connection = conn;
-
-            SqlParameter f = new SqlParameter("@flag", SqlDbType.VarChar);
-            f.Value = ocr.flag ;
-            cmd.Parameters.Add(f);
-
-            SqlParameter q1 = new SqlParameter("@Mobileno", SqlDbType.VarChar, 20);
-            q1.Value = ocr.mobileno;
-            cmd.Parameters.Add(q1);
-
-            SqlParameter e = new SqlParameter("@Amount", SqlDbType.Decimal);
-            e.Value = ocr.Amount;
-            cmd.Parameters.Add(e);
-
-
-            DataTable dt = new DataTable();
-            SqlDataAdapter da = new SqlDataAdapter(cmd);
-            da.Fill(dt);
-
-            return (dt);
-
-            //Verify Passwordotp
-
-        }
-
-        [HttpPost]
-        [Route("api/UserAccount/Passwordverification")]
+        [Route("api/RegisterDriver/Passwordverification")]
         public DataTable Passwordverification(UserAccount ocr)
         {
 
@@ -397,7 +352,7 @@ namespace Paysmart.Controllers
 
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = CommandType.StoredProcedure;
-            cmd.CommandText = "PSPasswordverification";
+            cmd.CommandText = "PSDriversPasswordreset";
 
             cmd.Connection = conn;
 
@@ -406,9 +361,19 @@ namespace Paysmart.Controllers
             q1.Value = ocr.Password;
             cmd.Parameters.Add(q1);
 
-            SqlParameter e = new SqlParameter("@Passwordotp", SqlDbType.VarChar, 10);
-            e.Value = ocr.Passwordotp;
+            SqlParameter p = new SqlParameter("@Passwordotp", SqlDbType.VarChar, 10);
+            p.Value = ocr.Passwordotp;
+            cmd.Parameters.Add(p);
+
+            SqlParameter e = new SqlParameter("@Email", SqlDbType.VarChar, 50);
+            e.Value = ocr.Email;
             cmd.Parameters.Add(e);
+
+
+
+            SqlParameter b1 = new SqlParameter("@Mobilenumber", SqlDbType.VarChar, 20);
+            b1.Value = ocr.Mobilenumber;
+            cmd.Parameters.Add(b1);
 
 
             DataTable dt = new DataTable();

@@ -14,9 +14,9 @@ namespace Paysmart.Controllers
         [HttpGet]
 
         [Route("api/BookingHistory/GetBookingHistory")]
-        public DataTable GetBookingHistory(string PhoneNo)
+        public DataTable GetBookingHistory(string PhoneNo ,string EmailId)
         {
-                DataTable dt = new DataTable();
+           DataTable dt = new DataTable();
 
             SqlConnection conn = new SqlConnection();
 
@@ -24,8 +24,9 @@ namespace Paysmart.Controllers
 
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = CommandType.StoredProcedure;
-            cmd.CommandText = "HVGetHistory";
+            cmd.CommandText = "HVGetBookingHistory";
             cmd.Parameters.Add("@PhoneNo", SqlDbType.VarChar, 50).Value = PhoneNo;
+            cmd.Parameters.Add("@EmailId", SqlDbType.VarChar, 50).Value = EmailId;
             cmd.Connection = conn;
             DataSet ds = new DataSet();
             SqlDataAdapter db = new SqlDataAdapter(cmd);
