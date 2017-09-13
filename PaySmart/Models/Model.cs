@@ -109,6 +109,11 @@ namespace Paysmart.Models
         public string Password { get; set; }
 
     }
+    public class DriverLogin
+    {
+        public string Mobilenumber { get; set; }
+        public string Password { get; set; }
+    }
 
     public class Tickets
     {
