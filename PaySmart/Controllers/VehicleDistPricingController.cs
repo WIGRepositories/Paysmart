@@ -7,93 +7,103 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using Paysmart.Models;
+using System.Configuration;
+using System.Web.Http.Tracing;
 
 namespace Paysmart.Controllers
 {
     public class VehicleDistPricingController : ApiController
     {
 
-        [HttpGet]
-        [Route("api/VehicleDistPricing/GetDistanceBasePricing")]
-        public DataTable GetDistanceBasePricing()
-        {
-            DataTable Tbl = new DataTable();
-
-
-            //connect to database
-            SqlConnection conn = new SqlConnection();
-            //connetionString="Data Source=ServerName;Initial Catalog=DatabaseName;User ID=UserName;Password=Password"
-            conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
-
-            SqlCommand cmd = new SqlCommand();
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.CommandText = "PSGetDistanceBasePricing";
-            cmd.Connection = conn;
-
-            SqlDataAdapter db = new SqlDataAdapter(cmd);
-            db.Fill(Tbl);
-
-
-
-            // int found = 0;
-            return Tbl;
-
-        }
-
         [HttpPost]
-        [Route("api/VehicleDistPricing/SaveVehicleDistPricing")]
-        public DataTable SaveVehicleDistPricing(VehicleDist v)
+        [Route("api/VehicleDistPricing/VehicleDistanceConfig")]
+        public DataTable VehicleDistanceConfig(VehicleDistancePriceConfiguration vdpc)
         {
+            DataTable dt = new DataTable();
+            LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
 
-            conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
+             try
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "TaxiPrice....");
+
+
+            conn.ConnectionString = ConfigurationManager.ConnectionStrings["btposdb"].ToString();
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = CommandType.StoredProcedure;
-            cmd.CommandText = "PSInsUpdDelDistanceBasePricing";
-
+            cmd.CommandText = "InsUpdDelVehicleDistancePrice";
             cmd.Connection = conn;
 
-            SqlParameter insupddelflag = new SqlParameter("@insupddelflag", SqlDbType.VarChar, 10);
-            insupddelflag.Value = v.insupddelflag;
-            cmd.Parameters.Add(insupddelflag);
+            SqlParameter vdpcSourceLoc = new SqlParameter("@SourceLoc", SqlDbType.VarChar, 200);
+            vdpcSourceLoc.Value = vdpc.SourceLoc;
+            cmd.Parameters.Add(vdpcSourceLoc);
 
-            SqlParameter q = new SqlParameter("@Id", SqlDbType.Int);
-            q.Value = v.Id;
-            cmd.Parameters.Add(q);
+            SqlParameter vdpcDestinationLoc = new SqlParameter("@DestinationLoc", SqlDbType.VarChar, 200);
+            vdpcDestinationLoc.Value = vdpc.DestinationLoc;
+            cmd.Parameters.Add(vdpcDestinationLoc);
 
-            SqlParameter q1 = new SqlParameter("@VehicleModelId", SqlDbType.Int);
-            q1.Value = v.VehicleModelId;
-            cmd.Parameters.Add(q1);
+            SqlParameter vdpcSourceLat = new SqlParameter("@SourceLat", SqlDbType.Float);
+            vdpcSourceLat.Value = vdpc.SourceLat;
+            cmd.Parameters.Add(vdpcSourceLat);
 
-            SqlParameter e = new SqlParameter("@Fromkm", SqlDbType.Int);
-            e.Value = v.FromKm;
-            cmd.Parameters.Add(e);
+            SqlParameter vdpcSourceLng = new SqlParameter("@SourceLng", SqlDbType.Float);
+            vdpcSourceLng.Value = vdpc.SourceLng;
+            cmd.Parameters.Add(vdpcSourceLng);
 
-            SqlParameter t = new SqlParameter("@ToKm", SqlDbType.Int);
-            t.Value = v.ToKm;
-            cmd.Parameters.Add(t);
+            SqlParameter vdpcDestinationLat = new SqlParameter("@DestinationLat", SqlDbType.Float);
+            vdpcDestinationLat.Value = vdpc.DestinationLat;
+            cmd.Parameters.Add(vdpcDestinationLat);
 
-            SqlParameter c1 = new SqlParameter("@Pricing", SqlDbType.Decimal);
-            c1.Value = v.Pricing;
-            cmd.Parameters.Add(c1);
+            SqlParameter vdpcDestinationLng = new SqlParameter("@DestinationLng", SqlDbType.Float);
+            vdpcDestinationLng.Value = vdpc.DestinationLng;
+            cmd.Parameters.Add(vdpcDestinationLng);
 
-            SqlParameter ft = new SqlParameter("@FromTime", SqlDbType.DateTime);
-            ft.Value = v.FromTime;
-            cmd.Parameters.Add(ft);
+            SqlParameter vdpcVehicleModelId = new SqlParameter("@VehicleModelId", SqlDbType.Int);
+            vdpcVehicleModelId.Value = vdpc.VehicleModelId;
+            cmd.Parameters.Add(vdpcVehicleModelId);
 
-            SqlParameter tf = new SqlParameter("@ToTime", SqlDbType.DateTime);
-            tf.Value = v.ToTime;
-            cmd.Parameters.Add(tf);
+            SqlParameter vdpcVehicleTypeId = new SqlParameter("@VehicleTypeId", SqlDbType.Int);
+            vdpcVehicleTypeId.Value = vdpc.VehicleTypeId;
+            cmd.Parameters.Add(vdpcVehicleTypeId);
 
-            DataTable dt = new DataTable();
+            SqlParameter vdpcPricingTypeId = new SqlParameter("@PricingTypeId", SqlDbType.Int);
+            vdpcPricingTypeId.Value = vdpc.PricingTypeId;
+            cmd.Parameters.Add(vdpcPricingTypeId);
+
+            SqlParameter vdpcUnitPrice = new SqlParameter("@UnitPrice", SqlDbType.Float);
+            vdpcUnitPrice.Value = vdpc.UnitPrice;
+            cmd.Parameters.Add(vdpcUnitPrice);
+
+            SqlParameter vdpcAmount = new SqlParameter("@Amount", SqlDbType.Float);
+            vdpcAmount.Value = vdpc.Amount;
+            cmd.Parameters.Add(vdpcAmount);
+
+            SqlParameter flag = new SqlParameter("@flag", SqlDbType.VarChar);
+            flag.Value = vdpc.flag;
+            cmd.Parameters.Add(flag);
+
+            SqlParameter src = new SqlParameter("@SrcId", SqlDbType.Int);
+            src.Value = vdpc.srcid;
+            cmd.Parameters.Add(src);
+
+            SqlParameter dest = new SqlParameter("@DestId", SqlDbType.Int);
+            dest.Value = vdpc.destid;
+            cmd.Parameters.Add(dest);
+
+            
             SqlDataAdapter da = new SqlDataAdapter(cmd);
             da.Fill(dt);
 
-            return (dt);
+            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "TaxiPrice successful....");
+            }
+             catch (Exception ex)
+             {
+                 traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "TaxiPrice...." + ex.Message.ToString());
 
+             }
 
-
+            return dt;
         }
     }
 }

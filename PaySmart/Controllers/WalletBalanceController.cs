@@ -72,7 +72,7 @@ namespace Paysmart.Controllers
                 conn.ConnectionString = ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
                 cmd.CommandType = CommandType.StoredProcedure;
-                cmd.CommandText = "PSInsUpdWalletBalance";
+                cmd.CommandText = "EWInsUpdWalletBalance";
                 cmd.Connection = conn;
 
                 SqlParameter f = new SqlParameter("@flag", SqlDbType.VarChar);

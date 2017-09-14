@@ -104,6 +104,8 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\allocatedriverController.cs" />
     <Compile Include="Controllers\AvailableSeatsController.cs" />
+    <Compile Include="Controllers\TaxiPriceController.cs" />
+    <Compile Include="Controllers\TaxiSrcDestController.cs" />
     <Compile Include="Controllers\WalletBalanceController.cs" />
     <Compile Include="Controllers\BookAVehicleController.cs" />
     <Compile Include="Controllers\BookedHistoryController.cs" />
