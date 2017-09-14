@@ -11,10 +11,10 @@ using Paysmart.Models;
 
 namespace Paysmart.Controllers
 {
-    public class BalanceController : ApiController
+    public class WalletBalanceController : ApiController
     {
         [HttpGet]
-        [Route("api/Balance/Getcurrentbalance")]
+        [Route("api/WalletBalance/Getcurrentbalance")]
 
         public DataTable Getcurrentbalance(string mobileno)
         {
@@ -37,56 +37,11 @@ namespace Paysmart.Controllers
             return dt;
 
         }
-        [HttpGet]
-        [Route("api/Balance/GetAddBalance")]
-
-        public DataTable GetAddBalance(string mobileno)
-        {
-            SqlConnection conn = new SqlConnection();
-
-            conn.ConnectionString = ConfigurationManager.ConnectionStrings["btposdb"].ToString();
-            SqlCommand cmd = new SqlCommand();
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.CommandText = "PSGetAddBalance";
-            cmd.Connection = conn;
-            SqlParameter cmpid = new SqlParameter("@Mobilenumber", SqlDbType.VarChar, 20);
-            cmpid.Value = mobileno;
-            cmd.Parameters.Add(cmpid);
 
 
-            DataTable dt = new DataTable();
-            SqlDataAdapter db = new SqlDataAdapter(cmd);
-            db.Fill(dt);
-
-            return dt;
-
-        }
-        [HttpGet]
-        [Route("api/Balance/GetTransferBalance")]
-
-        public DataTable GetTransferBalance(string mobileno)
-        {
-            SqlConnection conn = new SqlConnection();
-
-            conn.ConnectionString = ConfigurationManager.ConnectionStrings["btposdb"].ToString();
-            SqlCommand cmd = new SqlCommand();
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.CommandText = "PSGetTransferBalance";
-            cmd.Connection = conn;
-            SqlParameter cmpid = new SqlParameter("@Mobilenumber", SqlDbType.VarChar, 20);
-            cmpid.Value = mobileno;
-            cmd.Parameters.Add(cmpid);
-
-
-            DataTable dt = new DataTable();
-            SqlDataAdapter db = new SqlDataAdapter(cmd);
-            db.Fill(dt);
-
-            return dt;
-
-        }
+       
         [HttpPost]
-        [Route("api/Balance/WalletBalance")]
+        [Route("api/WalletBalance/WalletBalance")]
 
         public DataTable WalletBalance(Appusers A)
         {
@@ -94,12 +49,10 @@ namespace Paysmart.Controllers
             SqlCommand cmd = new SqlCommand();
             try
             {
-
-
                 conn.ConnectionString = ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
                 cmd.CommandType = CommandType.StoredProcedure;
-                cmd.CommandText = "PSInsUpdBalance";
+                cmd.CommandText = "PSInsUpdWalletBalance";
                 cmd.Connection = conn;
 
                 SqlParameter f = new SqlParameter("@flag", SqlDbType.VarChar);
@@ -123,6 +76,7 @@ namespace Paysmart.Controllers
             catch
             {
                 Exception ex;
+                
             }
             DataTable dt = new DataTable();
             SqlDataAdapter da = new SqlDataAdapter(cmd);

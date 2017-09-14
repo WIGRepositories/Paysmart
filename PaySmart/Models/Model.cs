@@ -700,7 +700,9 @@ namespace Paysmart.Models
 
         public object Details { get; set; }
 
-        public int TransactionId { get; set; }
+        public string TransactionId { get; set; }
+
+        public string TransactionMode { get; set; }
     }
 }
 
