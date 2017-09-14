@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Web.Http.Tracing;
 
 namespace Paysmart.Controllers
 {
@@ -14,9 +15,12 @@ namespace Paysmart.Controllers
         [HttpGet]
         public DataTable RetriveTicketDetails(string ticketNo, string emailid, string mobileno)
         {
-            DataTable dt = new DataTable();
-            //connect to database
+            LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
+            DataTable dt = new DataTable();
+            try
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "RetriveTicketDetails....");
             //connetionString="Data Source=ServerName;Initial Catalog=DatabaseName;User ID=UserName;Password=Password"
             conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
@@ -28,11 +32,22 @@ namespace Paysmart.Controllers
             cmd.Parameters.Add("@mobileno", SqlDbType.VarChar, 15).Value = (mobileno == null) ? "-1" : mobileno;
 
             cmd.Connection = conn;
-
-
             SqlDataAdapter db = new SqlDataAdapter(cmd);
             db.Fill(dt);
 
+            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "RetriveTicketDetails successful....");
+            }
+            catch (Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "RetriveTicketDetails...." + ex.Message.ToString());
+                throw ex;
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
+            }
             return dt;
         }
     }

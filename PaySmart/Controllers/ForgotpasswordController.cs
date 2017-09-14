@@ -8,6 +8,7 @@ using System.Net.Http;
 using System.Net.Mail;
 using System.Web.Http;
 using Paysmart.Models;
+using System.Web.Http.Tracing;
 namespace Paysmart.Controllers
 {
     public class ForgotpasswordController : ApiController
@@ -19,51 +20,56 @@ namespace Paysmart.Controllers
         {
 
             int Status = 0;
+
+            LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
 
-
-            conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
-
-            SqlCommand cmd = new SqlCommand();
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.CommandText = "PSInsUpdDelPasswordverification";
-
-            cmd.Connection = conn;
-
-            SqlParameter c = new SqlParameter("@Mobilenumber", SqlDbType.VarChar, 20);
-            c.Value = ocr.Mobilenumber;
-            cmd.Parameters.Add(c);
-
-            SqlParameter a = new SqlParameter("@Email", SqlDbType.VarChar, 50);
-            a.Value = ocr.Email;
-            cmd.Parameters.Add(a);
-
-            conn.Open();
-            object potpStr = cmd.ExecuteScalar();
-            conn.Close();
-
-            #region password otp
-            string potp = potpStr.ToString();
-            if (potp != null)
+            try
             {
-                try
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Forgotpassword....");
+
+                conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = "PSInsUpdDelPasswordverification";
+
+                cmd.Connection = conn;
+
+                SqlParameter c = new SqlParameter("@Mobilenumber", SqlDbType.VarChar, 20);
+                c.Value = ocr.Mobilenumber;
+                cmd.Parameters.Add(c);
+
+                SqlParameter a = new SqlParameter("@Email", SqlDbType.VarChar, 50);
+                a.Value = ocr.Email;
+                cmd.Parameters.Add(a);
+
+                conn.Open();
+                object potpStr = cmd.ExecuteScalar();
+                conn.Close();
+
+                #region password otp
+                string potp = potpStr.ToString();
+                if (potp != null)
                 {
-                    MailMessage mail = new MailMessage();
-                    string emailserver = System.Configuration.ConfigurationManager.AppSettings["emailserver"].ToString();
+                    try
+                    {
+                        MailMessage mail = new MailMessage();
+                        string emailserver = System.Configuration.ConfigurationManager.AppSettings["emailserver"].ToString();
 
-                    string username = System.Configuration.ConfigurationManager.AppSettings["username"].ToString();
-                    string pwd = System.Configuration.ConfigurationManager.AppSettings["password"].ToString();
-                    string fromaddress = System.Configuration.ConfigurationManager.AppSettings["fromaddress"].ToString();
-                    string port = System.Configuration.ConfigurationManager.AppSettings["port"].ToString();
+                        string username = System.Configuration.ConfigurationManager.AppSettings["username"].ToString();
+                        string pwd = System.Configuration.ConfigurationManager.AppSettings["password"].ToString();
+                        string fromaddress = System.Configuration.ConfigurationManager.AppSettings["fromaddress"].ToString();
+                        string port = System.Configuration.ConfigurationManager.AppSettings["port"].ToString();
 
-                    SmtpClient SmtpServer = new SmtpClient(emailserver);
+                        SmtpClient SmtpServer = new SmtpClient(emailserver);
 
-                    mail.From = new MailAddress(fromaddress);
-                    mail.To.Add(ocr.Email);
-                    mail.Subject = "User registration - Password OTP";
-                    mail.IsBodyHtml = true;
+                        mail.From = new MailAddress(fromaddress);
+                        mail.To.Add(ocr.Email);
+                        mail.Subject = "User registration - Password OTP";
+                        mail.IsBodyHtml = true;
 
-                    string verifcodeMail = @"<table>
+                        string verifcodeMail = @"<table>
                                                         <tr>
                                                             <td>
                                                                 <h2>Thank you for registering with PaySmart APP</h2>
@@ -94,30 +100,43 @@ namespace Paysmart.Controllers
                                                     </table>";
 
 
-                    mail.Body = verifcodeMail;
-                    //SmtpServer.Port = 465;
-                    //SmtpServer.Port = 587;
-                    SmtpServer.Port = Convert.ToInt32(port);
-                    SmtpServer.UseDefaultCredentials = false;
+                        mail.Body = verifcodeMail;
+                        //SmtpServer.Port = 465;
+                        //SmtpServer.Port = 587;
+                        SmtpServer.Port = Convert.ToInt32(port);
+                        SmtpServer.UseDefaultCredentials = false;
 
-                    SmtpServer.Credentials = new System.Net.NetworkCredential(username, pwd);
-                    SmtpServer.EnableSsl = true;
-                    //SmtpServer.TargetName = "STARTTLS/smtp.gmail.com";
-                    SmtpServer.Send(mail);
-                    Status = 1;
+                        SmtpServer.Credentials = new System.Net.NetworkCredential(username, pwd);
+                        SmtpServer.EnableSsl = true;
+                        //SmtpServer.TargetName = "STARTTLS/smtp.gmail.com";
+                        SmtpServer.Send(mail);
+                        Status = 1;
 
+                    }
+                    catch (Exception ex)
+                    {
+                        //throw ex;
+                    }
+                    finally
+                    {
+                        conn.Close();
+                    }
+                #endregion password otp
                 }
-                catch (Exception ex)
-                {
-                    //throw ex;
-                }
-                finally
-                {
-                    conn.Close();
-                }
-            #endregion password otp
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Forgotpassword successful....");
+
             }
-
+            catch (Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "Forgotpassword...." + ex.Message.ToString());
+                throw ex;
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
+            }
             return Status;
         }
     }

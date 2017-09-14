@@ -8,6 +8,7 @@ using System.Net.Http;
 using System.Net.Mail;
 using System.Web.Http;
 using Paysmart.Models;
+using System.Web.Http.Tracing;
 
 namespace Paysmart.Controllers
 {
@@ -19,7 +20,12 @@ namespace Paysmart.Controllers
         public int SaveBookingDetails(VehicleBooking b)
         {
             int Status = 0;
+            LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
+            DataTable dt = new DataTable();
+            try
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "SaveBookingDetails....");
 
             conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
@@ -156,14 +162,11 @@ namespace Paysmart.Controllers
             ce.Value = b.lng;
             cmd.Parameters.Add(ce);
 
-            
-            
-            DataTable dt = new DataTable();
             SqlDataAdapter da = new SqlDataAdapter(cmd);
             da.Fill(dt);
             
     
-    #region Mobile OTP
+            #region Mobile OTP
             string motp = dt.Rows[0]["BNo"].ToString();
                 if (motp != null)
                 {
@@ -235,7 +238,21 @@ namespace Paysmart.Controllers
                     }
                 }
             #endregion Mobile OTP
-            
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "SaveBookingDetails successful....");
+
+            }
+            catch (Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "SaveBookingDetails...." + ex.Message.ToString());
+                throw ex;
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
+            }
                 return Status;
 
             

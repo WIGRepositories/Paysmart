@@ -19,36 +19,48 @@ namespace Paysmart.Controllers
         {
             DataTable Tbl = new DataTable();
 
-           
-
-
-            //connect to database
+            LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
-            //connetionString="Data Source=ServerName;Initial Catalog=DatabaseName;User ID=UserName;Password=Password"
-            conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
-            SqlCommand cmd = new SqlCommand();
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.CommandText = "PSValidatecred";
+            try
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "ValidateCredentials....");
+                //connetionString="Data Source=ServerName;Initial Catalog=DatabaseName;User ID=UserName;Password=Password"
+                conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
-            cmd.Connection = conn;
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = "PSValidatecred";
 
-            SqlParameter lUserName = new SqlParameter("@Mobilenumber", SqlDbType.VarChar, 20);
-            lUserName.Value = u.Mobilenumber;
-            lUserName.Direction = ParameterDirection.Input;
-            cmd.Parameters.Add(lUserName);
+                cmd.Connection = conn;
 
-
-            SqlParameter lPassword = new SqlParameter("@Password", SqlDbType.VarChar, 50);
-            lPassword.Value = u.Password;
-            lPassword.Direction = ParameterDirection.Input;
-            cmd.Parameters.Add(lPassword);
-            //System.Threading.Thread.Sleep(10000);
-            SqlDataAdapter da = new SqlDataAdapter(cmd);
-            da.Fill(Tbl);
+                SqlParameter lUserName = new SqlParameter("@Mobilenumber", SqlDbType.VarChar, 20);
+                lUserName.Value = u.Mobilenumber;
+                lUserName.Direction = ParameterDirection.Input;
+                cmd.Parameters.Add(lUserName);
 
 
+                SqlParameter lPassword = new SqlParameter("@Password", SqlDbType.VarChar, 50);
+                lPassword.Value = u.Password;
+                lPassword.Direction = ParameterDirection.Input;
+                cmd.Parameters.Add(lPassword);
+                //System.Threading.Thread.Sleep(10000);
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(Tbl);
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "ValidateCredentials successful....");
 
+            }
+            catch (Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "ValidateCredentials...." + ex.Message.ToString());
+                throw ex;
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
+            }
             return Tbl;
 
         }

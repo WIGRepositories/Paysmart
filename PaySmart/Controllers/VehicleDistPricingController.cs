@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using Paysmart.Models;
+using System.Web.Http.Tracing;
 
 namespace Paysmart.Controllers
 {
@@ -18,10 +19,12 @@ namespace Paysmart.Controllers
         public DataTable GetDistanceBasePricing()
         {
             DataTable Tbl = new DataTable();
-
-
-            //connect to database
+            LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
+            
+            try
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetDistanceBasePricing....");
             //connetionString="Data Source=ServerName;Initial Catalog=DatabaseName;User ID=UserName;Password=Password"
             conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
@@ -32,9 +35,19 @@ namespace Paysmart.Controllers
 
             SqlDataAdapter db = new SqlDataAdapter(cmd);
             db.Fill(Tbl);
-
-
-
+            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetDistanceBasePricing successful....");
+            }
+            catch (Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "GetDistanceBasePricing...." + ex.Message.ToString());
+                throw ex;
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
+            }
             // int found = 0;
             return Tbl;
 
@@ -44,7 +57,12 @@ namespace Paysmart.Controllers
         [Route("api/VehicleDistPricing/SaveVehicleDistPricing")]
         public DataTable SaveVehicleDistPricing(VehicleDist v)
         {
+            LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
+            DataTable dt = new DataTable();
+            try
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "SaveVehicleDistPricing....");
 
             conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
@@ -86,12 +104,22 @@ namespace Paysmart.Controllers
             tf.Value = v.ToTime;
             cmd.Parameters.Add(tf);
 
-            DataTable dt = new DataTable();
             SqlDataAdapter da = new SqlDataAdapter(cmd);
             da.Fill(dt);
-
+            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "SaveVehicleDistPricing successful....");
+            }
+            catch (Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "SaveVehicleDistPricing...." + ex.Message.ToString());
+                throw ex;
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
+            }
             return (dt);
-
 
 
         }

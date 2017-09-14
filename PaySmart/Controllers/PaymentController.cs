@@ -8,6 +8,7 @@ using System.Net.Http;
 using System.Web.Http;
 using Paysmart.Models;
 using System.Configuration;
+using System.Web.Http.Tracing;
 
 namespace Paysmart.Controllers
 {
@@ -18,20 +19,38 @@ namespace Paysmart.Controllers
         [Route("api/Payment/Getpayment")]
         public DataTable Getpayment()
         {
+            DataTable dt = new DataTable();
+            LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
 
-            conn.ConnectionString = ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+            try
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Getpayment....");
 
-            SqlCommand cmd = new SqlCommand();
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.CommandText = "PSGetPayments";
+                conn.ConnectionString = ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
-            cmd.Connection = conn;
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = "PSGetPayments";
 
-            DataTable dt = new DataTable();
-            SqlDataAdapter db = new SqlDataAdapter(cmd);
-            db.Fill(dt);
+                cmd.Connection = conn;
 
+                SqlDataAdapter db = new SqlDataAdapter(cmd);
+                db.Fill(dt);
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Getpayment successful....");
+
+            }
+            catch (Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "Getpayment...." + ex.Message.ToString());
+                throw ex;
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
+            }
             return dt;
 
         }
@@ -40,41 +59,58 @@ namespace Paysmart.Controllers
         [Route("api/Payment/Pay")]
         public DataTable Pay(paymentdetails s)
         {
+            DataTable dt = new DataTable();
+            LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
 
-            conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+            try
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Pay....");
 
-            SqlCommand cmd = new SqlCommand();
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.CommandText = "PSInsUpdPayments";
+                conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
-            cmd.Connection = conn;
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = "PSInsUpdPayments";
+
+                cmd.Connection = conn;
 
 
-            SqlParameter T = new SqlParameter("@flag", SqlDbType.VarChar);
-            T.Value = s.flag;
-            cmd.Parameters.Add(T);
+                SqlParameter T = new SqlParameter("@flag", SqlDbType.VarChar);
+                T.Value = s.flag;
+                cmd.Parameters.Add(T);
 
-            SqlParameter q = new SqlParameter("@ServiceType", SqlDbType.VarChar, 50);
-            q.Value = s.servicetype;
-            cmd.Parameters.Add(q);
-            
-            SqlParameter e = new SqlParameter("@Status", SqlDbType.VarChar,50);
-            e.Value = s.status;
-            cmd.Parameters.Add(e);
+                SqlParameter q = new SqlParameter("@ServiceType", SqlDbType.VarChar, 50);
+                q.Value = s.servicetype;
+                cmd.Parameters.Add(q);
 
-            SqlParameter q1 = new SqlParameter("@Amount", SqlDbType.Decimal);
-            q1.Value = s.Amount;
-            cmd.Parameters.Add(q1);
+                SqlParameter e = new SqlParameter("@Status", SqlDbType.VarChar, 50);
+                e.Value = s.status;
+                cmd.Parameters.Add(e);
 
-                      
-            DataTable dt = new DataTable();
-            SqlDataAdapter da = new SqlDataAdapter(cmd);
-            da.Fill(dt);
+                SqlParameter q1 = new SqlParameter("@Amount", SqlDbType.Decimal);
+                q1.Value = s.Amount;
+                cmd.Parameters.Add(q1);
 
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(dt);
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Pay successful....");
+
+            }
+            catch (Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "Pay...." + ex.Message.ToString());
+                throw ex;
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
+            }
             return (dt);
 
-            
+
         }
     }
 }

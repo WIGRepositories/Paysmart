@@ -8,6 +8,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using Paysmart.Models;
+using System.Web.Http.Tracing;
 
 namespace Paysmart.Controllers
 {
@@ -19,32 +20,49 @@ namespace Paysmart.Controllers
         public int TripRating(VehicleBooking b)
         {
             int status = 1;
+            LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
 
-            conn.ConnectionString = ConfigurationManager.ConnectionStrings["btposdb"].ToString();
-            SqlCommand cmd = new SqlCommand();
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.CommandText = "PSTrackVehicleHistory";
+            try
+            {
+                traceWriter.Trace(Request, "0", System.Diagnostics.TraceLevel.Info, "{0}", "TripRating....");
 
-            cmd.Connection = conn;
-            conn.Open();
+                conn.ConnectionString = ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = "PSTrackVehicleHistory";
 
-            SqlParameter bb = new SqlParameter("@BookingId", SqlDbType.VarChar,50);
-            bb.Value = b.BookingId;
-            cmd.Parameters.Add(bb);
+                cmd.Connection = conn;
+                conn.Open();
 
-            SqlParameter sr = new SqlParameter("@Rating", SqlDbType.Int);
-            sr.Value = b.Rating;
-            cmd.Parameters.Add(sr);
+                SqlParameter bb = new SqlParameter("@BookingId", SqlDbType.VarChar, 50);
+                bb.Value = b.BookingId;
+                cmd.Parameters.Add(bb);
 
-            SqlParameter sb = new SqlParameter("@RatedBy", SqlDbType.VarChar,50);
-            sb.Value = b.RatedBy;
-            cmd.Parameters.Add(sb);
+                SqlParameter sr = new SqlParameter("@Rating", SqlDbType.Int);
+                sr.Value = b.Rating;
+                cmd.Parameters.Add(sr);
 
-            SqlParameter sc = new SqlParameter("@Comments", SqlDbType.VarChar,50);
-            sc.Value = b.Comments;
-            cmd.Parameters.Add(sc);
+                SqlParameter sb = new SqlParameter("@RatedBy", SqlDbType.VarChar, 50);
+                sb.Value = b.RatedBy;
+                cmd.Parameters.Add(sb);
 
+                SqlParameter sc = new SqlParameter("@Comments", SqlDbType.VarChar, 50);
+                sc.Value = b.Comments;
+                cmd.Parameters.Add(sc);
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "TripRating successful....");
+            }
+            catch (Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "TripRating...." + ex.Message.ToString());
+                throw ex;
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
+            }
 
             return status;
         }

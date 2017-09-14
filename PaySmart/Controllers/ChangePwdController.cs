@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using Paysmart.Models;
+using System.Web.Http.Tracing;
 
 namespace Paysmart.Controllers
 {
@@ -17,7 +18,13 @@ namespace Paysmart.Controllers
         [Route("api/ChangePwd/change")]
         public int change(UserAccount U)
         {
+            int status = 0;
+            LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
+            DataTable dt = new DataTable();
+            try
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "change....");
 
             conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
@@ -26,8 +33,6 @@ namespace Paysmart.Controllers
             cmd.CommandText = "PSChangePwd";
 
             cmd.Connection = conn;
-
-           
 
             SqlParameter b1 = new SqlParameter("@Mobilenumber", SqlDbType.VarChar, 20);
             b1.Value = U.Mobilenumber;
@@ -46,13 +51,23 @@ namespace Paysmart.Controllers
             m1.Value = U.NewPassword;
             cmd.Parameters.Add(m1);
 
-
-
-
             conn.Open();
-            int status = cmd.ExecuteNonQuery();
+             status = cmd.ExecuteNonQuery();
 
             conn.Close();
+            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "change successful....");
+            }
+            catch (Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "change...." + ex.Message.ToString());
+                throw ex;
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
+            }
             return status;
 
             //Verify Passwordotp

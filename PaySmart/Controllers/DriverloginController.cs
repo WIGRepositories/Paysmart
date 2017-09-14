@@ -8,7 +8,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using Paysmart.Models;
-using System.Diagnostics;
+using System.Web.Http.Tracing;
 
 namespace Paysmart.Controllers
 {
@@ -19,7 +19,14 @@ namespace Paysmart.Controllers
         [Route("api/Driverlogin/Getdrivers")]
         public DataTable Getdrivers(string DriverNo)
         {
+           
+            LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
+            DataTable dt = new DataTable();
+            try
+            {
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Getdrivers....");
 
             conn.ConnectionString = ConfigurationManager.ConnectionStrings["btposdb"].ToString();
             SqlCommand cmd = new SqlCommand();
@@ -28,11 +35,23 @@ namespace Paysmart.Controllers
             cmd.Connection = conn;
             cmd.Parameters.Add("@DriverNo", SqlDbType.VarChar,20).Value = DriverNo;
 
-
-            DataTable dt = new DataTable();
             SqlDataAdapter db = new SqlDataAdapter(cmd);
             db.Fill(dt);
 
+            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Getdrivers successful....");
+
+            }
+            catch (Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "Getdrivers...." + ex.Message.ToString());
+                throw ex;
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
+            }
             return dt;
 
         }
@@ -40,10 +59,15 @@ namespace Paysmart.Controllers
 
         [HttpPost]
         [Route("api/Driverlogin/Driverlogin")]
-
         public DataTable Driverinn(drivers dl)
         {
+            LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
+            DataTable dt = new DataTable();
+            try
+            {
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Driverlogin....");
 
             conn.ConnectionString = ConfigurationManager.ConnectionStrings["btposdb"].ToString();
             SqlCommand cmd = new SqlCommand();
@@ -73,22 +97,37 @@ namespace Paysmart.Controllers
             j.Value = dl.LoginLongitude;
             cmd.Parameters.Add(j);
 
-            DataTable dt = new DataTable();
             SqlDataAdapter da = new SqlDataAdapter(cmd);
             da.Fill(dt);
 
+            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Driverlogin successful....");
+
+            }
+            catch (Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "Driverlogin...." + ex.Message.ToString());
+                throw ex;
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
+            }
             return dt;
         }
-
-
 
 
         [HttpPost]
         public DataTable ValidateDriverCredentials(DriverLogin b)
         {
-           
-            //connect to database
+           LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
+            DataTable dt = new DataTable();
+            try
+            {
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "ValidateDriverCredentials....");
            
                 //connetionString="Data Source=ServerName;Initial Catalog=DatabaseName;User ID=UserName;Password=Password"
                 conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
@@ -97,8 +136,7 @@ namespace Paysmart.Controllers
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.CommandText = "drivercredentials";
                 cmd.Connection = conn;
-                conn.Open();
-              
+                            
                 SqlParameter ss = new SqlParameter();
                 ss.ParameterName = "@DriverNo";
                 ss.SqlDbType = SqlDbType.VarChar;
@@ -110,12 +148,23 @@ namespace Paysmart.Controllers
                 dd.Value = b.Password;
                 cmd.Parameters.Add(dd);
                
-
-                
-                DataTable dt = new DataTable();
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
                 da.Fill(dt);
 
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "ValidateDriverCredentials successful....");
+
+            }
+            catch (Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "ValidateDriverCredentials...." + ex.Message.ToString());
+                throw ex;
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
+            }
                 return dt;
             }
         

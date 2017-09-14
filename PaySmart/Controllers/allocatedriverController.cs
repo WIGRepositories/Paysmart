@@ -8,6 +8,7 @@ using System.Net;
 using System.Net.Http; 
 using System.Web.Http;
 using Paysmart.Models;
+using System.Web.Http.Tracing;
 
 
 namespace Paysmart.Controllers
@@ -19,7 +20,12 @@ namespace Paysmart.Controllers
         [Route("api/allocatedriver/Getallocatedriver")]
         public DataTable Getallocatedriver(int VID)
         {
+            LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
+            DataTable dt = new DataTable();
+            try
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Getallocatedriver....");
 
             conn.ConnectionString = ConfigurationManager.ConnectionStrings["btposdb"].ToString();
             SqlCommand cmd = new SqlCommand();
@@ -28,11 +34,23 @@ namespace Paysmart.Controllers
             cmd.Connection = conn;
             cmd.Parameters.Add("@VID", SqlDbType.Int).Value = VID;
 
-
-            DataTable dt = new DataTable();
             SqlDataAdapter db = new SqlDataAdapter(cmd);
             db.Fill(dt);
 
+            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Getallocatedriver successful....");
+
+            }
+            catch (Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "Getallocatedriver...." + ex.Message.ToString());
+                throw ex;
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
+            }
             return dt;
 
         }
@@ -44,12 +62,14 @@ namespace Paysmart.Controllers
 
         public DataTable drivers(allocatedriver A)
         {
-            SqlConnection conn = new SqlConnection();
+          
             SqlCommand cmd = new SqlCommand();
+            LogTraceWriter traceWriter = new LogTraceWriter();
+            SqlConnection conn = new SqlConnection();
+            DataTable dt = new DataTable();
             try
             {
-
-
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "AllocateDriver....");
                 conn.ConnectionString = ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -166,15 +186,21 @@ namespace Paysmart.Controllers
                 dg.Value = A.VehicleGroupId;
                 cmd.Parameters.Add(dg);
 
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(dt);
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Getallocatedriver successful....");
             }
-            catch
+            catch (Exception ex)
             {
-                Exception ex;
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "AllocateDriver...." + ex.Message.ToString());
+                throw ex;
             }
-            DataTable dt = new DataTable();
-            SqlDataAdapter da = new SqlDataAdapter(cmd);
-            da.Fill(dt);
-
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
+            }
             return dt;
         }
         public int Max { get; set; }

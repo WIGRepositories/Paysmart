@@ -24,10 +24,7 @@ namespace Paysmart.Controllers
             DataTable dt = new DataTable();
             try
             {
-                
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "SaveBookingDetails....");
-
-               
 
                 conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
@@ -261,7 +258,13 @@ namespace Paysmart.Controllers
             }
             catch (Exception ex) {
                 traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "SaveBookingDetails...."+ex.Message.ToString());
-                
+                throw ex;
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
             }
             return dt;
         }
@@ -511,7 +514,13 @@ namespace Paysmart.Controllers
             catch (Exception ex)
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "AdvanceBookingDetails...." + ex.Message.ToString());
-
+                throw ex;
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
             }
             return dt;
         }
@@ -556,7 +565,13 @@ namespace Paysmart.Controllers
             }
             catch (Exception ex) {
                 traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "BookingStatus...." + ex.Message.ToString());
-                
+                throw ex;
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
             }
             return dt;
         }
@@ -598,7 +613,13 @@ namespace Paysmart.Controllers
             catch (Exception ex)
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "CalculatePrice...." + ex.Message.ToString());
-
+                throw ex;
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
             }
             return dt;
         }
@@ -636,7 +657,13 @@ namespace Paysmart.Controllers
             catch (Exception ex)
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "AvailableVehicles...." + ex.Message.ToString());
-
+                throw ex;
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
             }
             return dt;
         }
@@ -672,7 +699,13 @@ namespace Paysmart.Controllers
             catch (Exception ex)
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "VehiclePosition...." + ex.Message.ToString());
-
+                throw ex;
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
             }
             return dt;
         }
@@ -712,7 +745,13 @@ namespace Paysmart.Controllers
             catch (Exception ex)
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "RateTheRide...." + ex.Message.ToString());
-
+                throw ex;
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
             }
             return dt;
         }
@@ -747,7 +786,13 @@ namespace Paysmart.Controllers
             catch (Exception ex)
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "RideDetails...." + ex.Message.ToString());
-
+                throw ex;
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
             }
             return ds;
         }
@@ -782,7 +827,13 @@ namespace Paysmart.Controllers
             catch (Exception ex)
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "RidesList...." + ex.Message.ToString());
-
+                throw ex;
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
             }
             return dt;
         }
@@ -820,7 +871,13 @@ namespace Paysmart.Controllers
             catch (Exception ex)
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "UpdateBookingStatus...." + ex.Message.ToString());
-
+                throw ex;
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
             }
             return dt;
         }
@@ -844,9 +901,7 @@ namespace Paysmart.Controllers
             cmd.CommandText = "PSAcceptRejectBooking";
 
             cmd.Connection = conn;
-            conn.Open();
-
-
+            
             SqlParameter bb = new SqlParameter("@BookingId", SqlDbType.VarChar, 50);
             bb.Value = b.BookingId;
             cmd.Parameters.Add(bb);
@@ -866,7 +921,7 @@ namespace Paysmart.Controllers
             SqlParameter c = new SqlParameter("@comment", SqlDbType.VarChar, 150);
             c.Value = b.Reasons;
             cmd.Parameters.Add(c);
-
+            
             SqlDataAdapter da = new SqlDataAdapter(cmd);
            
             da.Fill(dt);
@@ -877,7 +932,13 @@ namespace Paysmart.Controllers
             catch (Exception ex)
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "AcceptRejectBooking...." + ex.Message.ToString());
-
+                throw ex;
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
             }
             return dt;
 
@@ -931,20 +992,25 @@ namespace Paysmart.Controllers
                     }
                     return Convert.ToInt32(statusres);
                 }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            //Verify mobile otp
-
-            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "StartTrip successful....");
-
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "StartTrip successful....");
             }
             catch (Exception ex)
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "StartTrip...." + ex.Message.ToString());
-
+                throw ex;
+            }
+            //Verify mobile otp
+            }
+            catch (Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "StartTrip...." + ex.Message.ToString());
+                throw ex;
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
             }
 
             return status;
@@ -995,20 +1061,28 @@ namespace Paysmart.Controllers
                     }
                     return Convert.ToInt32(statusres);
                 }
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "EndTrip successful....");
             }
             catch (Exception ex)
             {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "EndTrip...." + ex.Message.ToString());
                 throw ex;
             }
             //Verify mobile otp
 
-            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "EndTrip successful....");
+            
 
             }
             catch (Exception ex)
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "EndTrip...." + ex.Message.ToString());
-
+                throw ex;
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
             }
             return status;
 
@@ -1057,20 +1131,25 @@ namespace Paysmart.Controllers
                     }
                     return Convert.ToInt32(statusres);
                 }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            //Verify mobile otp
-
-            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "ProcessPayment successful....");
-
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "ProcessPayment successful....");
             }
             catch (Exception ex)
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "ProcessPayment...." + ex.Message.ToString());
-
+                throw ex;
+            }
+            //Verify mobile otp
+            }
+            catch (Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "ProcessPayment...." + ex.Message.ToString());
+                throw ex;
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
             }
             return status;
 
@@ -1113,7 +1192,13 @@ namespace Paysmart.Controllers
             catch (Exception ex)
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "DriverRatingToRide...." + ex.Message.ToString());
-
+                throw ex;
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
             }
             return dt;
         }

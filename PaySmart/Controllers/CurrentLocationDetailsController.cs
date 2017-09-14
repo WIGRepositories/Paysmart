@@ -8,6 +8,7 @@ using System.Net.Http;
 using System.Web.Http;
 using Paysmart.Models;
 using System.Data;
+using System.Web.Http.Tracing;
 
 namespace Paysmart.Controllers
 {
@@ -17,54 +18,74 @@ namespace Paysmart.Controllers
 
         public int GetCurrentLocationDetails(VehicleBooking b)
         {
-         int status = 1;
+            int status = 1;
+            LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
-
-            conn.ConnectionString = ConfigurationManager.ConnectionStrings["btposdb"].ToString();
-            SqlCommand cmd = new SqlCommand();
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.CommandText = "PSGetCurrentLocationDetails";
-
-            cmd.Connection = conn;
-            conn.Open();
-
-            SqlParameter MobileNumber = new SqlParameter("@Mobilenumber", SqlDbType.VarChar,50);
-            MobileNumber.Value = b.PMobNo;
-            cmd.Parameters.Add(MobileNumber);
-
-            SqlParameter Lat = new SqlParameter("@Latitude", SqlDbType.Float);
-            Lat.Value = b.latitude;
-            cmd.Parameters.Add(Lat);
-
-            SqlParameter Lng = new SqlParameter("@Longitude", SqlDbType.Float);
-            Lng.Value = b.longitude;
-            cmd.Parameters.Add(Lng);
-
-            SqlParameter vg = new SqlParameter("@VechicleGroupId", SqlDbType.Float);
-            vg.Value = b.VehicleGroupId;
-            cmd.Parameters.Add(vg);
+          
             try
             {
-                //conn.Open();
-                object userstat = cmd.ExecuteScalar();
-                conn.Close();
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetCurrentLocationDetails....");
 
-                if (userstat != null)
+                conn.ConnectionString = ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = "PSGetCurrentLocationDetails";
+
+                cmd.Connection = conn;
+                
+
+                SqlParameter MobileNumber = new SqlParameter("@Mobilenumber", SqlDbType.VarChar, 50);
+                MobileNumber.Value = b.PMobNo;
+                cmd.Parameters.Add(MobileNumber);
+
+                SqlParameter Lat = new SqlParameter("@Latitude", SqlDbType.Float);
+                Lat.Value = b.latitude;
+                cmd.Parameters.Add(Lat);
+
+                SqlParameter Lng = new SqlParameter("@Longitude", SqlDbType.Float);
+                Lng.Value = b.longitude;
+                cmd.Parameters.Add(Lng);
+
+                SqlParameter vg = new SqlParameter("@VechicleGroupId", SqlDbType.Float);
+                vg.Value = b.VehicleGroupId;
+                cmd.Parameters.Add(vg);
+
+                try
                 {
-                    if (conn.State == ConnectionState.Open)
+                    conn.Open();
+                    object userstat = cmd.ExecuteScalar();
+                    conn.Close();
+
+                    if (userstat != null)
                     {
-                        conn.Close();
+                        if (conn.State == ConnectionState.Open)
+                        {
+                            conn.Close();
+                        }
+                        return Convert.ToInt32(userstat);
                     }
-                    return Convert.ToInt32(userstat);
+
+                    traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetCurrentLocationDetails successful....");
                 }
+                catch (Exception ex)
+                {
+                    traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "GetCurrentLocationDetails...." + ex.Message.ToString());
+                    throw ex;
+                }
+
 
             }
             catch (Exception ex)
             {
-
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "GetCurrentLocationDetails...." + ex.Message.ToString());
                 throw ex;
             }
-
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
+            }
             return status;
             //return (dt);
         }

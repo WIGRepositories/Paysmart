@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using Paysmart.Models;
+using System.Web.Http.Tracing;
 
 namespace Paysmart.Controllers
 {
@@ -19,22 +20,36 @@ namespace Paysmart.Controllers
         {
             DataTable Tbl = new DataTable();
 
-
-            //connect to database
+            LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
-            //connetionString="Data Source=ServerName;Initial Catalog=DatabaseName;User ID=UserName;Password=Password"
-            conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
-            SqlCommand cmd = new SqlCommand();
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.CommandText = "PSGetfaqs";
-            cmd.Connection = conn;
+            try
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Getfaqs....");
+                //connetionString="Data Source=ServerName;Initial Catalog=DatabaseName;User ID=UserName;Password=Password"
+                conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
-            SqlDataAdapter db = new SqlDataAdapter(cmd);
-            db.Fill(Tbl);
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = "PSGetfaqs";
+                cmd.Connection = conn;
 
+                SqlDataAdapter db = new SqlDataAdapter(cmd);
+                db.Fill(Tbl);
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Getfaqs successful....");
 
-
+            }
+            catch (Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "Getfaqs...." + ex.Message.ToString());
+                throw ex;
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
+            }
             // int found = 0;
             return Tbl;
 
@@ -44,52 +59,69 @@ namespace Paysmart.Controllers
         [Route("api/Faqs/faqsdetails")]
         public DataTable faqsdetails(faqs f)
         {
+            DataTable dt = new DataTable();
+            LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
 
-            conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+            try
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "faqsdetails....");
 
-            SqlCommand cmd = new SqlCommand();
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.CommandText = "PSInsUpdFaqs";
+                conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
-            cmd.Connection = conn;
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = "PSInsUpdFaqs";
 
-
-            SqlParameter q = new SqlParameter("@Id", SqlDbType.Int);
-            q.Value = f.Id;
-            cmd.Parameters.Add(q);
-
-            SqlParameter q1 = new SqlParameter("@Question", SqlDbType.VarChar, 500);
-            q1.Value = f.Question;
-            cmd.Parameters.Add(q1);
-
-            SqlParameter e = new SqlParameter("@Answer", SqlDbType.VarChar, 500);
-            e.Value = f.Answer;
-            cmd.Parameters.Add(e);
-
-            SqlParameter t = new SqlParameter("@Catid", SqlDbType.Int);
-            t.Value = f.Catid;
-            cmd.Parameters.Add(t);
-
-            SqlParameter c = new SqlParameter("@CreatedOn", SqlDbType.Date);
-            c.Value = f.CreatedOn;
-            cmd.Parameters.Add(c);
-
-            SqlParameter b = new SqlParameter("@Createdby", SqlDbType.Int);
-            b.Value = f.Createdby;
-            cmd.Parameters.Add(b);     
-
-            
-
-            SqlParameter f1 = new SqlParameter("@flag", SqlDbType.VarChar);
-            f1.Value = f.flag;
-            cmd.Parameters.Add(f1);
+                cmd.Connection = conn;
 
 
-            DataTable dt = new DataTable();
-            SqlDataAdapter da = new SqlDataAdapter(cmd);
-            da.Fill(dt);
+                SqlParameter q = new SqlParameter("@Id", SqlDbType.Int);
+                q.Value = f.Id;
+                cmd.Parameters.Add(q);
 
+                SqlParameter q1 = new SqlParameter("@Question", SqlDbType.VarChar, 500);
+                q1.Value = f.Question;
+                cmd.Parameters.Add(q1);
+
+                SqlParameter e = new SqlParameter("@Answer", SqlDbType.VarChar, 500);
+                e.Value = f.Answer;
+                cmd.Parameters.Add(e);
+
+                SqlParameter t = new SqlParameter("@Catid", SqlDbType.Int);
+                t.Value = f.Catid;
+                cmd.Parameters.Add(t);
+
+                SqlParameter c = new SqlParameter("@CreatedOn", SqlDbType.Date);
+                c.Value = f.CreatedOn;
+                cmd.Parameters.Add(c);
+
+                SqlParameter b = new SqlParameter("@Createdby", SqlDbType.Int);
+                b.Value = f.Createdby;
+                cmd.Parameters.Add(b);
+
+
+
+                SqlParameter f1 = new SqlParameter("@flag", SqlDbType.VarChar);
+                f1.Value = f.flag;
+                cmd.Parameters.Add(f1);
+
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(dt);
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "faqsdetails successful....");
+
+            }
+            catch (Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "faqsdetails...." + ex.Message.ToString());
+                throw ex;
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
+            }
             return (dt);
 
             //Verify Passwordotp

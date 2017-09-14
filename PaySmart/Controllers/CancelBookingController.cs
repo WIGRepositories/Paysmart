@@ -35,12 +35,12 @@ namespace Paysmart.Controllers
             n.Value = c.BookingStatus;
             cmd.Parameters.Add(n);
 
-            SqlParameter r = new SqlParameter("@CancelReason", SqlDbType.VarChar,255);
+            SqlParameter r = new SqlParameter("@CancelReason", SqlDbType.VarChar, 255);
             r.Value = c.CancelReason;
             cmd.Parameters.Add(r);
 
 
-            SqlParameter a = new SqlParameter("@CancelBy", SqlDbType.VarChar,255);
+            SqlParameter a = new SqlParameter("@CancelBy", SqlDbType.VarChar, 255);
             a.Value = c.CancelBy;
             cmd.Parameters.Add(a);
 
@@ -55,13 +55,13 @@ namespace Paysmart.Controllers
         }
 
         [Route("api/CancelBooking/BookingExpiry")]
-        public int BookingExpiry(VehicleBooking vb) 
+        public int BookingExpiry(VehicleBooking vb)
         {
             int status = 0;
             SqlConnection conn = new SqlConnection();
 
             try
-            {               
+            {
 
                 conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
@@ -69,7 +69,7 @@ namespace Paysmart.Controllers
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.CommandText = "HVInsUpdcancelbooking";
 
-                SqlParameter i = new SqlParameter("@BNo", SqlDbType.VarChar,20);
+                SqlParameter i = new SqlParameter("@BNo", SqlDbType.VarChar, 20);
                 i.Value = vb.BNo;
                 cmd.Parameters.Add(i);
 
@@ -96,11 +96,19 @@ namespace Paysmart.Controllers
                 }
                 return status;
             }
-            catch (Exception ex) {
-                if (conn.State == ConnectionState.Open) {
+            catch (Exception ex)
+            {
+                if (conn.State == ConnectionState.Open)
+                {
                     conn.Close();
                 }
                 return status;
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
             }
         }
 

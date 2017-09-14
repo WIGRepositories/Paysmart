@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using Paysmart.Models;
+using System.Web.Http.Tracing;
 namespace Paysmart.Controllers
 {
     public class ResetPwdController : ApiController
@@ -16,39 +17,56 @@ namespace Paysmart.Controllers
         [Route("api/ResetPwd/reset")]
         public int reset(UserAccount U)
         {
+            int status = 0;
+            LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
 
-            conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+            try
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "reset....");
 
-            SqlCommand cmd = new SqlCommand();
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.CommandText = "PSPasswordreset";
+                conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
-            cmd.Connection = conn;
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = "PSPasswordreset";
 
-            SqlParameter b = new SqlParameter("@Passwordotp", SqlDbType.VarChar, 10);
-            b.Value = U.Passwordotp;
-            cmd.Parameters.Add(b);
+                cmd.Connection = conn;
 
-            SqlParameter b1 = new SqlParameter("@Mobilenumber", SqlDbType.VarChar, 20);
-            b1.Value = U.Mobilenumber;
-            cmd.Parameters.Add(b1);
+                SqlParameter b = new SqlParameter("@Passwordotp", SqlDbType.VarChar, 10);
+                b.Value = U.Passwordotp;
+                cmd.Parameters.Add(b);
 
-            SqlParameter e = new SqlParameter("@Email", SqlDbType.VarChar, 50);
-            e.Value = U.Email;
-            cmd.Parameters.Add(e);
+                SqlParameter b1 = new SqlParameter("@Mobilenumber", SqlDbType.VarChar, 20);
+                b1.Value = U.Mobilenumber;
+                cmd.Parameters.Add(b1);
 
-
-            SqlParameter m = new SqlParameter("@Password", SqlDbType.VarChar, 10);
-            m.Value = U.Password;
-            cmd.Parameters.Add(m);
-
+                SqlParameter e = new SqlParameter("@Email", SqlDbType.VarChar, 50);
+                e.Value = U.Email;
+                cmd.Parameters.Add(e);
 
 
-            conn.Open();
-            int status = cmd.ExecuteNonQuery();
+                SqlParameter m = new SqlParameter("@Password", SqlDbType.VarChar, 10);
+                m.Value = U.Password;
+                cmd.Parameters.Add(m);
 
-            conn.Close();
+                conn.Open();
+                status = cmd.ExecuteNonQuery();
+
+                conn.Close();
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "reset successful....");
+            }
+            catch (Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "reset...." + ex.Message.ToString());
+                throw ex;
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
+            }
             return status;
 
             //Verify Passwordotp

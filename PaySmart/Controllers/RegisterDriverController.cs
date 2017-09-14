@@ -274,6 +274,10 @@ namespace Paysmart.Controllers
             }
             catch (Exception ex)
             {
+                if (conn.State == ConnectionState.Open)
+                {
+                    conn.Close();
+                }
                 throw ex;
             }
             //Verify mobile otp

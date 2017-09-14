@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Web.Http.Tracing;
 
 namespace Paysmart.Controllers
 {
@@ -16,9 +17,12 @@ namespace Paysmart.Controllers
         [Route("api/BookingHistory/GetBookingHistory")]
         public DataTable GetBookingHistory(string PhoneNo ,string EmailId)
         {
-           DataTable dt = new DataTable();
-
+          LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
+            DataTable dt = new DataTable();
+            try
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetBookingHistory....");
 
             conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
@@ -33,6 +37,20 @@ namespace Paysmart.Controllers
             db.Fill(ds);
             dt = ds.Tables[0];
 
+            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetBookingHistory successful....");
+
+            }
+            catch (Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "GetBookingHistory...." + ex.Message.ToString());
+                throw ex;
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
+            }
             return dt;
 
         }

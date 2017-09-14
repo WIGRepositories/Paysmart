@@ -8,6 +8,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using Paysmart.Models;
+using System.Web.Http.Tracing;
 
 namespace Paysmart.Controllers
 {
@@ -19,7 +20,12 @@ namespace Paysmart.Controllers
 
         public DataTable Getvech(int VechId)
         {
+           LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
+            DataTable dt = new DataTable();
+            try
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Getvech....");
 
             conn.ConnectionString = ConfigurationManager.ConnectionStrings["btposdb"].ToString();
             SqlCommand cmd = new SqlCommand();
@@ -28,10 +34,22 @@ namespace Paysmart.Controllers
             cmd.Connection = conn;
 
             cmd.Parameters.Add("@VechID", SqlDbType.Int).Value = VechId;
-            DataTable dt = new DataTable();
+           
             SqlDataAdapter db = new SqlDataAdapter(cmd);
             db.Fill(dt);
-
+            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Getvech successful....");
+            }
+            catch (Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "Getvech...." + ex.Message.ToString());
+                throw ex;
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
+            }
             return dt;
 
         }
@@ -40,7 +58,12 @@ namespace Paysmart.Controllers
 
         public DataTable vechile(Vechlogin A)
         {
+           LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
+            DataTable dt = new DataTable();
+            try
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "vechile....");
 
             conn.ConnectionString = ConfigurationManager.ConnectionStrings["btposdb"].ToString();
             SqlCommand cmd = new SqlCommand();
@@ -133,10 +156,22 @@ namespace Paysmart.Controllers
             vg.Value = A.VehicleGroupId;
             cmd.Parameters.Add(vg);
 
-            DataTable dt = new DataTable();
+           
             SqlDataAdapter da = new SqlDataAdapter(cmd);
             da.Fill(dt);
-
+            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "vechile successful....");
+            }
+            catch (Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "vechile...." + ex.Message.ToString());
+                throw ex;
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
+            }
             return dt;
         }
     }

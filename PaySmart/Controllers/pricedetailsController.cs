@@ -8,6 +8,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Web.Http.Tracing;
 
 namespace Paysmart.Controllers
 {
@@ -19,7 +20,13 @@ namespace Paysmart.Controllers
         public int GetPricing(VehicleBooking b)
         {
             int status = 1;
+           
+            LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
+
+            try
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetPricing....");
 
             conn.ConnectionString = ConfigurationManager.ConnectionStrings["btposdb"].ToString();
             SqlCommand cmd = new SqlCommand();
@@ -27,7 +34,7 @@ namespace Paysmart.Controllers
             cmd.CommandText = "PSTrackVehicleHistory";
 
             cmd.Connection = conn;
-            conn.Open();
+          
 
             SqlParameter MobileNumber = new SqlParameter("@Mobilenumber", SqlDbType.VarChar, 50);
             MobileNumber.Value = b.PMobNo;
@@ -65,7 +72,20 @@ namespace Paysmart.Controllers
             d.Value = b.Date;
             cmd.Parameters.Add(d);
 
+            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetPricing successful....");
 
+            }
+            catch (Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "GetPricing...." + ex.Message.ToString());
+                throw ex;
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
+            }
             return status;
 
         }

@@ -10,6 +10,7 @@ using Paysmart.Models;
 using System.Web;
 using System.Net.Mail;
 using System.Text;
+using System.Web.Http.Tracing;
 
 namespace Paysmart.Controllers
 {
@@ -20,10 +21,13 @@ namespace Paysmart.Controllers
         public DataTable GetAvailableServices(int srcId, int destId)
         {
             DataTable Tbl = new DataTable();
-
-
-            //connect to database
+            LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
+            
+            try
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetAvailableServices....");
+            
             //connetionString="Data Source=ServerName;Initial Catalog=DatabaseName;User ID=UserName;Password=Password"
             conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
@@ -40,6 +44,21 @@ namespace Paysmart.Controllers
             Tbl = ds.Tables[0];
             int a = Tbl.Rows.Count;
 
+
+            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetAvailableServices successful....");
+
+            }
+            catch (Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "GetAvailableServices...." + ex.Message.ToString());
+                throw ex;
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
+            }
             return Tbl;
         }
        [HttpGet]
@@ -47,6 +66,12 @@ namespace Paysmart.Controllers
         public DataTable GetAvailableSeats()
         {
             DataTable Tbl = new DataTable();
+            LogTraceWriter traceWriter = new LogTraceWriter();
+            SqlConnection conn = new SqlConnection();
+            
+            try
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetAvailableSeats....");
 
             DataColumn dc = new DataColumn("Id", typeof(int));
             Tbl.Columns.Add("seatno", typeof(String));
@@ -107,7 +132,20 @@ namespace Paysmart.Controllers
             dr[2] = "2";
             Tbl.Rows.Add(dr);
 
-            
+            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetAvailableSeats successful....");
+
+            }
+            catch (Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "GetAvailableSeats...." + ex.Message.ToString());
+                throw ex;
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
+            }
 
             return Tbl;
         }
@@ -117,15 +155,14 @@ namespace Paysmart.Controllers
        public int SaveBookingDetails(BookingDetails B)
        {
            //DataTable Tbl = new DataTable();
-          
-           
-
+           LogTraceWriter traceWriter = new LogTraceWriter();
            SqlConnection conn = new SqlConnection();
            conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
            SqlTransaction transaction = null;
            StringBuilder passangersList = new StringBuilder();
            try
            {
+              traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "SaveBookingDetails....");
 
                #region save booking information
 
@@ -133,7 +170,7 @@ namespace Paysmart.Controllers
                PnrDeatilscmd.CommandType = CommandType.StoredProcedure;
                PnrDeatilscmd.CommandText = "InsUpdDelBookingDetails";
                PnrDeatilscmd.Connection = conn;
-               conn.Open();
+              
 
                transaction = conn.BeginTransaction();
                PnrDeatilscmd.Transaction = transaction;
@@ -250,8 +287,9 @@ namespace Paysmart.Controllers
                insupddelflag.Value = B.insupddelflag;
                PnrDeatilscmd.Parameters.Add(insupddelflag);
 
+               conn.Open();
                object bookingId = PnrDeatilscmd.ExecuteScalar();
-
+               conn.Close();
                #endregion save booking information
 
                #region Save seats information
@@ -347,9 +385,9 @@ namespace Paysmart.Controllers
                        SqlParameter binsupddelflag = new SqlParameter("@insupddelflag", SqlDbType.VarChar);
                        binsupddelflag.Value = b.insupddelflag;
                        PnrDeatilscmd.Parameters.Add(binsupddelflag);
-
+                       conn.Open();
                        PnrDeatilscmd.ExecuteScalar();
-
+                       conn.Close();
                        string pTd = string.Format("<tr width='100%' style='text-align:left;background:#f7f9ff;padding-left:8px'><td align='center'>{0}</td><td align='center'>{1}</td><td align='center'>{2}</td><td align='center'>{3}</td><td align='center'>{4}</td></tr>", b.FName + " " + b.LName, b.Age, b.PassengerType, b.Gender, b.SeatNo);
 
                        passangersList.Append(pTd);
@@ -474,7 +512,7 @@ namespace Paysmart.Controllers
                catch (Exception ex)
                {
 
-                   
+                   throw ex;
                }
 
                #endregion Save ticket
@@ -620,15 +658,22 @@ namespace Paysmart.Controllers
 
                return bid;
            }
-           catch (SqlException sqlEx)
+           catch (SqlException ex)
            {
+               traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "SaveBookingDetails...." + ex.Message.ToString());
                transaction.Rollback();
-
+               string str = ex.Message;
                return -1;
 
            }
+           catch (WebException ex)
+           {
+               traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "SaveBookingDetails...." + ex.Message.ToString());
+               return -1;
+           }
            catch (Exception ex)
            {
+               traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "SaveBookingDetails...." + ex.Message.ToString());
                //transaction.Rollback();
                if (conn != null && conn.State == ConnectionState.Open)
                {
@@ -645,15 +690,17 @@ namespace Paysmart.Controllers
            }
        }
 
-       
-
        [HttpGet]
        public DataTable GetticketDetails(int bookingId)
        {
            DataTable dt = new DataTable();
+            LogTraceWriter traceWriter = new LogTraceWriter();
+            SqlConnection conn = new SqlConnection();
+            
+            try
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetticketDetails....");
 
-           //connect to database
-           SqlConnection conn = new SqlConnection();
            //connetionString="Data Source=ServerName;Initial Catalog=DatabaseName;User ID=UserName;Password=Password"
            conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
@@ -666,6 +713,20 @@ namespace Paysmart.Controllers
            SqlDataAdapter db = new SqlDataAdapter(cmd);
            db.Fill(dt);
 
+           traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetticketDetails successful....");
+
+            }
+            catch (Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "GetticketDetails...." + ex.Message.ToString());
+                throw ex;
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
+            }
            return dt;
        }
 
@@ -674,9 +735,12 @@ namespace Paysmart.Controllers
        public DataTable GetTicketsForCancellation(string ticketNo, string emailmobileno)
        {
            DataTable dt = new DataTable();
-
-           //connect to database
-           SqlConnection conn = new SqlConnection();
+            LogTraceWriter traceWriter = new LogTraceWriter();
+            SqlConnection conn = new SqlConnection();
+            
+            try
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetTicketsForCancellation....");
            
            conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
@@ -690,6 +754,20 @@ namespace Paysmart.Controllers
            SqlDataAdapter db = new SqlDataAdapter(cmd);
            db.Fill(dt);
 
+           traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetTicketsForCancellation successful....");
+
+            }
+            catch (Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "GetTicketsForCancellation...." + ex.Message.ToString());
+                throw ex;
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
+            }
            return dt;
        }
     }
