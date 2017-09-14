@@ -700,7 +700,37 @@ namespace Paysmart.Models
 
         public object Details { get; set; }
 
-        public int TransactionId { get; set; }
+        public string TransactionId { get; set; }
+
+        public string TransactionMode { get; set; }
+    }
+
+    public class Taxi
+    {
+
+        public string flag { get; set; }
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public decimal latitude { get; set; }
+        public decimal longitude { get; set; }
+    }
+    public class VehicleDistancePriceConfiguration
+    {
+        public string SourceLoc { get; set; }
+        public string DestinationLoc { get; set; }
+        public float SourceLat { get; set; }
+        public float SourceLng { get; set; }
+        public float DestinationLat { get; set; }
+        public float DestinationLng { get; set; }
+        public string VehicleModelId { get; set; }
+        public string VehicleTypeId { get; set; }
+        public string PricingTypeId { get; set; }
+        public float UnitPrice { get; set; }
+        public float Amount { get; set; }
+        public string flag { get; set; }
+        public int srcid { get; set; }
+        public int destid { get; set; }
     }
 }
 

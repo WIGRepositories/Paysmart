@@ -14,60 +14,62 @@ namespace Paysmart.Controllers
     public class WalletTransDetailsController : ApiController
     {
         [HttpGet]
-        [Route("api/WalletTransDetails/GetWalletDetails")]
-        public DataTable GetWalletDetails(int TransactionsId)
+        [Route("api/WalletTransDetails/GetWalletTransDetails")]
+        public DataTable GetWalletTransDetails(string MobileNo)
         {
             DataTable Tbl = new DataTable();
             LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
-           
+
+
             try
             {
-                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetWalletDetails....");
-
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetWalletTransDetails....");
+            
             conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = CommandType.StoredProcedure;
-            cmd.CommandText = "GetEWalletTransDetails";
-            cmd.Parameters.Add("@TransactionId", SqlDbType.Int).Value = TransactionsId;
+            cmd.CommandText = "EWGetTransDetails";
+            cmd.Parameters.Add("@MobileNo", SqlDbType.VarChar).Value = MobileNo;
             cmd.Connection = conn;
+
             DataSet ds = new DataSet();
             SqlDataAdapter db = new SqlDataAdapter(cmd);
             db.Fill(ds);
             Tbl = ds.Tables[0];
-            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetWalletDetails successful....");
+            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetWalletTransDetails successful....");
+
             }
             catch (Exception ex)
             {
-                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "GetWalletDetails...." + ex.Message.ToString());
-                throw ex;
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "GetWalletTransDetails...." + ex.Message.ToString());
+
             }
-            finally
-            {
-                conn.Close();
-                conn.Dispose();
-                SqlConnection.ClearPool(conn);
-            }
+
+            // int found = 0;
             return Tbl;
         }
 
         [HttpPost]
-        [Route("api/WalletTransDetails/savewalletdetails")]
-        public DataTable savewalletdetails(ewallet r)
+        [Route("api/WalletTransDetails/savewalletTransdetails")]
+        public DataTable savewalletTransdetails(ewallet r)
         {
-           LogTraceWriter traceWriter = new LogTraceWriter();
-            SqlConnection conn = new SqlConnection();
             DataTable dt = new DataTable();
-            try
+            LogTraceWriter traceWriter = new LogTraceWriter();
+            SqlConnection conn = new SqlConnection();
+
+
+             try
             {
-                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "savewalletdetails....");
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "savewalletTransdetails....");
+
 
             conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = CommandType.StoredProcedure;
-            cmd.CommandText = "InsUpdEwalletTransHistory";
+            cmd.CommandText = "EWInsUpdTransHistory";
 
             cmd.Connection = conn;
             SqlParameter f = new SqlParameter("@flag", SqlDbType.VarChar);
@@ -90,38 +92,38 @@ namespace Paysmart.Controllers
             SqlParameter q1 = new SqlParameter("@Status", SqlDbType.Int);
             q1.Value = r.Status;
             cmd.Parameters.Add(q1);
-
-            SqlParameter d = new SqlParameter("@Date", SqlDbType.Date);
-            d.Value = r.Date;
-            cmd.Parameters.Add(d);
-
-            SqlParameter t = new SqlParameter("@Time", System.Data.SqlDbType.DateTime);
-            t.Value = r.Time;
-            cmd.Parameters.Add(t);
+                        
 
             SqlParameter de = new SqlParameter("@Details", SqlDbType.VarChar, 50);
             de.Value = r.Details;
             cmd.Parameters.Add(de);
 
-            SqlParameter td = new SqlParameter("@TransactionId", SqlDbType.Int);
+
+            SqlParameter d = new SqlParameter("@MobileNo", SqlDbType.VarChar, 20);
+            d.Value = r.MobileNo;
+            cmd.Parameters.Add(d);
+
+            SqlParameter td = new SqlParameter("@TransactionId", SqlDbType.VarChar,50);
             td.Value = r.TransactionId;
             cmd.Parameters.Add(td);
 
+            SqlParameter tm = new SqlParameter("@TransactionMode", SqlDbType.VarChar,50);
+            tm.Value = r.TransactionMode;
+            cmd.Parameters.Add(tm);
+
+
+
+           
             SqlDataAdapter da = new SqlDataAdapter(cmd);
             da.Fill(dt);
-            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "savewalletdetails successful....");
+            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "savewalletTransdetails successful....");
             }
-            catch (Exception ex)
-            {
-                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "savewalletdetails...." + ex.Message.ToString());
-                throw ex;
-            }
-            finally
-            {
-                conn.Close();
-                conn.Dispose();
-                SqlConnection.ClearPool(conn);
-            }
+             catch (Exception ex)
+             {
+                 traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "savewalletTransdetails...." + ex.Message.ToString());
+
+             }
+
             return dt;
         }
     }
