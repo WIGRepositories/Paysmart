@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using Paysmart.Models;
+using System.Web.Http.Tracing;
 
 namespace Paysmart.Controllers
 {
@@ -17,9 +18,14 @@ namespace Paysmart.Controllers
         public DataTable GetWalletTransDetails(string MobileNo)
         {
             DataTable Tbl = new DataTable();
-
+            LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
 
+
+            try
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetWalletTransDetails....");
+            
             conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
             SqlCommand cmd = new SqlCommand();
@@ -32,6 +38,14 @@ namespace Paysmart.Controllers
             SqlDataAdapter db = new SqlDataAdapter(cmd);
             db.Fill(ds);
             Tbl = ds.Tables[0];
+            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetWalletTransDetails successful....");
+
+            }
+            catch (Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "GetWalletTransDetails...." + ex.Message.ToString());
+
+            }
 
             // int found = 0;
             return Tbl;
@@ -41,7 +55,15 @@ namespace Paysmart.Controllers
         [Route("api/WalletTransDetails/savewalletTransdetails")]
         public DataTable savewalletTransdetails(ewallet r)
         {
+            DataTable dt = new DataTable();
+            LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
+
+
+             try
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "savewalletTransdetails....");
+
 
             conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
@@ -91,9 +113,17 @@ namespace Paysmart.Controllers
 
 
 
-            DataTable dt = new DataTable();
+           
             SqlDataAdapter da = new SqlDataAdapter(cmd);
             da.Fill(dt);
+            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "savewalletTransdetails successful....");
+            }
+             catch (Exception ex)
+             {
+                 traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "savewalletTransdetails...." + ex.Message.ToString());
+
+             }
+
             return dt;
         }
     }
