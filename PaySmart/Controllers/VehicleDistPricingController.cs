@@ -100,7 +100,13 @@ namespace Paysmart.Controllers
              catch (Exception ex)
              {
                  traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "TaxiPrice...." + ex.Message.ToString());
-
+                 throw ex;
+             }
+             finally
+             {
+                 conn.Close();
+                 conn.Dispose();
+                 SqlConnection.ClearPool(conn);
              }
 
             return dt;
