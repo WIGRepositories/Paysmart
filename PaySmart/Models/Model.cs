@@ -10,8 +10,6 @@ namespace Paysmart.Models
         public string flag { get; set; }
 
         public int id { get; set; }
-
-
         public string Username { get; set; }
 
         public string Email { get; set; }
@@ -42,7 +40,7 @@ namespace Paysmart.Models
     {
 
         public string flag { get; set; }
-        public int id { get; set; }
+        public int id { get; set; }  
         public string Username { get; set; }
 
         public string Email { get; set; }
@@ -216,7 +214,7 @@ namespace Paysmart.Models
 
     }
 
-  
+
     public class passenger
     {
         public string Fname { get; set; }
@@ -410,6 +408,12 @@ namespace Paysmart.Models
         public int VehicleModelId { get; set; }
         public int ServiceTypeId { get; set; }
         public int VehicleGroupId { get; set; }
+
+        public string Photo { get; set; }
+
+        public string Status { get; set; }
+
+        public string FleetOwnerCode { get; set; }
     }
 
     public class travels
@@ -659,9 +663,9 @@ namespace Paysmart.Models
         public int gatewayid { get; set; }
         public string transactiontype { get; set; }
 
-        
+
         public string servicetype { get; set; }
-        
+
         public int Transactionid { get; set; }
         public string Transaction_Number { get; set; }
         public int Amount { get; set; }
@@ -726,11 +730,37 @@ namespace Paysmart.Models
         public string VehicleModelId { get; set; }
         public string VehicleTypeId { get; set; }
         public string PricingTypeId { get; set; }
+
         public float UnitPrice { get; set; }
         public float Amount { get; set; }
         public string flag { get; set; }
         public int srcid { get; set; }
         public int destid { get; set; }
+    }
+
+    public class VehicleDocuments
+    {
+        public int Id { get; set; }
+
+        public int VehicleId { get; set; }
+
+        public string FileName { get; set; }
+
+        public int DocTypeId { get; set; }
+
+        public DateTime ExpiryDate { get; set; }
+
+        public int UpdatedById { get; set; }
+
+        public DateTime DueDate { get; set; }
+
+        public int FileContent { get; set; }
+
+        public string change { get; set; }
+
+
+
+        public int loggedinUserId { get; set; }
     }
 }
 
