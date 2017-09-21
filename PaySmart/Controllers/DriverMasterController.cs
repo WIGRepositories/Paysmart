@@ -117,17 +117,17 @@ namespace Paysmart.Controllers
                 cmd.Connection = conn;
 
 
-                SqlParameter f = new SqlParameter("@flag", SqlDbType.VarChar);
-                f.Value = d.flag;
-                cmd.Parameters.Add(f);
+                SqlParameter ff = new SqlParameter("@flag", SqlDbType.VarChar);
+                ff.Value = d.flag;
+                cmd.Parameters.Add(ff);
 
                 SqlParameter i = new SqlParameter("@DId", SqlDbType.Int);
-                i.Value = d.id;
+                i.Value = d.DId;
                 cmd.Parameters.Add(i);
 
-                SqlParameter ie = new SqlParameter("@CompanyId", SqlDbType.Int);
-                ie.Value = d.CompanyId;
-                cmd.Parameters.Add(ie);
+                SqlParameter di = new SqlParameter("@CompanyId", SqlDbType.Int);
+                di.Value = d.CompanyId;
+                cmd.Parameters.Add(di);
 
                 SqlParameter n = new SqlParameter("@NAme", SqlDbType.VarChar, 50);
                 n.Value = d.Name;
@@ -147,9 +147,9 @@ namespace Paysmart.Controllers
                 s.Value = d.Pin;
                 cmd.Parameters.Add(s);
 
-                SqlParameter ff = new SqlParameter("@PAddress", SqlDbType.VarChar, 50);
-                ff.Value = d.PAddress;
-                cmd.Parameters.Add(ff);
+                SqlParameter f = new SqlParameter("@PAddress", SqlDbType.VarChar, 50);
+                f.Value = d.PAddress;
+                cmd.Parameters.Add(f);
 
                 SqlParameter j2 = new SqlParameter("@PCity", SqlDbType.VarChar, 255);
                 j2.Value = d.PCity;
@@ -179,26 +179,14 @@ namespace Paysmart.Controllers
                 rj.Value = d.BloodGroup;
                 cmd.Parameters.Add(rj);
 
-                SqlParameter t = new SqlParameter("@LicenceNo", SqlDbType.VarChar, 50);
-                t.Value = d.LicenceNo;
-                cmd.Parameters.Add(t);
-
-                SqlParameter u = new SqlParameter("@LiCExpDate", SqlDbType.Date);
-                u.Value = d.LiCExpDate;
-                cmd.Parameters.Add(u);
-
-                SqlParameter o = new SqlParameter("@BadgeNo", SqlDbType.VarChar, 50);
-                o.Value = d.BadgeNo;
-                cmd.Parameters.Add(o);
-
-                SqlParameter p = new SqlParameter("@BadgeExpDate", SqlDbType.Date);
-                p.Value = d.BadgeExpDate;
-                cmd.Parameters.Add(p);
-
                 SqlParameter w = new SqlParameter("@Remarks", SqlDbType.VarChar, 50);
                 w.Value = d.Remarks;
                 cmd.Parameters.Add(w);
 
+                SqlParameter pr = new SqlParameter("@Photo", SqlDbType.VarChar);
+                pr.Value = d.Photo;
+                cmd.Parameters.Add(pr);
+                
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
                 da.Fill(dt);
 

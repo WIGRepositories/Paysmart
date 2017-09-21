@@ -345,7 +345,7 @@ namespace Paysmart.Models
     public class driverdetails
     {
         public string flag { get; set; }
-        public int id { get; set; }
+        public int DId { get; set; }
         public int CompanyId { get; set; }
         public string Name { get; set; }
         public string Address { get; set; }
@@ -364,6 +364,10 @@ namespace Paysmart.Models
         public string BadgeNo { get; set; }
         public DateTime BadgeExpDate { get; set; }
         public string Remarks { get; set; }
+        public string Photo { get; set; }
+        public string licenseimage { get; set; }
+        public string badgeimage { get; set; }
+
     }
 
     public class vehicledetails
