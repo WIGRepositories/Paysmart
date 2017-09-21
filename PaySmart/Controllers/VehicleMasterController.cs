@@ -54,13 +54,12 @@ namespace Paysmart.Controllers
         }
 
         [HttpGet]
-
         [Route("api/VehicleMaster/GetVehicleDetails")]
-        public DataTable GetVehicleDetails(int VID)
+        public DataSet GetVehicleDetails(int VID)
         {
             LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
-            DataTable dt = new DataTable();
+            DataSet dt = new DataSet();
             try
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetVehicleDetails....");
@@ -72,10 +71,10 @@ namespace Paysmart.Controllers
                 cmd.CommandText = "PSgetvehicleDetails";
                 cmd.Parameters.Add("@VID", SqlDbType.Int).Value = VID;
                 cmd.Connection = conn;
-                DataSet ds = new DataSet();
+                
                 SqlDataAdapter db = new SqlDataAdapter(cmd);
-                db.Fill(ds);
-                dt = ds.Tables[0];
+                db.Fill(dt);
+               
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetVehicleDetails successful....");
             }
             catch (Exception ex)

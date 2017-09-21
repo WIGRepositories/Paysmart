@@ -58,6 +58,45 @@ namespace Paysmart.Controllers
 
         }
 
+        [HttpGet]
+        [Route("api/DriverMaster/GetDriverDetails")]
+        public DataSet GetDriverDetails(int DID)
+        {
+            LogTraceWriter traceWriter = new LogTraceWriter();
+            SqlConnection conn = new SqlConnection();
+            DataSet dt = new DataSet();
+            try
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetDriverDetails....");
+
+                conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = "PSgetDriverDetails";
+                cmd.Parameters.Add("@DID", SqlDbType.Int).Value = DID;
+                cmd.Connection = conn;
+
+                SqlDataAdapter db = new SqlDataAdapter(cmd);
+                db.Fill(dt);
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetDriverDetails successful....");
+            }
+            catch (Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "GetDriverDetails...." + ex.Message.ToString());
+                throw ex;
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
+            }
+            return dt;
+
+        }
+
         [HttpPost]
         [Route("api/DriverMaster/Driver")]
 
@@ -179,6 +218,79 @@ namespace Paysmart.Controllers
             }
             return dt;
         }
+
+        [HttpPost]
+        [Route("api/DriverMaster/SaveDriverDocuments")]
+        public int SaveDriverDoc(DriverDocuments dd)
+        {
+             SqlConnection conn = new SqlConnection();
+            DataTable dt = new DataTable();
+            int status = 1;
+            try
+            {
+                //connetionString="Data Source=ServerName;Initial Catalog=DatabaseName;User ID=UserName;Password=Password"
+                conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = "PSInsUpdDelDriverDocs";
+                cmd.Connection = conn;
+            SqlParameter did = new SqlParameter("@Id", SqlDbType.Int);
+            did.Value = dd.Id;
+            cmd.Parameters.Add(did);
+
+            SqlParameter drId = new SqlParameter("@DriverId", SqlDbType.Int);
+            drId.Value = dd.DriverId;
+            cmd.Parameters.Add(drId);
+
+            SqlParameter Gid = new SqlParameter("@FileName", SqlDbType.VarChar, 100);
+            Gid.Value = dd.FileName;
+            cmd.Parameters.Add(Gid);
+
+            SqlParameter type = new SqlParameter("@DocTypeId", SqlDbType.Int);
+            type.Value = dd.DocTypeId;
+            cmd.Parameters.Add(type);
+
+             SqlParameter exp = new SqlParameter("@ExpiryDate", SqlDbType.Date);
+            exp.Value = dd.ExpiryDate;
+            cmd.Parameters.Add(exp);
+
+            
+            //SqlParameter create= new SqlParameter("@CreatedById", SqlDbType.Int);
+            //create.Value = dd.CreatedById;
+            //cmd.Parameters.Add(create);
+
+            SqlParameter update = new SqlParameter("@UpdatedById", SqlDbType.Int);
+            update.Value = dd.UpdatedById;
+            cmd.Parameters.Add(update);
+
+            SqlParameter due = new SqlParameter("@DueDate", SqlDbType.Date);
+            due.Value = dd.DueDate;
+            cmd.Parameters.Add(due);
+
+            SqlParameter cont = new SqlParameter("@FileContent", SqlDbType.VarChar);
+            cont.Value = dd.FileContent;
+            cmd.Parameters.Add(cont);
+
+            SqlParameter flag = new SqlParameter("@change", SqlDbType.VarChar);
+            flag.Value = dd.change;
+            cmd.Parameters.Add(flag);
+
+            SqlParameter luid = new SqlParameter("@loggedinUserId", SqlDbType.Int);
+            luid.Value = dd.loggedinUserId;
+            cmd.Parameters.Add(luid);
+             
+             SqlDataAdapter da = new SqlDataAdapter(cmd);
+            da.Fill(dt);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return status;
+        }
+
+
     }
 
 }

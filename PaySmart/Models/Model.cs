@@ -754,14 +754,36 @@ namespace Paysmart.Models
 
         public DateTime DueDate { get; set; }
 
-        public int FileContent { get; set; }
+        public string FileContent { get; set; }
 
         public string change { get; set; }
 
-
-
         public int loggedinUserId { get; set; }
     }
+
+    public class DriverDocuments
+    {
+
+        public int Id { get; set; }
+
+        public int DriverId { get; set; }
+        public string FileName { get; set; }
+
+        public int DocTypeId { get; set; }
+
+        public DateTime ExpiryDate { get; set; }
+        public int CreatedById { get; set; }
+        public int UpdatedById { get; set; }
+
+        public DateTime DueDate { get; set; }
+
+        public string FileContent { get; set; }
+        public string change { get; set; }
+
+        public int loggedinUserId { get; set; }
+
+    }
+
 }
 
 
