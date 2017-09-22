@@ -186,7 +186,7 @@ namespace Paysmart.Controllers
                 SqlParameter pr = new SqlParameter("@Photo", SqlDbType.VarChar);
                 pr.Value = d.Photo;
                 cmd.Parameters.Add(pr);
-                
+
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
                 da.Fill(dt);
 
@@ -211,11 +211,14 @@ namespace Paysmart.Controllers
         [Route("api/DriverMaster/SaveDriverDocuments")]
         public int SaveDriverDoc(DriverDocuments dd)
         {
-             SqlConnection conn = new SqlConnection();
             DataTable dt = new DataTable();
+            LogTraceWriter traceWriter = new LogTraceWriter();
+            SqlConnection conn = new SqlConnection();
             int status = 1;
             try
             {
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Driver....");
+
                 //connetionString="Data Source=ServerName;Initial Catalog=DatabaseName;User ID=UserName;Password=Password"
                 conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
@@ -223,57 +226,66 @@ namespace Paysmart.Controllers
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.CommandText = "PSInsUpdDelDriverDocs";
                 cmd.Connection = conn;
-            SqlParameter did = new SqlParameter("@Id", SqlDbType.Int);
-            did.Value = dd.Id;
-            cmd.Parameters.Add(did);
+                SqlParameter did = new SqlParameter("@Id", SqlDbType.Int);
+                did.Value = dd.Id;
+                cmd.Parameters.Add(did);
 
-            SqlParameter drId = new SqlParameter("@DriverId", SqlDbType.Int);
-            drId.Value = dd.DriverId;
-            cmd.Parameters.Add(drId);
+                SqlParameter drId = new SqlParameter("@DriverId", SqlDbType.Int);
+                drId.Value = dd.DriverId;
+                cmd.Parameters.Add(drId);
 
-            SqlParameter Gid = new SqlParameter("@FileName", SqlDbType.VarChar, 100);
-            Gid.Value = dd.FileName;
-            cmd.Parameters.Add(Gid);
+                SqlParameter Gid = new SqlParameter("@FileName", SqlDbType.VarChar, 100);
+                Gid.Value = dd.FileName;
+                cmd.Parameters.Add(Gid);
 
-            SqlParameter type = new SqlParameter("@DocTypeId", SqlDbType.Int);
-            type.Value = dd.DocTypeId;
-            cmd.Parameters.Add(type);
+                SqlParameter type = new SqlParameter("@DocTypeId", SqlDbType.Int);
+                type.Value = dd.DocTypeId;
+                cmd.Parameters.Add(type);
 
-             SqlParameter exp = new SqlParameter("@ExpiryDate", SqlDbType.Date);
-            exp.Value = dd.ExpiryDate;
-            cmd.Parameters.Add(exp);
+                SqlParameter exp = new SqlParameter("@ExpiryDate", SqlDbType.Date);
+                exp.Value = dd.ExpiryDate;
+                cmd.Parameters.Add(exp);
 
-            
-            //SqlParameter create= new SqlParameter("@CreatedById", SqlDbType.Int);
-            //create.Value = dd.CreatedById;
-            //cmd.Parameters.Add(create);
 
-            SqlParameter update = new SqlParameter("@UpdatedById", SqlDbType.Int);
-            update.Value = dd.UpdatedById;
-            cmd.Parameters.Add(update);
+                //SqlParameter create= new SqlParameter("@CreatedById", SqlDbType.Int);
+                //create.Value = dd.CreatedById;
+                //cmd.Parameters.Add(create);
 
-            SqlParameter due = new SqlParameter("@DueDate", SqlDbType.Date);
-            due.Value = dd.DueDate;
-            cmd.Parameters.Add(due);
+                SqlParameter update = new SqlParameter("@UpdatedById", SqlDbType.Int);
+                update.Value = dd.UpdatedById;
+                cmd.Parameters.Add(update);
 
-            SqlParameter cont = new SqlParameter("@FileContent", SqlDbType.VarChar);
-            cont.Value = dd.FileContent;
-            cmd.Parameters.Add(cont);
+                SqlParameter due = new SqlParameter("@DueDate", SqlDbType.Date);
+                due.Value = dd.DueDate;
+                cmd.Parameters.Add(due);
 
-            SqlParameter flag = new SqlParameter("@change", SqlDbType.VarChar);
-            flag.Value = dd.change;
-            cmd.Parameters.Add(flag);
+                SqlParameter cont = new SqlParameter("@FileContent", SqlDbType.VarChar);
+                cont.Value = dd.FileContent;
+                cmd.Parameters.Add(cont);
 
-            SqlParameter luid = new SqlParameter("@loggedinUserId", SqlDbType.Int);
-            luid.Value = dd.loggedinUserId;
-            cmd.Parameters.Add(luid);
-             
-             SqlDataAdapter da = new SqlDataAdapter(cmd);
-            da.Fill(dt);
+                SqlParameter flag = new SqlParameter("@change", SqlDbType.VarChar);
+                flag.Value = dd.change;
+                cmd.Parameters.Add(flag);
+
+                SqlParameter luid = new SqlParameter("@loggedinUserId", SqlDbType.Int);
+                luid.Value = dd.loggedinUserId;
+                cmd.Parameters.Add(luid);
+
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(dt);
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Driver successful....");
+
             }
             catch (Exception ex)
             {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "Driver...." + ex.Message.ToString());
                 throw ex;
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
             }
             return status;
         }

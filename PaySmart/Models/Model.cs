@@ -67,6 +67,11 @@ namespace Paysmart.Models
         public object Mobileotp { get; set; }
 
         public object Emailotp { get; set; }
+
+        public int Gender { get; set; }
+        public string UserPhoto { get; set; }
+
+        public decimal Amount { get; set; }
     }
 
     public class DriverAccount

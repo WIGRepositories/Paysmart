@@ -19,94 +19,94 @@ namespace Paysmart.Controllers
         public DataTable RegisterDrivers(DriverAccount ocr)
         {
             SqlConnection conn = new SqlConnection();
-            LogTraceWriter traceWriter = new LogTraceWriter();            
+            LogTraceWriter traceWriter = new LogTraceWriter();
             DataTable dt = new DataTable();
             try
             {
-                
-            conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
-            SqlCommand cmd = new SqlCommand();
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.CommandText = "PSInsUpdAppDrivers";
+                conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
-            cmd.Connection = conn;
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = "PSInsUpdAppDrivers";
 
-            SqlParameter f = new SqlParameter("@flag", SqlDbType.VarChar);
-            f.Value = ocr.flag;
-            cmd.Parameters.Add(f);
+                cmd.Connection = conn;
 
-            SqlParameter c = new SqlParameter("@Drivername", SqlDbType.VarChar, 20);
-            c.Value = ocr.Drivername;
-            cmd.Parameters.Add(c);
+                SqlParameter f = new SqlParameter("@flag", SqlDbType.VarChar);
+                f.Value = ocr.flag;
+                cmd.Parameters.Add(f);
 
-            SqlParameter ce = new SqlParameter("@Email", SqlDbType.VarChar, 50);
-            ce.Value = ocr.Email;
-            cmd.Parameters.Add(ce);
+                SqlParameter c = new SqlParameter("@Drivername", SqlDbType.VarChar, 20);
+                c.Value = ocr.Drivername;
+                cmd.Parameters.Add(c);
 
-
-            SqlParameter cm = new SqlParameter("@Mobilenumber", SqlDbType.VarChar, 20);
-            cm.Value = ocr.Mobilenumber;
-            cmd.Parameters.Add(cm);
-
-            SqlParameter q1 = new SqlParameter("@Password", SqlDbType.VarChar, 50);
-            q1.Value = ocr.Password;
-            cmd.Parameters.Add(q1);
-
-            SqlParameter v = new SqlParameter("@Firstname", SqlDbType.VarChar, 50);
-            v.Value = ocr.Firstname;
-            cmd.Parameters.Add(v);
-
-            SqlParameter v1 = new SqlParameter("@lastname", SqlDbType.VarChar, 50);
-            v1.Value = ocr.lastname;
-            cmd.Parameters.Add(v1);
+                SqlParameter ce = new SqlParameter("@Email", SqlDbType.VarChar, 50);
+                ce.Value = ocr.Email;
+                cmd.Parameters.Add(ce);
 
 
+                SqlParameter cm = new SqlParameter("@Mobilenumber", SqlDbType.VarChar, 20);
+                cm.Value = ocr.Mobilenumber;
+                cmd.Parameters.Add(cm);
 
-            SqlParameter v2 = new SqlParameter("@AuthTypeId", SqlDbType.VarChar, 50);
-            v2.Value = ocr.AuthTypeId;
-            cmd.Parameters.Add(v2);
+                SqlParameter q1 = new SqlParameter("@Password", SqlDbType.VarChar, 50);
+                q1.Value = ocr.Password;
+                cmd.Parameters.Add(q1);
 
-            SqlParameter u = new SqlParameter("@AltPhonenumber", SqlDbType.VarChar, 50);
-            u.Value = ocr.AltPhonenumber;
-            cmd.Parameters.Add(u);
+                SqlParameter v = new SqlParameter("@Firstname", SqlDbType.VarChar, 50);
+                v.Value = ocr.Firstname;
+                cmd.Parameters.Add(v);
 
-            SqlParameter u1 = new SqlParameter("@Altemail", SqlDbType.VarChar, 50);
-            u1.Value = ocr.Altemail;
-            cmd.Parameters.Add(u1);
-
-            SqlParameter i = new SqlParameter("@AccountNo", SqlDbType.VarChar, 50);
-            i.Value = ocr.AccountNo;
-            cmd.Parameters.Add(i);
+                SqlParameter v1 = new SqlParameter("@lastname", SqlDbType.VarChar, 50);
+                v1.Value = ocr.lastname;
+                cmd.Parameters.Add(v1);
 
 
-          
-            SqlDataAdapter da = new SqlDataAdapter(cmd);
-            da.Fill(dt);
-            //[Mobileotp] ,[Emailotp]
-            //send email otp\
-            #region email opt
-            string eotp = dt.Rows[0]["Emailotp"].ToString();
-            if (eotp != null)
-            {
-                try
+
+                SqlParameter v2 = new SqlParameter("@AuthTypeId", SqlDbType.VarChar, 50);
+                v2.Value = ocr.AuthTypeId;
+                cmd.Parameters.Add(v2);
+
+                SqlParameter u = new SqlParameter("@AltPhonenumber", SqlDbType.VarChar, 50);
+                u.Value = ocr.AltPhonenumber;
+                cmd.Parameters.Add(u);
+
+                SqlParameter u1 = new SqlParameter("@Altemail", SqlDbType.VarChar, 50);
+                u1.Value = ocr.Altemail;
+                cmd.Parameters.Add(u1);
+
+                SqlParameter i = new SqlParameter("@AccountNo", SqlDbType.VarChar, 50);
+                i.Value = ocr.AccountNo;
+                cmd.Parameters.Add(i);
+
+
+
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(dt);
+                //[Mobileotp] ,[Emailotp]
+                //send email otp\
+                #region email opt
+                string eotp = dt.Rows[0]["Emailotp"].ToString();
+                if (eotp != null)
                 {
-                    MailMessage mail = new MailMessage();
-                    string emailserver = System.Configuration.ConfigurationManager.AppSettings["emailserver"].ToString();
+                    try
+                    {
+                        MailMessage mail = new MailMessage();
+                        string emailserver = System.Configuration.ConfigurationManager.AppSettings["emailserver"].ToString();
 
-                    string username = System.Configuration.ConfigurationManager.AppSettings["username"].ToString();
-                    string pwd = System.Configuration.ConfigurationManager.AppSettings["password"].ToString();
-                    string fromaddress = System.Configuration.ConfigurationManager.AppSettings["fromaddress"].ToString();
-                    string port = System.Configuration.ConfigurationManager.AppSettings["port"].ToString();
+                        string username = System.Configuration.ConfigurationManager.AppSettings["username"].ToString();
+                        string pwd = System.Configuration.ConfigurationManager.AppSettings["password"].ToString();
+                        string fromaddress = System.Configuration.ConfigurationManager.AppSettings["fromaddress"].ToString();
+                        string port = System.Configuration.ConfigurationManager.AppSettings["port"].ToString();
 
-                    SmtpClient SmtpServer = new SmtpClient(emailserver);
+                        SmtpClient SmtpServer = new SmtpClient(emailserver);
 
-                    mail.From = new MailAddress(fromaddress);
-                    mail.To.Add(ocr.Email);
-                    mail.Subject = "Driver registration - Email OTP";
-                    mail.IsBodyHtml = true;
+                        mail.From = new MailAddress(fromaddress);
+                        mail.To.Add(ocr.Email);
+                        mail.Subject = "Driver registration - Email OTP";
+                        mail.IsBodyHtml = true;
 
-                    string verifcodeMail = @"<table>
+                        string verifcodeMail = @"<table>
                                                         <tr>
                                                             <td>
                                                                 <h2>Thank you for registering with PaySmart APP</h2>
@@ -137,55 +137,55 @@ namespace Paysmart.Controllers
                                                     </table>";
 
 
-                    mail.Body = verifcodeMail;
-                    //SmtpServer.Port = 465;
-                    //SmtpServer.Port = 587;
-                    SmtpServer.Port = Convert.ToInt32(port);
-                    SmtpServer.UseDefaultCredentials = false;
+                        mail.Body = verifcodeMail;
+                        //SmtpServer.Port = 465;
+                        //SmtpServer.Port = 587;
+                        SmtpServer.Port = Convert.ToInt32(port);
+                        SmtpServer.UseDefaultCredentials = false;
 
-                    SmtpServer.Credentials = new System.Net.NetworkCredential(username, pwd);
-                    SmtpServer.EnableSsl = true;
-                    //SmtpServer.TargetName = "STARTTLS/smtp.gmail.com";
-                    SmtpServer.Send(mail);
+                        SmtpServer.Credentials = new System.Net.NetworkCredential(username, pwd);
+                        SmtpServer.EnableSsl = true;
+                        //SmtpServer.TargetName = "STARTTLS/smtp.gmail.com";
+                        SmtpServer.Send(mail);
+
+                    }
+                    catch (Exception ex)
+                    {
+                        //throw ex;
+                    }
 
                 }
-                catch (Exception ex)
+
+                //send mobile otp
+
+
+                // return dt;
+
+                #endregion email otp
+
+                //send mobile otp as SMS
+                #region Mobile OTP
+                string motp = dt.Rows[0]["Mobileotp"].ToString();
+                if (motp != null)
                 {
-                    //throw ex;
-                }
+                    try
+                    {
+                        MailMessage mail = new MailMessage();
+                        string emailserver = System.Configuration.ConfigurationManager.AppSettings["emailserver"].ToString();
 
-            }
+                        string username = System.Configuration.ConfigurationManager.AppSettings["username"].ToString();
+                        string pwd = System.Configuration.ConfigurationManager.AppSettings["password"].ToString();
+                        string fromaddress = System.Configuration.ConfigurationManager.AppSettings["fromaddress"].ToString();
+                        string port = System.Configuration.ConfigurationManager.AppSettings["port"].ToString();
 
-            //send mobile otp
+                        SmtpClient SmtpServer = new SmtpClient(emailserver);
 
+                        mail.From = new MailAddress(fromaddress);
+                        mail.To.Add(ocr.Email);
+                        mail.Subject = "Driver registration - Mobile OTP";
+                        mail.IsBodyHtml = true;
 
-            // return dt;
-
-            #endregion email otp
-
-            //send mobile otp as SMS
-            #region Mobile OTP
-            string motp = dt.Rows[0]["Mobileotp"].ToString();
-            if (motp != null)
-            {
-                try
-                {
-                    MailMessage mail = new MailMessage();
-                    string emailserver = System.Configuration.ConfigurationManager.AppSettings["emailserver"].ToString();
-
-                    string username = System.Configuration.ConfigurationManager.AppSettings["username"].ToString();
-                    string pwd = System.Configuration.ConfigurationManager.AppSettings["password"].ToString();
-                    string fromaddress = System.Configuration.ConfigurationManager.AppSettings["fromaddress"].ToString();
-                    string port = System.Configuration.ConfigurationManager.AppSettings["port"].ToString();
-
-                    SmtpClient SmtpServer = new SmtpClient(emailserver);
-
-                    mail.From = new MailAddress(fromaddress);
-                    mail.To.Add(ocr.Email);
-                    mail.Subject = "Driver registration - Mobile OTP";
-                    mail.IsBodyHtml = true;
-
-                    string verifcodeMail = @"<table>
+                        string verifcodeMail = @"<table>
                                                         <tr>
                                                             <td>
                                                                 <h2>Thank you for registering with PaySmart APP</h2>
@@ -216,26 +216,26 @@ namespace Paysmart.Controllers
                                                     </table>";
 
 
-                    mail.Body = verifcodeMail;
-                    //SmtpServer.Port = 465;
-                    //SmtpServer.Port = 587;
-                    SmtpServer.Port = Convert.ToInt32(port);
-                    SmtpServer.UseDefaultCredentials = false;
+                        mail.Body = verifcodeMail;
+                        //SmtpServer.Port = 465;
+                        //SmtpServer.Port = 587;
+                        SmtpServer.Port = Convert.ToInt32(port);
+                        SmtpServer.UseDefaultCredentials = false;
 
-                    SmtpServer.Credentials = new System.Net.NetworkCredential(username, pwd);
-                    SmtpServer.EnableSsl = true;
-                    //SmtpServer.TargetName = "STARTTLS/smtp.gmail.com";
-                    SmtpServer.Send(mail);
+                        SmtpServer.Credentials = new System.Net.NetworkCredential(username, pwd);
+                        SmtpServer.EnableSsl = true;
+                        //SmtpServer.TargetName = "STARTTLS/smtp.gmail.com";
+                        SmtpServer.Send(mail);
 
+                    }
+                    catch (Exception ex)
+                    {
+                        //throw ex;
+                    }
                 }
-                catch (Exception ex)
-                {
-                    //throw ex;
-                }
-            }
-            #endregion Mobile OTP
+                #endregion Mobile OTP
 
-            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Registerdriver successful....");
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Registerdriver successful....");
             }
             catch (Exception ex)
             {
@@ -259,25 +259,27 @@ namespace Paysmart.Controllers
             int status = 0;
             SqlConnection conn = new SqlConnection();
 
-            conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
-
-            SqlCommand cmd = new SqlCommand();
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.CommandText = "PSDriversMOTPverifying";
-
-            cmd.Connection = conn;
-
-
-            SqlParameter q1 = new SqlParameter("@Mobilenumber", SqlDbType.VarChar, 20);
-            q1.Value = ocr.Mobilenumber;
-            cmd.Parameters.Add(q1);
-
-            SqlParameter e = new SqlParameter("@Mobileotp", SqlDbType.VarChar, 10);
-            e.Value = ocr.MVerificationCode;
-            cmd.Parameters.Add(e);
-
+            LogTraceWriter traceWriter = new LogTraceWriter();
             try
             {
+                conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = "PSDriversMOTPverifying";
+
+                cmd.Connection = conn;
+
+
+                SqlParameter q1 = new SqlParameter("@Mobilenumber", SqlDbType.VarChar, 20);
+                q1.Value = ocr.Mobilenumber;
+                cmd.Parameters.Add(q1);
+
+                SqlParameter e = new SqlParameter("@Mobileotp", SqlDbType.VarChar, 10);
+                e.Value = ocr.MVerificationCode;
+                cmd.Parameters.Add(e);
+
+
                 conn.Open();
                 object statusres = cmd.ExecuteScalar();
                 conn.Close();
@@ -289,6 +291,7 @@ namespace Paysmart.Controllers
                     }
                     return Convert.ToInt32(statusres);
                 }
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "MOTPverifications successful....");
             }
             catch (Exception ex)
             {
@@ -296,6 +299,7 @@ namespace Paysmart.Controllers
                 {
                     conn.Close();
                 }
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "MOTPverifications...." + ex.Message.ToString());
                 throw ex;
             }
             //Verify mobile otp
@@ -312,32 +316,34 @@ namespace Paysmart.Controllers
         {
             int status = 0;
 
+            LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
-
-
-            conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
-
-            SqlCommand cmd = new SqlCommand();
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.CommandText = "PSDriversEOTPverification";
-
-            cmd.Connection = conn;
-
-
-            SqlParameter m = new SqlParameter("@Mobileno", SqlDbType.VarChar, 20);
-            m.Value = ocr.Mobilenumber;
-            cmd.Parameters.Add(m);
-
-            SqlParameter q1 = new SqlParameter("@Email", SqlDbType.VarChar, 50);
-            q1.Value = ocr.Email;
-            cmd.Parameters.Add(q1);
-
-            SqlParameter e = new SqlParameter("@Emailotp", SqlDbType.VarChar, 10);
-            e.Value = ocr.EVerificationCode;
-            cmd.Parameters.Add(e);
 
             try
             {
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "EOTPVerification....");
+
+                conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = "PSDriversEOTPverification";
+
+                cmd.Connection = conn;
+
+
+                SqlParameter m = new SqlParameter("@Mobileno", SqlDbType.VarChar, 20);
+                m.Value = ocr.Mobilenumber;
+                cmd.Parameters.Add(m);
+
+                SqlParameter q1 = new SqlParameter("@Email", SqlDbType.VarChar, 50);
+                q1.Value = ocr.Email;
+                cmd.Parameters.Add(q1);
+
+                SqlParameter e = new SqlParameter("@Emailotp", SqlDbType.VarChar, 10);
+                e.Value = ocr.EVerificationCode;
+                cmd.Parameters.Add(e);
+
                 conn.Open();
                 object statusres = cmd.ExecuteScalar();
                 conn.Close();
@@ -349,9 +355,11 @@ namespace Paysmart.Controllers
                     }
                     return Convert.ToInt32(statusres);
                 }
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "EOTPVerification successful....");
             }
             catch (Exception ex)
             {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "EOTPVerification....failed" + ex.Message.ToString());
                 throw ex;
             }
             //Verify mobile otp
@@ -360,48 +368,54 @@ namespace Paysmart.Controllers
             //Verify Emailotp
         }
 
-
-
         [HttpPost]
         [Route("api/RegisterDriver/Passwordverification")]
         public DataTable Passwordverification(UserAccount ocr)
         {
-
-
+            LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
-
-            conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
-
-            SqlCommand cmd = new SqlCommand();
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.CommandText = "PSDriversPasswordreset";
-
-            cmd.Connection = conn;
-
-
-            SqlParameter q1 = new SqlParameter("@Password", SqlDbType.VarChar, 50);
-            q1.Value = ocr.Password;
-            cmd.Parameters.Add(q1);
-
-            SqlParameter p = new SqlParameter("@Passwordotp", SqlDbType.VarChar, 10);
-            p.Value = ocr.Passwordotp;
-            cmd.Parameters.Add(p);
-
-            SqlParameter e = new SqlParameter("@Email", SqlDbType.VarChar, 50);
-            e.Value = ocr.Email;
-            cmd.Parameters.Add(e);
-
-
-
-            SqlParameter b1 = new SqlParameter("@Mobilenumber", SqlDbType.VarChar, 20);
-            b1.Value = ocr.Mobilenumber;
-            cmd.Parameters.Add(b1);
-
-
             DataTable dt = new DataTable();
-            SqlDataAdapter da = new SqlDataAdapter(cmd);
-            da.Fill(dt);
+            try
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Passwordverification....");
 
+                conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = "PSDriversPasswordreset";
+
+                cmd.Connection = conn;
+
+
+                SqlParameter q1 = new SqlParameter("@Password", SqlDbType.VarChar, 50);
+                q1.Value = ocr.Password;
+                cmd.Parameters.Add(q1);
+
+                SqlParameter p = new SqlParameter("@Passwordotp", SqlDbType.VarChar, 10);
+                p.Value = ocr.Passwordotp;
+                cmd.Parameters.Add(p);
+
+                SqlParameter e = new SqlParameter("@Email", SqlDbType.VarChar, 50);
+                e.Value = ocr.Email;
+                cmd.Parameters.Add(e);
+
+
+
+                SqlParameter b1 = new SqlParameter("@Mobilenumber", SqlDbType.VarChar, 20);
+                b1.Value = ocr.Mobilenumber;
+                cmd.Parameters.Add(b1);
+
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(dt);
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Passwordverification successful....");
+            }
+            catch (Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "Passwordverification....failed" + ex.Message.ToString());
+                throw ex;
+            }
             return (dt);
 
             //Verify Passwordotp

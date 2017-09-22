@@ -54,12 +54,9 @@ namespace Paysmart.Controllers
             return dt;
 
         }
-
-
-
+        
         [HttpPost]
         [Route("api/allocatedriver/AllocateDriver")]
-
         public DataTable drivers(allocatedriver A)
         {
           

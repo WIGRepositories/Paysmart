@@ -256,6 +256,7 @@ namespace Paysmart.Controllers
         public int SaveVehicleDoc(VehicleDocuments vd)
         {
             //connect to database
+            LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
             DataTable dt = new DataTable();
             int status = 1;
@@ -311,9 +312,12 @@ namespace Paysmart.Controllers
 
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
                 da.Fill(dt);
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "SaveVehicleDoc successful....");
             }
             catch(Exception ex)
             {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "SaveVehicleDoc....failed" + ex.Message.ToString());
                 throw ex;
             }
             return status;
@@ -372,8 +376,5 @@ namespace Paysmart.Controllers
             //return (dt);
         }
 
-        public SqlParameter id { get; set; }
-
-        public SqlParameter did { get; set; }
     }
 }
