@@ -331,7 +331,7 @@ namespace Paysmart.Controllers
                 s.Value = b.BranchAddress;
                 cmd.Parameters.Add(s);
 
-                SqlParameter j2 = new SqlParameter("@CountryId", SqlDbType.VarChar, 50);
+                SqlParameter j2 = new SqlParameter("@CountryId", SqlDbType.VarChar,50);
                 j2.Value = b.Country;
                 cmd.Parameters.Add(j2);
 
