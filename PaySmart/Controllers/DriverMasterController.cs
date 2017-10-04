@@ -125,8 +125,8 @@ namespace Paysmart.Controllers
                 i.Value = d.DId;
                 cmd.Parameters.Add(i);
 
-                SqlParameter di = new SqlParameter("@CompanyId", SqlDbType.Int);
-                di.Value = d.CompanyId;
+                SqlParameter di = new SqlParameter("@CompanyId", SqlDbType.VarChar,50);
+                di.Value = d.Company;
                 cmd.Parameters.Add(di);
 
                 SqlParameter n = new SqlParameter("@NAme", SqlDbType.VarChar, 50);
@@ -137,51 +137,38 @@ namespace Paysmart.Controllers
                 r.Value = d.Address;
                 cmd.Parameters.Add(r);
 
-
-
-                SqlParameter a = new SqlParameter("@City", SqlDbType.VarChar, 50);
-                a.Value = d.City;
-                cmd.Parameters.Add(a);
+                SqlParameter f = new SqlParameter("@PAddress", SqlDbType.VarChar, 50);
+                f.Value = d.PermanentAddress;
+                cmd.Parameters.Add(f);
 
                 SqlParameter s = new SqlParameter("@Pin", SqlDbType.VarChar, 50);
                 s.Value = d.Pin;
                 cmd.Parameters.Add(s);
 
-                SqlParameter f = new SqlParameter("@PAddress", SqlDbType.VarChar, 50);
-                f.Value = d.PAddress;
-                cmd.Parameters.Add(f);
-
-                SqlParameter j2 = new SqlParameter("@PCity", SqlDbType.VarChar, 255);
-                j2.Value = d.PCity;
-                cmd.Parameters.Add(j2);
-
                 SqlParameter g = new SqlParameter("@PPin", SqlDbType.VarChar, 50);
-                g.Value = d.PPin;
-                cmd.Parameters.Add(g);
-
-                SqlParameter h = new SqlParameter("@OffMobileNo", SqlDbType.Float);
-                h.Value = d.OffMobileNo;
-                cmd.Parameters.Add(h);
+                g.Value = d.PermanentPin;
+                cmd.Parameters.Add(g); 
 
                 SqlParameter j = new SqlParameter("@PMobNo", SqlDbType.VarChar, 255);
-                j.Value = d.PMobNo;
+                j.Value = d.Mobilenumber;
                 cmd.Parameters.Add(j);
 
-                SqlParameter k = new SqlParameter("@DOB", SqlDbType.Date);
-                k.Value = d.DOB;
-                cmd.Parameters.Add(k);
+                SqlParameter fr = new SqlParameter("@FirstName", SqlDbType.VarChar,50);
+                fr.Value = d.FirstName;
+                cmd.Parameters.Add(fr);
 
-                SqlParameter y = new SqlParameter("@DOJ", SqlDbType.Date);
-                y.Value = d.DOJ;
-                cmd.Parameters.Add(y);
+                SqlParameter lk = new SqlParameter("@LastName", SqlDbType.VarChar,50);
+                lk.Value = d.LastName;
+                cmd.Parameters.Add(lk);              
 
-                SqlParameter rj = new SqlParameter("@BloodGroup", SqlDbType.VarChar, 50);
-                rj.Value = d.BloodGroup;
-                cmd.Parameters.Add(rj);
 
-                SqlParameter w = new SqlParameter("@Remarks", SqlDbType.VarChar, 50);
-                w.Value = d.Remarks;
-                cmd.Parameters.Add(w);
+                SqlParameter ed = new SqlParameter("@EmailId", SqlDbType.VarChar,50);
+                ed.Value = d.EmailId;
+                cmd.Parameters.Add(ed);
+
+                SqlParameter dc = new SqlParameter("@DriverCode", SqlDbType.VarChar);
+                dc.Value = d.drivercode;
+                cmd.Parameters.Add(dc);
 
                 SqlParameter pr = new SqlParameter("@Photo", SqlDbType.VarChar);
                 pr.Value = d.Photo;
@@ -271,6 +258,18 @@ namespace Paysmart.Controllers
                 luid.Value = dd.loggedinUserId;
                 cmd.Parameters.Add(luid);
 
+                SqlParameter doc = new SqlParameter("@DocumentNo", SqlDbType.VarChar, 50);
+                doc.Value = dd.DocumentNo;
+                cmd.Parameters.Add(doc);
+
+                SqlParameter doc2 = new SqlParameter("@DocumentNo2", SqlDbType.VarChar, 50);
+                doc2.Value = dd.DocumentNo2;
+                cmd.Parameters.Add(doc2);
+
+                SqlParameter ver = new SqlParameter("@IsVerified", SqlDbType.Int);
+                ver.Value = dd.isVerified;
+                cmd.Parameters.Add(ver);
+
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
                 da.Fill(dt);
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Driver successful....");
@@ -290,6 +289,77 @@ namespace Paysmart.Controllers
             return status;
         }
 
+
+        [HttpPost]
+        [Route("api/DriverMaster/Bankingdetails")]
+        public DataTable Bankingdetails(bankdetails b)
+        {
+            DataTable dt = new DataTable();
+            LogTraceWriter traceWriter = new LogTraceWriter();
+            SqlConnection conn = new SqlConnection();
+            try
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Bankingdetails....");
+                conn.ConnectionString = ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = "HVInsUpdBankingdetails";
+                cmd.Connection = conn;
+
+                SqlParameter ff = new SqlParameter("@flag", SqlDbType.VarChar);
+                ff.Value = b.flag;
+                cmd.Parameters.Add(ff);
+
+                SqlParameter i = new SqlParameter("@Id", SqlDbType.Int);
+                i.Value = b.Id;
+                cmd.Parameters.Add(i);
+
+                SqlParameter n = new SqlParameter("@Accountnumber", SqlDbType.VarChar, 50);
+                n.Value = b.Accountnumber;
+                cmd.Parameters.Add(n);
+
+                SqlParameter r = new SqlParameter("@BankName", SqlDbType.VarChar, 50);
+                r.Value = b.BankName;
+                cmd.Parameters.Add(r);
+
+
+                SqlParameter a = new SqlParameter("@BankCode", SqlDbType.VarChar, 50);
+                a.Value = b.Bankcode;
+                cmd.Parameters.Add(a);
+
+                SqlParameter s = new SqlParameter("@BranchAddress", SqlDbType.VarChar, 50);
+                s.Value = b.BranchAddress;
+                cmd.Parameters.Add(s);
+
+                SqlParameter j2 = new SqlParameter("@CountryId", SqlDbType.VarChar, 50);
+                j2.Value = b.Country;
+                cmd.Parameters.Add(j2);
+
+                SqlParameter f = new SqlParameter("@IsActive", SqlDbType.Int);
+                f.Value = b.IsActive;
+                cmd.Parameters.Add(f);
+
+
+                
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(dt);
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Driver successful....");
+
+               
+            }
+            catch (Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "Driver...." + ex.Message.ToString());
+                throw ex;
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
+            }
+            return dt;
+        }
 
     }
 
