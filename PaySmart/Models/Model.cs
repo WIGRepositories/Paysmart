@@ -76,11 +76,9 @@ namespace Paysmart.Models
 
     public class DriverAccount
     {
-
         public string flag { get; set; }
         public int id { get; set; }
         public string Drivername { get; set; }
-
         public string Email { get; set; }
         public string Mobilenumber { get; set; }
         public string Password { get; set; }
@@ -91,7 +89,6 @@ namespace Paysmart.Models
         public string Passwordotp { get; set; }
         public DateTime MVerifiedOn { get; set; }
         public int IsMobileVerified { get; set; }
-
         public DateTime CreatedOn { get; set; }
         public int ENoOfAttempts { get; set; }
         public int MNoOfAttempts { get; set; }
@@ -103,8 +100,12 @@ namespace Paysmart.Models
         public string AccountNo { get; set; }
         public string NewPassword { get; set; }
         public object Mobileotp { get; set; }
-
         public object Emailotp { get; set; }
+        public string bioMetricData { get; set; }
+        public int CountryId { get; set; }
+        public string Photo { get; set; }
+
+        public vehicledetails Vehicle { get; set; }
     }
     public class UserLogin
     {
@@ -389,6 +390,7 @@ namespace Paysmart.Models
         public int VID { get; set; }
         public string RegistrationNo { get; set; }
         public string VehicleType { get; set; }
+        public int VehicleTypeId { get; set; }
         public string OwnerName { get; set; }
         public string ChasisNo { get; set; }
         public string Engineno { get; set; }              
@@ -399,6 +401,7 @@ namespace Paysmart.Models
         public string PMobNo { get; set; }
         public string VehicleModel { get; set; }        
         public string VehicleGroup { get; set; }
+        public int VehicleGroupId { get; set; }
         public string Photo { get; set; }
         public int StatusId { get; set; }
         public int FleetOwnerCode { get; set; }
@@ -406,7 +409,7 @@ namespace Paysmart.Models
         public int IsVerified { get; set; }
         public int isDriverOwned { get; set; }
         public string VehicleCode { get; set; }
-        public string Country { get; set; }
+        public int CountryId { get; set; }
     }
 
     public class travels
@@ -794,6 +797,37 @@ namespace Paysmart.Models
 
     }
 
+    public class ConfigData
+    {
+        public int includeStatus { get; set; }
+        public int includeCategories { get; set; }
+        public int includeLicenseCategories { get; set; }
+        public int includeVehicleGroup { get; set; }
+        public int includeGender { get; set; }
+        public int includeFrequency { get; set; }
+        public int includePricingType { get; set; }
+        public int includeTransactionType { get; set; }
+        public int includeApplicability { get; set; }
+        public int includeFeeCategory { get; set; }
+        public int includeTransChargeType { get; set; }
+        public int includeVehicleType { get; set; }
+        public int includeVehicleModel { get; set; }
+        public int includeVehicleMake { get; set; }
+        public int includeDocumentType { get; set; }
+        public int includePaymentType { get; set; }
+        public int includeMiscellaneousTypes { get; set; }
+        public int includeCardCategories { get; set; }
+        public int includeCardTypes { get; set; }
+        public int includeVehicleLayoutType { get; set; }
+        public int includeLicenseFeatures { get; set; }
+        public int includeCardModels { get; set; }
+        public int includeCards { get; set; }
+        public int includeTransactions { get; set; }
+        public int includeCountry { get; set; }
+        public int includeActiveCountry { get; set; }
+        public int includeFleetOwner { get; set; }
+        public int includeUserType { get; set; }
+    }
 }
 
 

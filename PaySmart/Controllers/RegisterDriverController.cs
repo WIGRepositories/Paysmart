@@ -35,52 +35,69 @@ namespace Paysmart.Controllers
                 SqlParameter f = new SqlParameter("@flag", SqlDbType.VarChar);
                 f.Value = ocr.flag;
                 cmd.Parameters.Add(f);
-
-                SqlParameter c = new SqlParameter("@Drivername", SqlDbType.VarChar, 20);
-                c.Value = ocr.Drivername;
-                cmd.Parameters.Add(c);
-
-                SqlParameter ce = new SqlParameter("@Email", SqlDbType.VarChar, 50);
-                ce.Value = ocr.Email;
-                cmd.Parameters.Add(ce);
-
-
+                              
                 SqlParameter cm = new SqlParameter("@Mobilenumber", SqlDbType.VarChar, 20);
                 cm.Value = ocr.Mobilenumber;
                 cmd.Parameters.Add(cm);
+
+                SqlParameter e = new SqlParameter("@Email", SqlDbType.VarChar, 100);
+                e.Value = ocr.Email;
+                cmd.Parameters.Add(e);
 
                 SqlParameter q1 = new SqlParameter("@Password", SqlDbType.VarChar, 50);
                 q1.Value = ocr.Password;
                 cmd.Parameters.Add(q1);
 
-                SqlParameter v = new SqlParameter("@Firstname", SqlDbType.VarChar, 50);
-                v.Value = ocr.Firstname;
-                cmd.Parameters.Add(v);
+                SqlParameter v3 = new SqlParameter("@Firstname", SqlDbType.VarChar, 50);
+                v3.Value = ocr.Firstname;
+                cmd.Parameters.Add(v3);
 
                 SqlParameter v1 = new SqlParameter("@lastname", SqlDbType.VarChar, 50);
                 v1.Value = ocr.lastname;
                 cmd.Parameters.Add(v1);
 
-
-
-                SqlParameter v2 = new SqlParameter("@AuthTypeId", SqlDbType.VarChar, 50);
+                SqlParameter v2 = new SqlParameter("@AuthTypeId", SqlDbType.Int);
                 v2.Value = ocr.AuthTypeId;
                 cmd.Parameters.Add(v2);
 
-                SqlParameter u = new SqlParameter("@AltPhonenumber", SqlDbType.VarChar, 50);
-                u.Value = ocr.AltPhonenumber;
+                SqlParameter c = new SqlParameter("@CountryId", SqlDbType.Int);
+                c.Value = ocr.CountryId;
+                cmd.Parameters.Add(c);
+
+                SqlParameter u = new SqlParameter("@bioMetricData", SqlDbType.VarChar);
+                u.Value = ocr.bioMetricData;
                 cmd.Parameters.Add(u);
 
-                SqlParameter u1 = new SqlParameter("@Altemail", SqlDbType.VarChar, 50);
-                u1.Value = ocr.Altemail;
-                cmd.Parameters.Add(u1);
+                SqlParameter p = new SqlParameter("@DPhoto", SqlDbType.VarChar);
+                p.Value = ocr.Photo;
+                cmd.Parameters.Add(p);
 
-                SqlParameter i = new SqlParameter("@AccountNo", SqlDbType.VarChar, 50);
-                i.Value = ocr.AccountNo;
-                cmd.Parameters.Add(i);
+                SqlParameter vg = new SqlParameter("@VehicleGroupId", SqlDbType.Int);
+                vg.Value = v.VehicleGroupId;
+                cmd.Parameters.Add(vg);
 
 
+                if (ocr.Vehicle != null) {
+                    vehicledetails v = ocr.Vehicle;
+                   
+                    SqlParameter n = new SqlParameter("@RegistrationNo", SqlDbType.VarChar, 50);
+                    n.Value = v.RegistrationNo;
+                    cmd.Parameters.Add(n);
+                   
+                    SqlParameter vt = new SqlParameter("@VehicleTypeId", SqlDbType.Int);
+                    vt.Value = v.VehicleTypeId;
+                    cmd.Parameters.Add(vt);                   
+                    
+                    SqlParameter isDriverOwned = new SqlParameter("@isDriverOwned", SqlDbType.Int);
+                    isDriverOwned.Value = v.isDriverOwned;
+                    cmd.Parameters.Add(isDriverOwned);
 
+                    SqlParameter vcode = new SqlParameter("@VPhoto ", SqlDbType.VarChar);
+                    vcode.Value = v.Photo;
+                    cmd.Parameters.Add(vcode);
+
+                }
+                
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
                 da.Fill(dt);
                 //[Mobileotp] ,[Emailotp]
