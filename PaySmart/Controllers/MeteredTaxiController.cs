@@ -15,10 +15,10 @@ namespace Paysmart.Controllers
     public class MeteredTaxiController : ApiController
     {
         //get stops
+        [HttpGet]
+        [Route("api/MeteredTaxi/TaxiStops")]
 
-        [HttpPost]
-        [Route("api/TaxiSrcDest/SaveTaxiSrcDest")]
-        public DataTable TaxiSrcDest(Taxi A)
+        public DataTable AllStops()
         {
 
             DataTable dt = new DataTable();
@@ -27,51 +27,23 @@ namespace Paysmart.Controllers
             SqlCommand cmd = new SqlCommand();
             try
             {
-                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "SaveTaxiSrcDest....");
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "TaxiPrice....");
 
 
                 conn.ConnectionString = ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
                 cmd.CommandType = CommandType.StoredProcedure;
-                cmd.CommandText = "PSTaxiSrcDest";
+                cmd.CommandText = "GetTaxiStopsList";
                 cmd.Connection = conn;
-
-
-                SqlParameter f = new SqlParameter("@flag", SqlDbType.VarChar);
-                f.Value = A.flag;
-                cmd.Parameters.Add(f);
-
-                SqlParameter ff = new SqlParameter("@Id", SqlDbType.Int);
-                ff.Value = A.Id;
-                cmd.Parameters.Add(ff);
-
-
-                SqlParameter mn = new SqlParameter("@Name", SqlDbType.VarChar,50);
-                mn.Value = A.Name;
-                cmd.Parameters.Add(mn);
-
-                SqlParameter em = new SqlParameter("@Description", SqlDbType.VarChar,50);
-                em.Value = A.Description;
-                cmd.Parameters.Add(em);
-
-
-                SqlParameter St = new SqlParameter("@Latitude", SqlDbType.Decimal);
-                St.Value = A.latitude;
-                cmd.Parameters.Add(St);
-
-                SqlParameter lk = new SqlParameter("@Longitude", SqlDbType.Decimal);
-                lk.Value = A.longitude;
-                cmd.Parameters.Add(lk);
-
 
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
                 da.Fill(dt);
 
-                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "SaveTaxiSrcDest successful....");
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "TaxiPrice successful....");
             }
             catch (Exception ex)
             {
-                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "SaveTaxiSrcDest...." + ex.Message.ToString());
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "TaxiPrice...." + ex.Message.ToString());
                 throw ex;
             }
             finally
@@ -85,7 +57,7 @@ namespace Paysmart.Controllers
 
 
         [HttpGet]
-        [Route("api/TaxiPrice/TaxiPrice")]
+        [Route("api/MeteredTaxi/TaxiPrice")]
 
         public DataTable TaxiPrice(int SrcId, int DestId)
         {
@@ -102,7 +74,7 @@ namespace Paysmart.Controllers
                 conn.ConnectionString = ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
                 cmd.CommandType = CommandType.StoredProcedure;
-                cmd.CommandText = "GetTaxiprice";
+                cmd.CommandText = "PSGetTaxiprice";
                 cmd.Connection = conn;
 
                 cmd.Parameters.Add("@SrcId", SqlDbType.Int).Value = SrcId;
