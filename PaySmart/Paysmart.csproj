@@ -107,6 +107,8 @@
     <Compile Include="Controllers\AvailableSeatsController.cs" />
     <Compile Include="Controllers\CommonController.cs" />
     <Compile Include="Controllers\MeteredTaxiController.cs" />
+    <Compile Include="Controllers\SOSMessageController.cs" />
+    <Compile Include="Controllers\SOSNumberController.cs" />
     <Compile Include="Controllers\VehicleBookingController.cs" />
     <Compile Include="Controllers\WalletBalanceController.cs" />
     <Compile Include="Controllers\BookAVehicleController.cs" />
