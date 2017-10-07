@@ -790,7 +790,25 @@ namespace Paysmart.Models
         public string change { get; set; }
 
         public int loggedinUserId { get; set; }
+        public class SOSNumber
+        {
 
+            public string flag { get; set; }
+
+            public int Id { get; set; }
+
+            public int UserId { get; set; }
+
+            public string MobileNumber { get; set; }
+
+            public int UserTypeId { get; set; }
+
+            public DateTime CreatedOn { get; set; }
+
+            public int Active { get; set; }
+
+            public int MobiOrder { get; set; }
+        }
     }
 
 }

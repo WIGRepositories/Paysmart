@@ -148,5 +148,48 @@ namespace Paysmart.Controllers
             }
             return dt;
         }
+
+        [Route("api/GetFileContent")]
+        public DataTable GetFileContent(int id, int cat)
+        {
+            DataTable dt = new DataTable();
+            DataSet ds = new DataSet();
+            LogTraceWriter traceWriter = new LogTraceWriter();
+            SqlConnection conn = new SqlConnection(); try
+            {
+                conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+                SqlCommand cmd = new SqlCommand();
+
+                SqlParameter Id = new SqlParameter("@FileId", SqlDbType.Int);
+                Id.Value = id;
+                cmd.Parameters.Add(Id);
+
+                SqlParameter c = new SqlParameter("@Category", SqlDbType.Int);
+                c.Value = cat;
+                cmd.Parameters.Add(c);
+
+                cmd.Connection = conn;
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = "PSGetFileContent";
+                SqlDataAdapter sda = new SqlDataAdapter(cmd);
+                sda.Fill(ds);
+                dt = ds.Tables[0];
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetFileContent successful....");
+            }
+            catch (Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "GetFileContent failed...." + ex.Message.ToString());
+                throw ex;
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
+            }
+            return dt;
+        }
+
     }
 }

@@ -105,7 +105,9 @@
     <Compile Include="Controllers\allocatedriverController.cs" />
     <Compile Include="Controllers\AppUsersController.cs" />
     <Compile Include="Controllers\AvailableSeatsController.cs" />
+    <Compile Include="Controllers\BalanceController.cs" />
     <Compile Include="Controllers\MeteredTaxiController.cs" />
+    <Compile Include="Controllers\SOSNumberController.cs" />
     <Compile Include="Controllers\WalletBalanceController.cs" />
     <Compile Include="Controllers\BookAVehicleController.cs" />
     <Compile Include="Controllers\BookedHistoryController.cs" />
