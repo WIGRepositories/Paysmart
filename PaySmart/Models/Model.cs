@@ -103,9 +103,13 @@ namespace Paysmart.Models
         public object Emailotp { get; set; }
         public string bioMetricData { get; set; }
         public int CountryId { get; set; }
-        public string Photo { get; set; }
-
+        public string DPhoto { get; set; }
+        public int VehicleGroupId { get; set; }
         public vehicledetails Vehicle { get; set; }
+        public string RegistrationNo { get; set; }
+        public string VPhoto { get; set; }
+        public int VehicleTypeId { get; set; }
+        public int isDriverOwned { get; set; }
     }
     public class UserLogin
     {

@@ -179,8 +179,8 @@ namespace Paysmart.Controllers
                 vcode.Value = v.VehicleCode;
                 cmd.Parameters.Add(vcode);
 
-                SqlParameter ctr = new SqlParameter("@Country ", SqlDbType.VarChar, 10);
-                ctr.Value = v.Country;
+                SqlParameter ctr = new SqlParameter("@Country", SqlDbType.VarChar, 10);
+                ctr.Value = v.CountryId;
                 cmd.Parameters.Add(ctr);
 
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
