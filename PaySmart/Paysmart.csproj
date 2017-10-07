@@ -105,9 +105,9 @@
     <Compile Include="Controllers\allocatedriverController.cs" />
     <Compile Include="Controllers\AppUsersController.cs" />
     <Compile Include="Controllers\AvailableSeatsController.cs" />
-    <Compile Include="Controllers\BalanceController.cs" />
+    <Compile Include="Controllers\CommonController.cs" />
     <Compile Include="Controllers\MeteredTaxiController.cs" />
-    <Compile Include="Controllers\SOSNumberController.cs" />
+    <Compile Include="Controllers\VehicleBookingController.cs" />
     <Compile Include="Controllers\WalletBalanceController.cs" />
     <Compile Include="Controllers\BookAVehicleController.cs" />
     <Compile Include="Controllers\BookedHistoryController.cs" />
@@ -154,7 +154,6 @@
     <Compile Include="Controllers\UserInfoController.cs" />
     <Compile Include="Controllers\UserlocationController.cs" />
     <Compile Include="Controllers\UserpreferencesController.cs" />
-    <Compile Include="Controllers\VehicleBookingController.cs" />
     <Compile Include="Controllers\VehicleDistPricingController.cs" />
     <Compile Include="Controllers\VehicleloginController.cs" />
     <Compile Include="Controllers\VehicleLogoutController.cs" />

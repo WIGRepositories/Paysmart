@@ -23,7 +23,7 @@ namespace Paysmart.Controllers
             DataTable dt = new DataTable();
             try
             {
-
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Register Driver....");
                 conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
                 SqlCommand cmd = new SqlCommand();
@@ -35,133 +35,74 @@ namespace Paysmart.Controllers
                 SqlParameter f = new SqlParameter("@flag", SqlDbType.VarChar);
                 f.Value = ocr.flag;
                 cmd.Parameters.Add(f);
-
-                SqlParameter c = new SqlParameter("@Drivername", SqlDbType.VarChar, 20);
-                c.Value = ocr.Drivername;
-                cmd.Parameters.Add(c);
-
-                SqlParameter ce = new SqlParameter("@Email", SqlDbType.VarChar, 50);
-                ce.Value = ocr.Email;
-                cmd.Parameters.Add(ce);
-
-
+                              
                 SqlParameter cm = new SqlParameter("@Mobilenumber", SqlDbType.VarChar, 20);
                 cm.Value = ocr.Mobilenumber;
                 cmd.Parameters.Add(cm);
+
+                SqlParameter e = new SqlParameter("@Email", SqlDbType.VarChar, 100);
+                e.Value = ocr.Email;
+                cmd.Parameters.Add(e);
 
                 SqlParameter q1 = new SqlParameter("@Password", SqlDbType.VarChar, 50);
                 q1.Value = ocr.Password;
                 cmd.Parameters.Add(q1);
 
-                SqlParameter v = new SqlParameter("@Firstname", SqlDbType.VarChar, 50);
-                v.Value = ocr.Firstname;
-                cmd.Parameters.Add(v);
+                SqlParameter v3 = new SqlParameter("@Firstname", SqlDbType.VarChar, 50);
+                v3.Value = ocr.Firstname;
+                cmd.Parameters.Add(v3);
 
                 SqlParameter v1 = new SqlParameter("@lastname", SqlDbType.VarChar, 50);
                 v1.Value = ocr.lastname;
                 cmd.Parameters.Add(v1);
 
-
-
-                SqlParameter v2 = new SqlParameter("@AuthTypeId", SqlDbType.VarChar, 50);
+                SqlParameter v2 = new SqlParameter("@AuthTypeId", SqlDbType.Int);
                 v2.Value = ocr.AuthTypeId;
                 cmd.Parameters.Add(v2);
 
-                SqlParameter u = new SqlParameter("@AltPhonenumber", SqlDbType.VarChar, 50);
-                u.Value = ocr.AltPhonenumber;
+                SqlParameter c = new SqlParameter("@CountryId", SqlDbType.Int);
+                c.Value = ocr.CountryId;
+                cmd.Parameters.Add(c);
+
+                SqlParameter u = new SqlParameter("@bioMetricData", SqlDbType.VarChar);
+                u.Value = ocr.bioMetricData;
                 cmd.Parameters.Add(u);
 
-                SqlParameter u1 = new SqlParameter("@Altemail", SqlDbType.VarChar, 50);
-                u1.Value = ocr.Altemail;
-                cmd.Parameters.Add(u1);
+                SqlParameter p = new SqlParameter("@DPhoto", SqlDbType.VarChar);
+                p.Value = ocr.DPhoto;
+                cmd.Parameters.Add(p);
 
-                SqlParameter i = new SqlParameter("@AccountNo", SqlDbType.VarChar, 50);
-                i.Value = ocr.AccountNo;
-                cmd.Parameters.Add(i);
-
-
-
-                SqlDataAdapter da = new SqlDataAdapter(cmd);
-                da.Fill(dt);
-                //[Mobileotp] ,[Emailotp]
-                //send email otp\
-                #region email opt
-                string eotp = dt.Rows[0]["Emailotp"].ToString();
-                if (eotp != null)
-                {
-                    try
-                    {
-                        MailMessage mail = new MailMessage();
-                        string emailserver = System.Configuration.ConfigurationManager.AppSettings["emailserver"].ToString();
-
-                        string username = System.Configuration.ConfigurationManager.AppSettings["username"].ToString();
-                        string pwd = System.Configuration.ConfigurationManager.AppSettings["password"].ToString();
-                        string fromaddress = System.Configuration.ConfigurationManager.AppSettings["fromaddress"].ToString();
-                        string port = System.Configuration.ConfigurationManager.AppSettings["port"].ToString();
-
-                        SmtpClient SmtpServer = new SmtpClient(emailserver);
-
-                        mail.From = new MailAddress(fromaddress);
-                        mail.To.Add(ocr.Email);
-                        mail.Subject = "Driver registration - Email OTP";
-                        mail.IsBodyHtml = true;
-
-                        string verifcodeMail = @"<table>
-                                                        <tr>
-                                                            <td>
-                                                                <h2>Thank you for registering with PaySmart APP</h2>
-                                                                <table width=\""760\"" align=\""center\"">
-                                                                    <tbody style='background-color:#F0F8FF;'>
-                                                                        <tr>
-                                                                            <td style=\""font-family:'Zurich BT',Arial,Helvetica,sans-serif;font-size:15px;text-align:left;line-height:normal;background-color:#F0F8FF;\"" >
-<div style='padding:10px;border:#0000FF solid 2px;'>    <br /><br />
-                                                                             
-                                                       Your email OTP is:<h3>" + eotp + @" </h3>
-
-                                                        If you didn't make this request, <a href='http://154.120.237.198:52800'>click here</a> to cancel.
-
-                                                                                <br/>
-                                                                                <br/>             
-                                                                       
-                                                                                Warm regards,<br>
-                                                                                PAYSMART Customer Service Team<br/><br />
-</div>
-                                                                            </td>
-                                                                        </tr>
-
-                                                                    </tbody>
-                                                                </table>
-                                                            </td>
-                                                        </tr>
-
-                                                    </table>";
+                SqlParameter vg = new SqlParameter("@VehicleGroupId", SqlDbType.Int);
+                vg.Value = ocr.VehicleGroupId;
+                cmd.Parameters.Add(vg);
 
 
-                        mail.Body = verifcodeMail;
-                        //SmtpServer.Port = 465;
-                        //SmtpServer.Port = 587;
-                        SmtpServer.Port = Convert.ToInt32(port);
-                        SmtpServer.UseDefaultCredentials = false;
+                if (ocr.RegistrationNo != null)
+                {                 
+                    SqlParameter n = new SqlParameter("@RegistrationNo", SqlDbType.VarChar, 50);
+                    n.Value = ocr.RegistrationNo;
+                    cmd.Parameters.Add(n);
+                   
+                    SqlParameter vt = new SqlParameter("@VehicleTypeId", SqlDbType.Int);
+                    vt.Value = ocr.VehicleTypeId;
+                    cmd.Parameters.Add(vt);                   
+                    
+                    SqlParameter isDriverOwned = new SqlParameter("@isDriverOwned", SqlDbType.Int);
+                    isDriverOwned.Value = ocr.isDriverOwned;
+                    cmd.Parameters.Add(isDriverOwned);
 
-                        SmtpServer.Credentials = new System.Net.NetworkCredential(username, pwd);
-                        SmtpServer.EnableSsl = true;
-                        //SmtpServer.TargetName = "STARTTLS/smtp.gmail.com";
-                        SmtpServer.Send(mail);
-
-                    }
-                    catch (Exception ex)
-                    {
-                        //throw ex;
-                    }
+                    SqlParameter vcode = new SqlParameter("@VPhoto ", SqlDbType.VarChar);
+                    vcode.Value = ocr.VPhoto;
+                    cmd.Parameters.Add(vcode);
 
                 }
+                
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(dt);
 
-                //send mobile otp
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Register driver saved....");
 
-
-                // return dt;
-
-                #endregion email otp
+                //[Mobileotp] ,[Emailotp]
 
                 //send mobile otp as SMS
                 #region Mobile OTP
@@ -230,16 +171,97 @@ namespace Paysmart.Controllers
                     }
                     catch (Exception ex)
                     {
+                        traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "Register driver Email otp failed...." + ex.Message);
                         //throw ex;
                     }
                 }
                 #endregion Mobile OTP
 
+                //send email otp\
+                #region email opt
+                string eotp = dt.Rows[0]["Emailotp"].ToString();
+                if (eotp != null)
+                {
+                    try
+                    {
+                        MailMessage mail = new MailMessage();
+                        string emailserver = System.Configuration.ConfigurationManager.AppSettings["emailserver"].ToString();
+
+                        string username = System.Configuration.ConfigurationManager.AppSettings["username"].ToString();
+                        string pwd = System.Configuration.ConfigurationManager.AppSettings["password"].ToString();
+                        string fromaddress = System.Configuration.ConfigurationManager.AppSettings["fromaddress"].ToString();
+                        string port = System.Configuration.ConfigurationManager.AppSettings["port"].ToString();
+
+                        SmtpClient SmtpServer = new SmtpClient(emailserver);
+
+                        mail.From = new MailAddress(fromaddress);
+                        mail.To.Add(ocr.Email);
+                        mail.Subject = "Driver registration - Email OTP";
+                        mail.IsBodyHtml = true;
+
+                        string verifcodeMail = @"<table>
+                                                        <tr>
+                                                            <td>
+                                                                <h2>Thank you for registering with PaySmart APP</h2>
+                                                                <table width=\""760\"" align=\""center\"">
+                                                                    <tbody style='background-color:#F0F8FF;'>
+                                                                        <tr>
+                                                                            <td style=\""font-family:'Zurich BT',Arial,Helvetica,sans-serif;font-size:15px;text-align:left;line-height:normal;background-color:#F0F8FF;\"" >
+<div style='padding:10px;border:#0000FF solid 2px;'>    <br /><br />
+                                                                             
+                                                       Your email OTP is:<h3>" + eotp + @" </h3>
+
+                                                        If you didn't make this request, <a href='http://154.120.237.198:52800'>click here</a> to cancel.
+
+                                                                                <br/>
+                                                                                <br/>             
+                                                                       
+                                                                                Warm regards,<br>
+                                                                                PAYSMART Customer Service Team<br/><br />
+</div>
+                                                                            </td>
+                                                                        </tr>
+
+                                                                    </tbody>
+                                                                </table>
+                                                            </td>
+                                                        </tr>
+
+                                                    </table>";
+
+
+                        mail.Body = verifcodeMail;
+                        //SmtpServer.Port = 465;
+                        //SmtpServer.Port = 587;
+                        SmtpServer.Port = Convert.ToInt32(port);
+                        SmtpServer.UseDefaultCredentials = false;
+
+                        SmtpServer.Credentials = new System.Net.NetworkCredential(username, pwd);
+                        SmtpServer.EnableSsl = true;
+                        //SmtpServer.TargetName = "STARTTLS/smtp.gmail.com";
+                        SmtpServer.Send(mail);
+
+                    }
+                    catch (Exception ex)
+                    {
+                        traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "Register driver Email otp failed...." + ex.Message);
+                        //throw ex;
+                    }
+
+                }
+
+                //send mobile otp
+
+
+                // return dt;
+
+                #endregion email otp                              
+
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Registerdriver successful....");
             }
             catch (Exception ex)
             {
-                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "Registerdriver...." + ex.Message.ToString());
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "Register driver...." + ex.Message.ToString());
                 throw ex;
             }
             finally
