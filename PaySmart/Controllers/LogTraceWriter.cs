@@ -18,7 +18,7 @@ namespace Paysmart
                 TraceRecord record = new TraceRecord(request, category, level);
                 traceAction(record);
                
-                string path = HttpContext.Current.Server.MapPath("~/AppLog.txt");
+                string path = HttpContext.Current.Server.MapPath("~/AppLog"+DateTime.Now.ToString("MMddyyyy")+".txt");
                 try
                 {
                     if (!File.Exists(path))

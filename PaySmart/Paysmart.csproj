@@ -93,8 +93,10 @@
     <Content Include="UI\EmailTemplates\TicketFormat.html" />
     <Content Include="UI\images\phone.jpg" />
     <Content Include="UI\js\angular.js" />
+    <Content Include="UI\js\LogViewer.js" />
     <Content Include="UI\js\Registration.js" />
     <Content Include="UI\js\UserInfo.js" />
+    <Content Include="UI\LogViewer.html" />
     <Content Include="UI\Registration.html" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
