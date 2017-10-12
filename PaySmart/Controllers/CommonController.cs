@@ -217,5 +217,80 @@ namespace Paysmart.Controllers
             return ds;
 
         }
+
+        [HttpGet]
+        [Route("api/Common/PendingDocs")]
+        public DataSet PendingDocs(int userid) { 
+
+             LogTraceWriter traceWriter = new LogTraceWriter();
+             traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "PendingDocs....");
+            DataSet ds = new DataSet();
+            
+            //connect to database
+            SqlConnection conn = new SqlConnection();
+            try
+            {
+                //connetionString="Data Source=ServerName;Initial Catalog=DatabaseName;User ID=UserName;Password=Password"
+                conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = "PSGetPendingDocs";
+                cmd.Connection = conn;
+
+                SqlParameter gsaa = new SqlParameter("@userId", SqlDbType.Int);
+                gsaa.Value = userid;
+                cmd.Parameters.Add(gsaa);
+
+                SqlDataAdapter db = new SqlDataAdapter(cmd);
+                db.Fill(ds);
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "PendingDocs completed.");
+            }
+            catch (Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "PendingDocs...." + ex.Message.ToString());
+                throw ex;
+            }
+
+            return ds;
+        }
+
+        [HttpGet]
+        [Route("api/Common/PendingVehicleDocs")]
+        public DataSet PendingVehicleDocs(int VId)
+        {
+
+            LogTraceWriter traceWriter = new LogTraceWriter();
+            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "PendingVehicleDocs....");
+            DataSet ds = new DataSet();
+
+            //connect to database
+            SqlConnection conn = new SqlConnection();
+            try
+            {
+                //connetionString="Data Source=ServerName;Initial Catalog=DatabaseName;User ID=UserName;Password=Password"
+                conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = "PSGetPendingVehicleDocs";
+                cmd.Connection = conn;
+
+                SqlParameter gsaa = new SqlParameter("@VId", SqlDbType.Int);
+                gsaa.Value = VId;
+                cmd.Parameters.Add(gsaa);
+
+                SqlDataAdapter db = new SqlDataAdapter(cmd);
+                db.Fill(ds);
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "PendingVehicleDocs completed.");
+            }
+            catch (Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "PendingVehicleDocs...." + ex.Message.ToString());
+                throw ex;
+            }
+
+            return ds;
+        }
     }
 }

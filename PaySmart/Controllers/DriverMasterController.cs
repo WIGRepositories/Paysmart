@@ -14,9 +14,7 @@ namespace Paysmart.Controllers
 {
     public class DriverMasterController : ApiController
     {
-
         [HttpGet]
-
         [Route("api/DriverMaster/Master")]
         public DataTable Master(int DId)
         {
@@ -288,8 +286,7 @@ namespace Paysmart.Controllers
             }
             return status;
         }
-
-
+        
         [HttpPost]
         [Route("api/DriverMaster/Bankingdetails")]
         public DataTable Bankingdetails(bankdetails b)
@@ -359,6 +356,47 @@ namespace Paysmart.Controllers
                 SqlConnection.ClearPool(conn);
             }
             return dt;
+        }
+
+        [HttpGet]
+        [Route("api/DriverMaster/CurrentState")]
+        public DataTable CurrentState(int DId)
+        {
+            DataTable dt = new DataTable();
+            LogTraceWriter traceWriter = new LogTraceWriter();
+            SqlConnection conn = new SqlConnection();
+
+            try
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "CurrentState....");
+
+                conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = "PSGetCurrentDriverStatus";
+                cmd.Parameters.Add("@DId", SqlDbType.Int).Value = DId;
+                cmd.Connection = conn;
+                DataSet ds = new DataSet();
+                SqlDataAdapter db = new SqlDataAdapter(cmd);
+                db.Fill(dt);
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "CurrentState successful....");
+
+            }
+            catch (Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "CurrentState...." + ex.Message.ToString());
+                throw ex;
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
+            }
+            return dt;
+
         }
 
     }
