@@ -798,27 +798,28 @@ namespace Paysmart.Models
         public string Bankcode { get; set; }
         public string Country { get; set; }
         public int IsActive { get; set; }
-        public class SOSNumber
-        {
-
-            public string flag { get; set; }
-
-            public int Id { get; set; }
-
-            public int UserId { get; set; }
-
-            public string MobileNumber { get; set; }
-
-            public int UserTypeId { get; set; }
-
-            public DateTime CreatedOn { get; set; }
-
-            public int Active { get; set; }
-
-            public int MobiOrder { get; set; }
-        }
+        
     }
 
+    public class SOSNumber
+    {
+
+        public string flag { get; set; }
+
+        public int Id { get; set; }
+
+        public int UserId { get; set; }
+
+        public string MobileNumber { get; set; }
+
+        public int UserTypeId { get; set; }
+
+        public DateTime CreatedOn { get; set; }
+
+        public int Active { get; set; }
+
+        public int MobiOrder { get; set; }
+    }
     public class ConfigData
     {
         public int includeStatus { get; set; }
@@ -850,25 +851,7 @@ namespace Paysmart.Models
         public int includeFleetOwner { get; set; }
         public int includeUserType { get; set; }
     }
-    public class SOSNumber
-    {
-
-        public string flag { get; set; }
-
-        public int Id { get; set; }
-
-        public int UserId { get; set; }
-
-        public string MobileNumber { get; set; }
-
-        public int UserTypeId { get; set; }
-
-        public DateTime CreatedOn { get; set; }
-
-        public int Active { get; set; }
-
-        public int MobiOrder { get; set; }
-    }
+   
     public class SOSMessage
     {
 
@@ -902,6 +885,9 @@ namespace Paysmart.Models
 
         public float Longitude { get; set; }
     }
+
+   
+
 }
 
 

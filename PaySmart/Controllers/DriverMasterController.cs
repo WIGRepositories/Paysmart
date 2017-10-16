@@ -288,7 +288,7 @@ namespace Paysmart.Controllers
         }
         
         [HttpPost]
-        [Route("api/DriverMaster/Bankingdetails")]
+        [Route("api/DriverMaster/SaveBankingdetails")]
         public DataTable Bankingdetails(bankdetails b)
         {
             DataTable dt = new DataTable();
@@ -355,6 +355,43 @@ namespace Paysmart.Controllers
                 conn.Dispose();
                 SqlConnection.ClearPool(conn);
             }
+            return dt;
+        }
+
+        [HttpGet]
+        [Route("api/DriverMaster/GetBankingDetails")]
+        public DataTable GetBankingDetails(int DId)
+        {
+            LogTraceWriter traceWriter = new LogTraceWriter();
+            DataTable dt = new DataTable();
+            SqlConnection conn = new SqlConnection();
+            SqlCommand cmd = new SqlCommand();
+            try
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetBankingDetails....");
+                conn.ConnectionString = ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = "HVGetbankingdetails";
+                cmd.Connection = conn;
+                cmd.Parameters.Add("@DId", SqlDbType.Int).Value = DId;
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(dt);
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetBankingDetails successful....");
+            }
+            catch (Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "GetBankingDetails...." + ex.Message.ToString());
+                throw ex;
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
+            }
+
             return dt;
         }
 
