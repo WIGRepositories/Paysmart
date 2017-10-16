@@ -29,9 +29,7 @@ namespace Paysmart.Controllers
 
             try
             {
-                
-
-                conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+               conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
                 SqlCommand cmd = new SqlCommand();
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -67,8 +65,6 @@ namespace Paysmart.Controllers
                 SqlParameter v1 = new SqlParameter("@lastname", SqlDbType.VarChar, 50);
                 v1.Value = ocr.lastname;
                 cmd.Parameters.Add(v1);
-
-
 
                 SqlParameter v2 = new SqlParameter("@AuthTypeId", SqlDbType.VarChar, 50);
                 v2.Value = ocr.AuthTypeId;

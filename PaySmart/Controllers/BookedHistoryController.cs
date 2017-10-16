@@ -22,23 +22,23 @@ namespace Paysmart.Controllers
             try
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetBookedHistory....");
-            //connetionString="Data Source=ServerName;Initial Catalog=DatabaseName;User ID=UserName;Password=Password"
-            conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+                //connetionString="Data Source=ServerName;Initial Catalog=DatabaseName;User ID=UserName;Password=Password"
+                conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
-            SqlCommand cmd = new SqlCommand();
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.CommandText = "PSGetBookedHistory";
-            cmd.Parameters.Add("@emailAddress", SqlDbType.VarChar, 50).Value = (emailid == null) ? "-1" : emailid;
-           // cmd.Parameters.Add("@emailAddress", SqlDbType.VarChar,50).Value = emailid;
-            cmd.Parameters.Add("@mobileno", SqlDbType.VarChar, 15).Value = MobileNo;
-            cmd.Connection = conn;
-            SqlDataAdapter db = new SqlDataAdapter(cmd);
-            db.Fill(dt);
-            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetBookedHistory successful....");
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = "PSGetBookedHistory";
+                cmd.Parameters.Add("@emailAddress", SqlDbType.VarChar, 50).Value = (emailid == null) ? "-1" : emailid;
+                // cmd.Parameters.Add("@emailAddress", SqlDbType.VarChar,50).Value = emailid;
+                cmd.Parameters.Add("@mobileno", SqlDbType.VarChar, 15).Value = MobileNo;
+                cmd.Connection = conn;
+                SqlDataAdapter db = new SqlDataAdapter(cmd);
+                db.Fill(dt);
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetBookedHistory successful....");
             }
             catch (Exception ex)
             {
-                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "GetBookedHistory...." + ex.Message.ToString());
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "GetBookedHistory....failed" + ex.Message.ToString());
                 throw ex;
             }
             finally

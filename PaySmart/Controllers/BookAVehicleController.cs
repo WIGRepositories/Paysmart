@@ -244,7 +244,7 @@ namespace Paysmart.Controllers
             }
             catch (Exception ex)
             {
-                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "SaveBookingDetails...." + ex.Message.ToString());
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "SaveBookingDetails....failed" + ex.Message.ToString());
                 throw ex;
             }
             finally

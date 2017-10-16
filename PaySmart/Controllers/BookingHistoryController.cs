@@ -15,29 +15,29 @@ namespace Paysmart.Controllers
         [HttpGet]
 
         [Route("api/BookingHistory/GetBookingHistory")]
-        public DataTable GetBookingHistory(string PhoneNo ,string EmailId)
+        public DataTable GetBookingHistory(string PhoneNo, string EmailId)
         {
-          LogTraceWriter traceWriter = new LogTraceWriter();
+            LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
             DataTable dt = new DataTable();
             try
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetBookingHistory....");
 
-            conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+                conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
-            SqlCommand cmd = new SqlCommand();
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.CommandText = "HVGetBookingHistory";
-            cmd.Parameters.Add("@PhoneNo", SqlDbType.VarChar, 50).Value = PhoneNo;
-            cmd.Parameters.Add("@EmailId", SqlDbType.VarChar, 50).Value = EmailId;
-            cmd.Connection = conn;
-            DataSet ds = new DataSet();
-            SqlDataAdapter db = new SqlDataAdapter(cmd);
-            db.Fill(ds);
-            dt = ds.Tables[0];
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = "HVGetBookingHistory";
+                cmd.Parameters.Add("@PhoneNo", SqlDbType.VarChar, 50).Value = PhoneNo;
+                cmd.Parameters.Add("@EmailId", SqlDbType.VarChar, 50).Value = EmailId;
+                cmd.Connection = conn;
+                DataSet ds = new DataSet();
+                SqlDataAdapter db = new SqlDataAdapter(cmd);
+                db.Fill(ds);
+                dt = ds.Tables[0];
 
-            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetBookingHistory successful....");
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetBookingHistory successful....");
 
             }
             catch (Exception ex)

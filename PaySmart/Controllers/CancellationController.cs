@@ -39,7 +39,7 @@ namespace Paysmart.Controllers
             }
             catch (Exception ex)
             {
-                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "RetriveTicketDetails...." + ex.Message.ToString());
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "RetriveTicketDetails....failed" + ex.Message.ToString());
                 throw ex;
             }
             finally

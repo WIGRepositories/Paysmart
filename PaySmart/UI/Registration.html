@@ -2,40 +2,40 @@
 <html lang="en">
 <head>
     <title>Registration</title>
-   
-    <style>
-  body  {
 
+    <style>
+        body {
             background-image: url("images/phone.jpg");
             background-repeat: no-repeat;
             background-attachment: scroll;
             background-position: 50% 10%;
-            background-size:50% ;
+            background-size: 50%;
         }
-  .text{
-      font-size: 100%;
-      text-align: center;
 
-  }
+        .text {
+            font-size: 100%;
+            text-align: center;
+        }
     </style>
 </head>
 <body ng-app="myApp" ng-controller="myCtrl" ng-model="type" class="col-md-offset-8" style="margin-top:200px">
     <div class="text" ng-model="register">
-        User Name: <input type="text" placeholder="Username" id="Username" style="height:20px;font-size:14pt;" ng-model="register.Username"><br><br />      
+        User Name: <input type="text" placeholder="Username" id="Username" style="height:20px;font-size:14pt;" ng-model="register.Username"><br><br />
         Email: <input type="email" placeholder="Email" id="Email" style="height:20px;font-size:14pt;margin-left:20px" ng-model="register.Email"><br><br />
         Mobile No: <input type="text" placeholder="Mobilenumber" id="Mobilenumber" style="height:20px;font-size:14pt;" ng-model="register.Mobilenumber"><br><br />
         Password:<input type="password" placeholder="Password" id="Password" style="height:20px;font-size:14pt;margin-left:2px" ng-model="register.Password"><br><br />
 
-    <div class="form-group" >
-        <button ng-click="Register(register)" class="btn btn-success" style="height:35px;font-size:20pt;text-align:center">
-            Register
-            &nbsp;<i class="fa fa-chevron-circle-right"></i>
-        </button>
+
+        <div class="form-group">
+            <button ng-click="Register(register)" class="btn btn-success" style="height:35px;font-size:20pt;text-align:center">
+                Register
+                &nbsp;<i class="fa fa-chevron-circle-right"></i>
+            </button>
 
         </div>
-        </div>
+    </div>
     <!--<div class="container" style="margin-top:60px;min-height:380px;font-size:medium" ng-show="registeredUseId != 0">
-      
+
         <div class="row">
             <h2 style="text-align:center">Verify Email Address</h2>
 
@@ -106,8 +106,8 @@
 
         </div>
     </div>-->
-  <script src="js/angular.js"></script>
-  <script src="js/Registration.js"></script>
+    <script src="js/angular.js"></script>
+    <script src="js/Registration.js"></script>
 </body>
 
 </html>
