@@ -295,7 +295,7 @@ namespace Paysmart.Controllers
             SqlConnection conn = new SqlConnection();
             try
             {
-                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Bankingdetails....");
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "SaveBankingdetails....");
                 conn.ConnectionString = ConfigurationManager.ConnectionStrings["btposdb"].ToString();
                 SqlCommand cmd = new SqlCommand();
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -354,13 +354,13 @@ namespace Paysmart.Controllers
                 
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
                 da.Fill(dt);
-                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Driver successful....");
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "SaveBankingdetails successful....");
 
                
             }
             catch (Exception ex)
             {
-                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "Driver...." + ex.Message.ToString());
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "SaveBankingdetails...." + ex.Message.ToString());
                 throw ex;
             }
             finally
