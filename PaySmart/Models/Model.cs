@@ -798,7 +798,10 @@ namespace Paysmart.Models
         public string Bankcode { get; set; }
         public string Country { get; set; }
         public int IsActive { get; set; }
-        
+        public int IsPrimary { get; set; }
+        public int DriverId { get; set; }
+        public string Code { get; set; }
+        public string QRCode { get; set; }
     }
 
     public class SOSNumber

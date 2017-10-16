@@ -95,9 +95,8 @@ namespace Paysmart.Controllers
 
         }
 
-        [HttpPost]
+        [HttpPost] 
         [Route("api/DriverMaster/Driver")]
-
         public DataTable Driver(driverdetails d)
         {
             DataTable dt = new DataTable();
@@ -332,11 +331,26 @@ namespace Paysmart.Controllers
                 j2.Value = b.Country;
                 cmd.Parameters.Add(j2);
 
+                SqlParameter did = new SqlParameter("@DriverId", SqlDbType.Int);
+                did.Value = b.DriverId;
+                cmd.Parameters.Add(did);
+
                 SqlParameter f = new SqlParameter("@IsActive", SqlDbType.Int);
                 f.Value = b.IsActive;
                 cmd.Parameters.Add(f);
 
+                SqlParameter code = new SqlParameter("@Code", SqlDbType.VarChar,20);
+                code.Value = b.Code;
+                cmd.Parameters.Add(code);
 
+                SqlParameter Qrcode = new SqlParameter("@QRCode", SqlDbType.VarChar,20);
+                Qrcode.Value = b.QRCode;
+                cmd.Parameters.Add(Qrcode);
+
+
+                SqlParameter ip = new SqlParameter("@IsPrimary", SqlDbType.Int);
+                ip.Value = b.IsPrimary;
+                cmd.Parameters.Add(ip);
                 
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
                 da.Fill(dt);
