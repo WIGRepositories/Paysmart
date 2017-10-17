@@ -904,6 +904,13 @@ namespace Paysmart.Models
         public int PymentType { get; set; }
        
     }
+    public class Approvals
+    {
+        public string change { get; set; }
+        public int IsApproved { get; set; }
+        public string MobileNo { get; set; }
+        public string RegistrationNo { get; set; }
+    }
 
 }
 

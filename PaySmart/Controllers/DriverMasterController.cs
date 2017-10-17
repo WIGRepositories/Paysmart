@@ -55,6 +55,56 @@ namespace Paysmart.Controllers
             return dt;
 
         }
+        [HttpGet]
+        [Route("api/DriverMaster/GetMaster")]
+        public DataTable GetMaster(int DId)
+        {
+            DataTable dt = new DataTable();
+
+            SqlConnection conn = new SqlConnection();
+
+            conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.CommandText = "HVgetdrivermaster";
+            cmd.Parameters.Add("@DId", SqlDbType.Int).Value = DId;
+            cmd.Connection = conn;
+            DataSet ds = new DataSet();
+            SqlDataAdapter db = new SqlDataAdapter(cmd);
+            db.Fill(ds);
+            dt = ds.Tables[0];
+
+            return dt;
+
+        }
+
+
+        [HttpGet]
+        [Route("api/DriverMaster/GetDriverApproval")]
+        public DataTable GetDriverApproval(String MobileNo)
+        {
+            DataTable dt = new DataTable();
+
+            SqlConnection conn = new SqlConnection();
+
+            conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.CommandText = "PSGetDriverApproval";
+            cmd.Parameters.Add("@MobileNumber", SqlDbType.VarChar).Value = MobileNo;
+            cmd.Connection = conn;
+            DataSet ds = new DataSet();
+            SqlDataAdapter db = new SqlDataAdapter(cmd);
+            db.Fill(ds);
+            dt = ds.Tables[0];
+
+            return dt;
+
+        }
+
+
 
         [HttpGet]
         [Route("api/DriverMaster/GetDriverDetails")]
@@ -448,6 +498,94 @@ namespace Paysmart.Controllers
             }
             return dt;
 
+        }
+        //[HttpGet]
+        //[Route("api/DriverMaster/Master")]
+        //public DataTable Master(int DId)
+        //{
+        //    DataTable dt = new DataTable();
+        //    LogTraceWriter traceWriter = new LogTraceWriter();
+        //    SqlConnection conn = new SqlConnection();
+
+        //    try
+        //    {
+        //        traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Master....");
+
+        //        conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+
+        //        SqlCommand cmd = new SqlCommand();
+        //        cmd.CommandType = CommandType.StoredProcedure;
+        //        cmd.CommandText = "HVgetdrivermaster";
+        //        cmd.Parameters.Add("@DId", SqlDbType.Int).Value = DId;
+        //        cmd.Connection = conn;
+        //        DataSet ds = new DataSet();
+        //        SqlDataAdapter db = new SqlDataAdapter(cmd);
+        //        db.Fill(ds);
+        //        dt = ds.Tables[0];
+
+        //        traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Master successful....");
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "Master...." + ex.Message.ToString());
+        //        throw ex;
+        //    }
+        //    finally
+        //    {
+        //        conn.Close();
+        //        conn.Dispose();
+        //        SqlConnection.ClearPool(conn);
+        //    }
+        //    return dt;
+
+        //}
+
+        [HttpPost]
+        [Route("api/DriverMaster/SaveDriverApprovals")]
+        public DataTable SaveDriverApprovals(Approvals a)
+        {
+            //connect to database
+            SqlConnection conn = new SqlConnection();
+            DataTable dt = new DataTable();
+            try
+            {
+                //connetionString="Data Source=ServerName;Initial Catalog=DatabaseName;User ID=UserName;Password=Password"
+                conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = "PSinsupddriverApprovals";
+                cmd.Connection = conn;
+
+
+                SqlParameter LocationId = new SqlParameter("@Change", SqlDbType.VarChar);
+                LocationId.Value = a.change;
+                cmd.Parameters.Add(LocationId);
+
+                SqlParameter parentid = new SqlParameter("@IsApproved", SqlDbType.Int);
+                parentid.Value = a.IsApproved;
+                cmd.Parameters.Add(parentid);
+
+                SqlParameter flag = new SqlParameter("@MobileNo", SqlDbType.VarChar);
+                flag.Value = a.MobileNo;
+                cmd.Parameters.Add(flag);
+
+
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(dt);
+
+
+                return dt;
+            }
+            catch (Exception ex)
+            {
+                if (conn != null && conn.State == ConnectionState.Open)
+                {
+                    conn.Close();
+                }
+                throw ex;
+            }
         }
 
     }
