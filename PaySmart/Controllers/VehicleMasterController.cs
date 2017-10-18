@@ -55,7 +55,7 @@ namespace Paysmart.Controllers
         }
 
         [HttpGet]
-        [Route("api/DriverMaster/GetVehicleApproval")]
+        [Route("api/VehicleMaster/GetVehicleApproval")]
         public DataTable GetVehicleApproval(String RegNo)
         {
             DataTable dt = new DataTable();
@@ -387,7 +387,7 @@ namespace Paysmart.Controllers
         }
 
         [HttpPost]
-        [Route("api/DriverMaster/SaveVehicleApprovals")]
+        [Route("api/VehicleMaster/SaveVehicleApprovals")]
         public DataTable SaveVehicleApprovals(Approvals a)
         {
             //connect to database
@@ -422,8 +422,8 @@ namespace Paysmart.Controllers
 
 
                 #region Mobile OTP
-                string motp = dt.Rows[0]["Mobileotp"].ToString();
-                if (motp != null)
+                string eotp = dt.Rows[0]["VehicleCode"].ToString();
+                if (eotp != null)
                 {
                     try
                     {
@@ -439,7 +439,7 @@ namespace Paysmart.Controllers
 
                         mail.From = new MailAddress(fromaddress);
                         mail.To.Add(a.Email);
-                        mail.Subject = "Driver registration - Mobile OTP";
+                        mail.Subject = "Vehicle Registration - Email OTP";
                         mail.IsBodyHtml = true;
 
                         string verifcodeMail = @"<table>
@@ -452,7 +452,7 @@ namespace Paysmart.Controllers
                                                                             <td style=\""font-family:'Zurich BT',Arial,Helvetica,sans-serif;font-size:15px;text-align:left;line-height:normal;background-color:#F0F8FF;\"" >
 <div style='padding:10px;border:#0000FF solid 2px;'>    <br /><br />
                                                                              
-                                                       Your Vehicle is Approved:<h3>" + motp + @" </h3>
+                                                       Your Vehicle is Approved:<h3>" + eotp + @" </h3>
 
                                                         If you didn't make this request, <a href='http://154.120.237.198:52800'>click here</a> to cancel.
 

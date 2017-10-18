@@ -911,6 +911,7 @@ namespace Paysmart.Models
         public string MobileNo { get; set; }
         public string RegistrationNo { get; set; }
         public string Email { get; set; }
+        
     }
 
 }
