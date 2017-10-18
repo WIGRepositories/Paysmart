@@ -910,6 +910,7 @@ namespace Paysmart.Models
         public int IsApproved { get; set; }
         public string MobileNo { get; set; }
         public string RegistrationNo { get; set; }
+        public string Email { get; set; }
     }
 
 }
