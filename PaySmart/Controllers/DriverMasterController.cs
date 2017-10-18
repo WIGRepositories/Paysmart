@@ -410,6 +410,44 @@ namespace Paysmart.Controllers
         }
 
         [HttpGet]
+        [Route("api/DriverMaster/GetQrCode")]
+        public DataTable GetQrCode(int DId)
+        {
+            LogTraceWriter traceWriter = new LogTraceWriter();
+            DataTable dt = new DataTable();
+            SqlConnection conn = new SqlConnection();
+            SqlCommand cmd = new SqlCommand();
+            try
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetQrCode....");
+                conn.ConnectionString = ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = "HvGetQrCode";
+                cmd.Connection = conn;
+                cmd.Parameters.Add("@DId", SqlDbType.Int).Value = DId;
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(dt);
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetQrCode successful....");
+            }
+            catch (Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "GetQrCode...." + ex.Message.ToString());
+                throw ex;
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
+            }
+
+            return dt;
+        }
+
+
+        [HttpGet]
         [Route("api/DriverMaster/CurrentState")]
         public DataTable CurrentState(int DId)
         {
