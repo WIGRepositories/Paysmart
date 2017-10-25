@@ -650,7 +650,7 @@ namespace Paysmart.Controllers
                                                         If you didn't make this request, <a href='http://154.120.237.198:52800'>click here</a> to cancel.
 
                                                                                 <br/>
-                                                                                <br/>             
+                                                                                <br/>              
                                                                        
                                                                                 Warm regards,<br>
                                                                                 PAYSMART Customer Service Team<br/><br />

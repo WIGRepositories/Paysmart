@@ -264,7 +264,8 @@ namespace Paysmart.Controllers
 
             try
             {
-                traceWriter.Trace(Request, "0", System.Diagnostics.TraceLevel.Info, "{0}", "MOTPverifications....");
+            
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "MOTPverifications....");
 
                 conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
@@ -332,8 +333,8 @@ namespace Paysmart.Controllers
 
             try
             {
-                traceWriter.Trace(Request, "0", System.Diagnostics.TraceLevel.Info, "{0}", "EOTPVerification....");
 
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "EOTPverifications....");
 
                 conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
