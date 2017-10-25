@@ -30,7 +30,7 @@ namespace Paysmart.Controllers
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.CommandText = "HVGetBookingHistory";
                 cmd.Parameters.Add("@PhoneNo", SqlDbType.VarChar, 50).Value = PhoneNo;
-                cmd.Parameters.Add("@EmailId", SqlDbType.VarChar, 50).Value = EmailId;
+                //cmd.Parameters.Add("@EmailId", SqlDbType.VarChar, 50).Value = EmailId;
                 cmd.Connection = conn;
                 DataSet ds = new DataSet();
                 SqlDataAdapter db = new SqlDataAdapter(cmd);
