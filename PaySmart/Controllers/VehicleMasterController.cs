@@ -336,9 +336,9 @@ namespace Paysmart.Controllers
         [HttpPost]
         [Route("api/VehicleMaster/TrackVehicle")]
 
-        public DataTable TrackVehicle(vehicledetails l)
+        public int TrackVehicle(vehicledetails l)
         {
-
+            int Status = 1;
             LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
             DataTable currTripList = new DataTable();
@@ -382,7 +382,7 @@ namespace Paysmart.Controllers
                 conn.Dispose();
                 SqlConnection.ClearPool(conn);
             }
-            return currTripList;
+            return Status;
             //return (dt);
         }
 
