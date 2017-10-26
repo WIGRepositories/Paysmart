@@ -29,6 +29,8 @@ namespace Paysmart.Controllers
 
             try
             {
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "RegisterUser....");
                conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
                 SqlCommand cmd = new SqlCommand();
