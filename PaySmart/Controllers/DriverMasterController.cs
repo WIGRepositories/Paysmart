@@ -350,7 +350,7 @@ namespace Paysmart.Controllers
                 conn.ConnectionString = ConfigurationManager.ConnectionStrings["btposdb"].ToString();
                 SqlCommand cmd = new SqlCommand();
                 cmd.CommandType = CommandType.StoredProcedure;
-                cmd.CommandText = "HVInsUpdBankingdetails";
+                cmd.CommandText = "HVInsUpdBankdetails";
                 cmd.Connection = conn;
 
                 SqlParameter ff = new SqlParameter("@flag", SqlDbType.VarChar);
@@ -390,18 +390,18 @@ namespace Paysmart.Controllers
                 f.Value = b.IsActive;
                 cmd.Parameters.Add(f);
 
-                SqlParameter code = new SqlParameter("@Code", SqlDbType.VarChar,20);
-                code.Value = b.Code;
-                cmd.Parameters.Add(code);
+                //SqlParameter code = new SqlParameter("@Code", SqlDbType.VarChar,20);
+                //code.Value = b.Code;
+                //cmd.Parameters.Add(code);
 
-                SqlParameter Qrcode = new SqlParameter("@QRCode", SqlDbType.VarChar,20);
-                Qrcode.Value = b.QRCode;
-                cmd.Parameters.Add(Qrcode);
+                //SqlParameter Qrcode = new SqlParameter("@QRCode", SqlDbType.VarChar,20);
+                //Qrcode.Value = b.QRCode;
+                //cmd.Parameters.Add(Qrcode);
 
 
-                SqlParameter ip = new SqlParameter("@IsPrimary", SqlDbType.Int);
-                ip.Value = b.IsPrimary;
-                cmd.Parameters.Add(ip);                
+                //SqlParameter ip = new SqlParameter("@IsPrimary", SqlDbType.Int);
+                //ip.Value = b.IsPrimary;
+                //cmd.Parameters.Add(ip);                
 
 
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
