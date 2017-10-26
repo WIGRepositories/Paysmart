@@ -122,7 +122,7 @@ namespace Paysmart.Controllers
 
                 SqlCommand cmd = new SqlCommand();
                 cmd.CommandType = CommandType.StoredProcedure;
-                cmd.CommandText = "PSgetDriverDetails";
+                cmd.CommandText = "HVgetDriverDetails";
                 cmd.Parameters.Add("@DID", SqlDbType.Int).Value = DID;
                 cmd.Connection = conn;
 

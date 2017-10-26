@@ -31,11 +31,11 @@ namespace Paysmart.Controllers
 
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = CommandType.StoredProcedure;
-            cmd.CommandText = "PSDriversInsUpdDelPasswordverification";
+            cmd.CommandText = "PSDriversForgotPassword";
 
             cmd.Connection = conn;
 
-            SqlParameter c = new SqlParameter("@Mobilenumber", SqlDbType.VarChar, 20);
+            SqlParameter c = new SqlParameter("@mobileno", SqlDbType.VarChar, 20);
             c.Value = ocr.Mobilenumber;
             cmd.Parameters.Add(c);
 
@@ -44,11 +44,11 @@ namespace Paysmart.Controllers
             cmd.Parameters.Add(a);
 
             conn.Open();
-            object potpStr = cmd.ExecuteScalar();
+            object Passwordotp = cmd.ExecuteScalar();
             conn.Close();
 
             #region password otp
-            string potp = potpStr.ToString();
+            string potp = Passwordotp.ToString();
             if (potp != null)
             {
                 try
