@@ -339,7 +339,7 @@ namespace Paysmart.Controllers
         
         [HttpPost]
         [Route("api/DriverMaster/SaveBankingdetails")]
-        public DataTable Bankingdetails(bankdetails b)
+        public DataTable SaveBankingdetails(bankdetails b)
         {
             DataTable dt = new DataTable();
             LogTraceWriter traceWriter = new LogTraceWriter();
@@ -401,8 +401,9 @@ namespace Paysmart.Controllers
 
                 SqlParameter ip = new SqlParameter("@IsPrimary", SqlDbType.Int);
                 ip.Value = b.IsPrimary;
-                cmd.Parameters.Add(ip);
-                
+                cmd.Parameters.Add(ip);                
+
+
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
                 da.Fill(dt);
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "SaveBankingdetails successful....");
