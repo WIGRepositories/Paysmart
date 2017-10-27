@@ -110,6 +110,10 @@ namespace Paysmart.Models
         public string VPhoto { get; set; }
         public string VehicleType { get; set; }
         public int isDriverOwned { get; set; }
+
+        public string CountryId { get; set; }
+        public int VehicleGroupId { get; set; }
+        public string VehicleTypeId { get; set; }
     }
     public class UserLogin
     {
@@ -658,7 +662,7 @@ namespace Paysmart.Models
         public string flag { get; set; }
         public int Id { get; set; }
         public int PaymentId { get; set; }
-        public int servicetypeid { get; set; }
+        public string cardcategory { get; set; }
         public string status { get; set; }
         public int gatewayid { get; set; }
         public string transactiontype { get; set; }

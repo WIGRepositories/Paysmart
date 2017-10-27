@@ -187,6 +187,24 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Messages.Core\Messages.Core.csproj">
+      <Project>{8f9026ec-0a9c-4c6b-b73c-7ec77b83ea7c}</Project>
+      <Name>Messages.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Messages.Licensing\Messages.Licensing.csproj">
+      <Project>{363851ec-dacd-47bb-ab2e-79cb7e74e0c3}</Project>
+      <Name>Messages.Licensing</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Messages.Postbridge\Messages.Postbridge.csproj">
+      <Project>{769665ba-888e-4c5f-85d9-01980f8d5f55}</Project>
+      <Name>Messages.Postbridge</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Payengine\Payengine.csproj">
+      <Project>{f0d4c2f0-fb0e-4584-a67d-153906c70028}</Project>
+      <Name>Payengine</Name>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

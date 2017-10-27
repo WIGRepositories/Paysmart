@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Mail;
+using System.Text;
 using System.Web.Http;
 using System.Web.Http.Tracing;
 
@@ -21,9 +22,34 @@ namespace Paysmart.Controllers
             SqlConnection conn = new SqlConnection();
             LogTraceWriter traceWriter = new LogTraceWriter();
             DataTable dt = new DataTable();
+            StringBuilder str = new StringBuilder();
+            SqlTransaction transaction = null;
+
             try
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Register Driver....");
+
+                if (ocr == null) {
+                    traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "invalid input sent");
+                }
+
+               
+                str.Append("email:" + ocr.Email + ",");
+                str.Append("password:" + ocr.Password + ",");
+                str.Append("firstname:" + ocr.Firstname + ",");
+                str.Append("lastname:" + ocr.lastname + ",");
+                str.Append("authtypeid:" + ocr.AuthTypeId + ",");
+                str.Append("countryid:" + ocr.CountryId + ",");
+                str.Append("bioMetricData:" + ocr.bioMetricData + ",");
+                str.Append(Environment.NewLine);
+                 str.Append("reg no:" + ocr.RegistrationNo + ",");
+                str.Append("vtypeid:" + ocr.VehicleTypeId + ",");
+                str.Append("vgroupid:" + ocr.VehicleGroupId + ",");
+                str.Append("isdriverowned:" + ocr.isDriverOwned + ",");
+                str.Append(Environment.NewLine);
+                                
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
+
                 conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
                 SqlCommand cmd = new SqlCommand();
@@ -73,7 +99,7 @@ namespace Paysmart.Controllers
                 cmd.Parameters.Add(p);
 
                 SqlParameter vg = new SqlParameter("@VehicleGroupId", SqlDbType.VarChar);
-                vg.Value = ocr.VehicleGroup;
+                vg.Value = ocr.VehicleGroupId;
                 cmd.Parameters.Add(vg);
 
 
@@ -96,10 +122,16 @@ namespace Paysmart.Controllers
                     cmd.Parameters.Add(vcode);
 
                 }
-                
-                SqlDataAdapter da = new SqlDataAdapter(cmd);
-                da.Fill(dt);
+                if (conn.State == ConnectionState.Closed) {
+                    conn.Open();
+                }
+               transaction= conn.BeginTransaction();
 
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                cmd.Transaction = transaction;
+
+                da.Fill(dt);
+                transaction.Commit();
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Register driver saved....");
 
                 //[Mobileotp] ,[Emailotp]
@@ -256,16 +288,18 @@ namespace Paysmart.Controllers
                 // return dt;
 
                 #endregion email otp                              
-
+                               
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Registerdriver successful....");
             }
             catch (Exception ex)
-            {
+            {   
                 traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "Register driver...." + ex.Message.ToString());
+                transaction.Rollback();
                 throw ex;
             }
             finally
             {
+                transaction.Dispose();
                 conn.Close();
                 conn.Dispose();
                 SqlConnection.ClearPool(conn);
