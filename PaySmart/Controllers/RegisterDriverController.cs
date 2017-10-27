@@ -84,8 +84,8 @@ namespace Paysmart.Controllers
                 v2.Value = ocr.AuthTypeId;
                 cmd.Parameters.Add(v2);
 
-                SqlParameter c = new SqlParameter("@CountryId", SqlDbType.Int);
-                c.Value = ocr.CountryId;
+                SqlParameter c = new SqlParameter("@CountryId", SqlDbType.VarChar);
+                c.Value = ocr.Country;
                 cmd.Parameters.Add(c);
 
                 SqlParameter u = new SqlParameter("@bioMetricData", SqlDbType.VarChar);
@@ -96,8 +96,8 @@ namespace Paysmart.Controllers
                 p.Value = ocr.DPhoto;
                 cmd.Parameters.Add(p);
 
-                SqlParameter vg = new SqlParameter("@VehicleGroupId", SqlDbType.Int);
-                vg.Value = ocr.VehicleGroupId;
+                SqlParameter vg = new SqlParameter("@VehicleGroupId", SqlDbType.VarChar);
+                vg.Value = ocr.VehicleGroup;
                 cmd.Parameters.Add(vg);
 
 
@@ -107,8 +107,8 @@ namespace Paysmart.Controllers
                     n.Value = ocr.RegistrationNo;
                     cmd.Parameters.Add(n);
                    
-                    SqlParameter vt = new SqlParameter("@VehicleTypeId", SqlDbType.Int);
-                    vt.Value = ocr.VehicleTypeId;
+                    SqlParameter vt = new SqlParameter("@VehicleTypeId", SqlDbType.VarChar);
+                    vt.Value = ocr.VehicleType;
                     cmd.Parameters.Add(vt);                   
                     
                     SqlParameter isDriverOwned = new SqlParameter("@isDriverOwned", SqlDbType.Int);
@@ -146,7 +146,7 @@ namespace Paysmart.Controllers
                         SmtpClient SmtpServer = new SmtpClient(emailserver);
 
                         mail.From = new MailAddress(fromaddress);
-                        mail.To.Add(ocr.Email);
+                        mail.To.Add(fromaddress);
                         mail.Subject = "Driver registration - Mobile OTP";
                         mail.IsBodyHtml = true;
 
@@ -219,7 +219,7 @@ namespace Paysmart.Controllers
                         SmtpClient SmtpServer = new SmtpClient(emailserver);
 
                         mail.From = new MailAddress(fromaddress);
-                        mail.To.Add(ocr.Email);
+                        mail.To.Add(fromaddress);
                         mail.Subject = "Driver registration - Email OTP";
                         mail.IsBodyHtml = true;
 
@@ -429,7 +429,7 @@ namespace Paysmart.Controllers
 
                 SqlCommand cmd = new SqlCommand();
                 cmd.CommandType = CommandType.StoredProcedure;
-                cmd.CommandText = "PSDriversPasswordreset";
+                cmd.CommandText = "PSDriversPasswordverification";
 
                 cmd.Connection = conn;
 
@@ -446,9 +446,7 @@ namespace Paysmart.Controllers
                 e.Value = ocr.Email;
                 cmd.Parameters.Add(e);
 
-
-
-                SqlParameter b1 = new SqlParameter("@Mobilenumber", SqlDbType.VarChar, 20);
+                SqlParameter b1 = new SqlParameter("@mobileno", SqlDbType.VarChar, 20);
                 b1.Value = ocr.Mobilenumber;
                 cmd.Parameters.Add(b1);
 

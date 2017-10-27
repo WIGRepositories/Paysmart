@@ -84,8 +84,8 @@ namespace Paysmart.Controllers
                 T.Value = s.flag;
                 cmd.Parameters.Add(T);
 
-                SqlParameter q = new SqlParameter("@ServiceType", SqlDbType.VarChar, 50);
-                q.Value = s.servicetype;
+                SqlParameter q = new SqlParameter("@CardCategories", SqlDbType.VarChar, 50);
+                q.Value = s.cardcategory;
                 cmd.Parameters.Add(q);
 
                 SqlParameter e = new SqlParameter("@Status", SqlDbType.VarChar, 50);

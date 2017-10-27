@@ -122,7 +122,7 @@ namespace Paysmart.Controllers
 
                 SqlCommand cmd = new SqlCommand();
                 cmd.CommandType = CommandType.StoredProcedure;
-                cmd.CommandText = "PSgetDriverDetails";
+                cmd.CommandText = "HVgetDriverDetails";
                 cmd.Parameters.Add("@DID", SqlDbType.Int).Value = DID;
                 cmd.Connection = conn;
 
@@ -339,7 +339,7 @@ namespace Paysmart.Controllers
         
         [HttpPost]
         [Route("api/DriverMaster/SaveBankingdetails")]
-        public DataTable Bankingdetails(bankdetails b)
+        public DataTable SaveBankingdetails(bankdetails b)
         {
             DataTable dt = new DataTable();
             LogTraceWriter traceWriter = new LogTraceWriter();
@@ -350,7 +350,7 @@ namespace Paysmart.Controllers
                 conn.ConnectionString = ConfigurationManager.ConnectionStrings["btposdb"].ToString();
                 SqlCommand cmd = new SqlCommand();
                 cmd.CommandType = CommandType.StoredProcedure;
-                cmd.CommandText = "HVInsUpdBankingdetails";
+                cmd.CommandText = "HVInsUpdBankdetails";
                 cmd.Connection = conn;
 
                 SqlParameter ff = new SqlParameter("@flag", SqlDbType.VarChar);
@@ -390,19 +390,20 @@ namespace Paysmart.Controllers
                 f.Value = b.IsActive;
                 cmd.Parameters.Add(f);
 
-                SqlParameter code = new SqlParameter("@Code", SqlDbType.VarChar,20);
-                code.Value = b.Code;
-                cmd.Parameters.Add(code);
+                //SqlParameter code = new SqlParameter("@Code", SqlDbType.VarChar,20);
+                //code.Value = b.Code;
+                //cmd.Parameters.Add(code);
 
-                SqlParameter Qrcode = new SqlParameter("@QRCode", SqlDbType.VarChar,20);
-                Qrcode.Value = b.QRCode;
-                cmd.Parameters.Add(Qrcode);
+                //SqlParameter Qrcode = new SqlParameter("@QRCode", SqlDbType.VarChar,20);
+                //Qrcode.Value = b.QRCode;
+                //cmd.Parameters.Add(Qrcode);
 
 
-                SqlParameter ip = new SqlParameter("@IsPrimary", SqlDbType.Int);
-                ip.Value = b.IsPrimary;
-                cmd.Parameters.Add(ip);
-                
+                //SqlParameter ip = new SqlParameter("@IsPrimary", SqlDbType.Int);
+                //ip.Value = b.IsPrimary;
+                //cmd.Parameters.Add(ip);                
+
+
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
                 da.Fill(dt);
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "SaveBankingdetails successful....");
@@ -650,7 +651,7 @@ namespace Paysmart.Controllers
                                                         If you didn't make this request, <a href='http://154.120.237.198:52800'>click here</a> to cancel.
 
                                                                                 <br/>
-                                                                                <br/>             
+                                                                                <br/>              
                                                                        
                                                                                 Warm regards,<br>
                                                                                 PAYSMART Customer Service Team<br/><br />

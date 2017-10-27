@@ -17,7 +17,7 @@ namespace Paysmart.Controllers
 
         [HttpGet]
         [Route("api/Driverlogin/Getdrivers")]
-        public DataTable Getdrivers(string DriverNo)
+        public DataTable Getdrivers(int DId)
         {
            
             LogTraceWriter traceWriter = new LogTraceWriter();
@@ -33,7 +33,7 @@ namespace Paysmart.Controllers
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.CommandText = "PSGetDriverLogin";
             cmd.Connection = conn;
-            cmd.Parameters.Add("@DriverNo", SqlDbType.VarChar,20).Value = DriverNo;
+            cmd.Parameters.Add("@DId", SqlDbType.VarChar,20).Value = DId;
 
             SqlDataAdapter db = new SqlDataAdapter(cmd);
             db.Fill(dt);
