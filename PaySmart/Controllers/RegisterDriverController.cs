@@ -23,6 +23,7 @@ namespace Paysmart.Controllers
             LogTraceWriter traceWriter = new LogTraceWriter();
             DataTable dt = new DataTable();
             StringBuilder str = new StringBuilder();
+            SqlTransaction transaction = null;
 
             try
             {
@@ -43,6 +44,7 @@ namespace Paysmart.Controllers
                 str.Append(Environment.NewLine);
                  str.Append("reg no:" + ocr.RegistrationNo + ",");
                 str.Append("vtypeid:" + ocr.VehicleTypeId + ",");
+                str.Append("vgroupid:" + ocr.VehicleGroupId + ",");
                 str.Append("isdriverowned:" + ocr.isDriverOwned + ",");
                 str.Append(Environment.NewLine);
                                 
@@ -97,7 +99,7 @@ namespace Paysmart.Controllers
                 cmd.Parameters.Add(p);
 
                 SqlParameter vg = new SqlParameter("@VehicleGroupId", SqlDbType.VarChar);
-                vg.Value = ocr.VehicleGroup;
+                vg.Value = ocr.VehicleGroupId;
                 cmd.Parameters.Add(vg);
 
 
@@ -120,10 +122,16 @@ namespace Paysmart.Controllers
                     cmd.Parameters.Add(vcode);
 
                 }
-                
-                SqlDataAdapter da = new SqlDataAdapter(cmd);
-                da.Fill(dt);
+                if (conn.State == ConnectionState.Closed) {
+                    conn.Open();
+                }
+               transaction= conn.BeginTransaction();
 
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                cmd.Transaction = transaction;
+
+                da.Fill(dt);
+                transaction.Commit();
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Register driver saved....");
 
                 //[Mobileotp] ,[Emailotp]
@@ -285,11 +293,13 @@ namespace Paysmart.Controllers
             }
             catch (Exception ex)
             {   
-                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "Register driver...." + ex.Message.ToString());             
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "Register driver...." + ex.Message.ToString());
+                transaction.Rollback();
                 throw ex;
             }
             finally
             {
+                transaction.Dispose();
                 conn.Close();
                 conn.Dispose();
                 SqlConnection.ClearPool(conn);
