@@ -10,6 +10,10 @@ using Paysmart.Models;
 using System.Configuration;
 using System.Web.Http.Tracing;
 
+using Payengine;
+using Payengine.Controllers;
+
+
 namespace Paysmart.Controllers
 {
     public class PaymentController : ApiController
@@ -111,6 +115,14 @@ namespace Paysmart.Controllers
             return (dt);
 
 
+        }
+
+        [HttpGet]
+        [Route("api/Payment/PostilionTest")]
+        public Messages.Core.Message.Default PostilionTest()
+        {
+            Class1 c = new Class1();
+            return c.GetPositionMssg();
         }
     }
 }
