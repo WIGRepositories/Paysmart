@@ -29,13 +29,13 @@ namespace Paysmart.Controllers
 
                 SqlCommand cmd = new SqlCommand();
                 cmd.CommandType = CommandType.StoredProcedure;
-                cmd.CommandText = "HVcancelbooking";
+                cmd.CommandText = "HVInsUpdcancelbooking";
 
                 SqlParameter i = new SqlParameter("@BNo", SqlDbType.Int);
                 i.Value = c.BNo;
                 cmd.Parameters.Add(i);
 
-                SqlParameter n = new SqlParameter("@cancellationType", SqlDbType.Int);
+                SqlParameter n = new SqlParameter("@BookingStatus", SqlDbType.Int);
                 n.Value = c.BookingStatus;
                 cmd.Parameters.Add(n);
 
