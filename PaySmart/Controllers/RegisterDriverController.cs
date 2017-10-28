@@ -29,11 +29,12 @@ namespace Paysmart.Controllers
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Register Driver....");
 
-                if (ocr == null) {
+                if (ocr == null)
+                {
                     traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "invalid input sent");
                 }
 
-               
+
                 str.Append("email:" + ocr.Email + ",");
                 str.Append("password:" + ocr.Password + ",");
                 str.Append("firstname:" + ocr.Firstname + ",");
@@ -42,12 +43,12 @@ namespace Paysmart.Controllers
                 str.Append("countryid:" + ocr.CountryId + ",");
                 str.Append("bioMetricData:" + ocr.bioMetricData + ",");
                 str.Append(Environment.NewLine);
-                 str.Append("reg no:" + ocr.RegistrationNo + ",");
+                str.Append("reg no:" + ocr.RegistrationNo + ",");
                 str.Append("vtypeid:" + ocr.VehicleTypeId + ",");
                 str.Append("vgroupid:" + ocr.VehicleGroupId + ",");
                 str.Append("isdriverowned:" + ocr.isDriverOwned + ",");
                 str.Append(Environment.NewLine);
-                                
+
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
 
                 conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
@@ -86,8 +87,8 @@ namespace Paysmart.Controllers
                 v2.Value = ocr.AuthTypeId;
                 cmd.Parameters.Add(v2);
 
-                SqlParameter c = new SqlParameter("@CountryId", SqlDbType.VarChar);
-                c.Value = ocr.Country;
+                SqlParameter c = new SqlParameter("@CountryId", SqlDbType.Int);
+                c.Value = ocr.CountryId;
                 cmd.Parameters.Add(c);
 
                 SqlParameter u = new SqlParameter("@bioMetricData", SqlDbType.VarChar);
@@ -98,7 +99,7 @@ namespace Paysmart.Controllers
                 p.Value = ocr.DPhoto;
                 cmd.Parameters.Add(p);
 
-                SqlParameter vg = new SqlParameter("@VehicleGroupId", SqlDbType.VarChar);
+                SqlParameter vg = new SqlParameter("@VehicleGroupId", SqlDbType.Int);
                 vg.Value = ocr.VehicleGroupId;
                 cmd.Parameters.Add(vg);
 
@@ -109,8 +110,8 @@ namespace Paysmart.Controllers
                     n.Value = ocr.RegistrationNo;
                     cmd.Parameters.Add(n);
                    
-                    SqlParameter vt = new SqlParameter("@VehicleTypeId", SqlDbType.VarChar);
-                    vt.Value = ocr.VehicleType;
+                    SqlParameter vt = new SqlParameter("@VehicleTypeId", SqlDbType.Int);
+                    vt.Value = ocr.VehicleTypeId;
                     cmd.Parameters.Add(vt);                   
                     
                     SqlParameter isDriverOwned = new SqlParameter("@isDriverOwned", SqlDbType.Int);

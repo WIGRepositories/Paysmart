@@ -222,6 +222,10 @@ namespace Paysmart.Controllers
                 pr.Value = d.Photo;
                 cmd.Parameters.Add(pr);
 
+                SqlParameter cs = new SqlParameter("@CurrentStateId", SqlDbType.Int);
+                cs.Value = d.CurrentStateId;
+                cmd.Parameters.Add(cs);
+
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
                 da.Fill(dt);
 
