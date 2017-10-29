@@ -111,7 +111,7 @@ namespace Paysmart.Models
         public string VehicleType { get; set; }
         public int isDriverOwned { get; set; }
 
-        public string CountryId { get; set; }
+        public int CountryId { get; set; }
         public int VehicleGroupId { get; set; }
         public string VehicleTypeId { get; set; }
     }

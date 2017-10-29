@@ -10,6 +10,7 @@ using System.Web.Http;
 using Paysmart.Models;
 using System.Web.Http.Tracing;
 using System.Net.Mail;
+using System.Text;
 namespace Paysmart.Controllers
 {
     public class VehicleMasterController : ApiController
@@ -256,6 +257,7 @@ namespace Paysmart.Controllers
             LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
             DataTable dt = new DataTable();
+            StringBuilder str = new StringBuilder();
             int status = 1;
             try
             {
@@ -319,6 +321,15 @@ namespace Paysmart.Controllers
                 SqlParameter ver = new SqlParameter("@IsVerified", SqlDbType.Int);
                 ver.Value = vd.isVerified;
                 cmd.Parameters.Add(ver);
+
+                str.Append("DocTypeId:" + vd.DocTypeId + ",");
+                str.Append("Id:" + vd.Id + ",");
+                str.Append("VehicleId:" + vd.VehicleId + ",");
+                str.Append("change:" + vd.change);
+                str.Append("filename:" + vd.FileName);
+                str.Append(Environment.NewLine);
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "SaveVehicleDoc Input sent...." + str.ToString());
 
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
                 da.Fill(dt);

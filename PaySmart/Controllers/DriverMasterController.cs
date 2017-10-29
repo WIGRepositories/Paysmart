@@ -10,6 +10,7 @@ using System.Web.Http;
 using Paysmart.Models;
 using System.Web.Http.Tracing;
 using System.Net.Mail;
+using System.Text;
 
 namespace Paysmart.Controllers
 {
@@ -253,10 +254,11 @@ namespace Paysmart.Controllers
             DataTable dt = new DataTable();
             LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
+            StringBuilder str = new StringBuilder();
             int status = 1;
             try
             {
-                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Driver....");
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "SaveDriverDocuments....");
 
                 //connetionString="Data Source=ServerName;Initial Catalog=DatabaseName;User ID=UserName;Password=Password"
                 conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
@@ -322,14 +324,23 @@ namespace Paysmart.Controllers
                 ver.Value = dd.isVerified;
                 cmd.Parameters.Add(ver);
 
+                str.Append("DocTypeId:" + dd.DocTypeId + ",");
+                str.Append("Id:" + dd.Id + ",");
+                str.Append("DriverId:" + dd.DriverId + ",");
+                str.Append("change:" + dd.change);
+                str.Append("filename:" + dd.FileName);
+
+                str.Append(Environment.NewLine);
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "SaveDriverDocuments Input sent...." + str.ToString());
+
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
                 da.Fill(dt);
-                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Driver successful....");
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "SaveDriverDocuments successful....");
 
             }
             catch (Exception ex)
             {
-                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "Driver...." + ex.Message.ToString());
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "SaveDriverDocuments...." + ex.Message.ToString());
                 throw ex;
             }
             finally
