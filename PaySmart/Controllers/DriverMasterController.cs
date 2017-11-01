@@ -69,7 +69,7 @@ namespace Paysmart.Controllers
 
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = CommandType.StoredProcedure;
-            cmd.CommandText = "HVgetdrivermaster";
+            cmd.CommandText = "PSgetdrivermaster";
             cmd.Parameters.Add("@DId", SqlDbType.Int).Value = DId;
             cmd.Connection = conn;
             DataSet ds = new DataSet();

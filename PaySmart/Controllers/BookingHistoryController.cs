@@ -15,7 +15,7 @@ namespace Paysmart.Controllers
         [HttpGet]
 
         [Route("api/BookingHistory/GetBookingHistory")]
-        public DataTable GetBookingHistory(string PhoneNo, string EmailId)
+        public DataTable GetBookingHistory(string PhoneNo)
         {
             LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();

@@ -10,8 +10,8 @@ using Paysmart.Models;
 using System.Configuration;
 using System.Web.Http.Tracing;
 
-using Payengine;
-using Payengine.Controllers;
+//using Payengine;
+//using Payengine.Controllers;
 
 
 namespace Paysmart.Controllers
@@ -117,12 +117,12 @@ namespace Paysmart.Controllers
 
         }
 
-        [HttpGet]
-        [Route("api/Payment/PostilionTest")]
-        public Messages.Core.Message.Default PostilionTest()
-        {
-            Class1 c = new Class1();
-            return c.GetPositionMssg();
-        }
+        //[HttpGet]
+        //[Route("api/Payment/PostilionTest")]
+        //public Messages.Core.Message.Default PostilionTest()
+        //{
+        //    Class1 c = new Class1();
+        //    return c.GetPositionMssg();
+        //}
     }
 }

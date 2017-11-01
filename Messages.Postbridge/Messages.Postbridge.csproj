@@ -47,7 +47,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Messages.Core">
-      <HintPath>..\Messages.Core\bin\Debug\Messages.Core.dll</HintPath>
+      <HintPath>..\Messages.Core\obj\x86\Debug\Messages.Core.dll</HintPath>
     </Reference>
     <Reference Include="System" />
   </ItemGroup>
