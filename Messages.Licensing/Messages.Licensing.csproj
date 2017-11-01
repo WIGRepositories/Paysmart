@@ -45,13 +45,14 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
   <ItemGroup>
     <Compile Include="Messages.Licensing\License.cs" />
     <Compile Include="Messages.Licensing\LicenseType.cs" />
     <Compile Include="Messages.Licensing\RSAFunctions.cs" />
     <Compile Include="Messages.Licensing\RSAKey.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

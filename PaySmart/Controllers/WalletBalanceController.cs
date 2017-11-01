@@ -9,6 +9,7 @@ using System.Net.Http;
 using System.Web.Http;
 using Paysmart.Models;
 using System.Web.Http.Tracing;
+using System.Net.Mail;
 
 namespace Paysmart.Controllers
 {
@@ -59,7 +60,7 @@ namespace Paysmart.Controllers
 
 
        
-        [HttpPost]
+        [HttpPost]  
         [Route("api/WalletBalance/WalletBalance")]
 
         public DataTable WalletBalance(Appusers A)
@@ -102,6 +103,77 @@ namespace Paysmart.Controllers
             SqlDataAdapter da = new SqlDataAdapter(cmd);
             da.Fill(dt);
 
+            #region Email OTP
+            string eotp = dt.Rows[0]["Emailotp"].ToString();
+            if (eotp != null)
+            {
+                try
+                {
+                    MailMessage mail = new MailMessage();
+                    string emailserver = System.Configuration.ConfigurationManager.AppSettings["emailserver"].ToString();
+
+                    string username = System.Configuration.ConfigurationManager.AppSettings["username"].ToString();
+                    string pwd = System.Configuration.ConfigurationManager.AppSettings["password"].ToString();
+                    string fromaddress = System.Configuration.ConfigurationManager.AppSettings["fromaddress"].ToString();
+                    string port = System.Configuration.ConfigurationManager.AppSettings["port"].ToString();
+
+                    SmtpClient SmtpServer = new SmtpClient(emailserver);
+
+                    mail.From = new MailAddress(fromaddress);
+                    mail.To.Add(fromaddress);
+                    mail.Subject = "Balance";
+                    mail.IsBodyHtml = true;
+
+                    string verifcodeMail = @"<table>
+                                                        <tr>
+                                                            <td>
+                                                                <h2>Thank you for registering with PaySmart APP</h2>
+                                                                <table width=\""760\"" align=\""center\"">
+                                                                    <tbody style='background-color:#F0F8FF;'>
+                                                                        <tr>
+                                                                            <td style=\""font-family:'Zurich BT',Arial,Helvetica,sans-serif;font-size:15px;text-align:left;line-height:normal;background-color:#F0F8FF;\"" >
+<div style='padding:10px;border:#0000FF solid 2px;'>    <br /><br />
+                                                                             
+                                                       Your Balance:<h3>" + eotp + @" </h3>
+
+                                                        If you didn't make this request, <a href='http://154.120.237.198:52800'>click here</a> to cancel.
+
+                                                                                <br/>
+                                                                                <br/>             
+                                                                       
+                                                                                Warm regards,<br>
+                                                                                PAYSMART Customer Service Team<br/><br />
+</div>
+                                                                            </td>
+                                                                        </tr>
+
+                                                                    </tbody>
+                                                                </table>
+                                                            </td>
+                                                        </tr>
+
+                                                    </table>";
+
+
+                    mail.Body = verifcodeMail;
+                    //SmtpServer.Port = 465;
+                    //SmtpServer.Port = 587;
+                    SmtpServer.Port = Convert.ToInt32(port);
+                    SmtpServer.UseDefaultCredentials = false;
+
+                    SmtpServer.Credentials = new System.Net.NetworkCredential(username, pwd);
+                    SmtpServer.EnableSsl = true;
+                    //SmtpServer.TargetName = "STARTTLS/smtp.gmail.com";
+                    SmtpServer.Send(mail);
+
+                }
+                catch (Exception ex)
+                {
+
+                    throw ex;
+                }
+            }
+            #endregion Email OTP
             traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "WalletBalance successful....");
             }
             catch (Exception ex)
