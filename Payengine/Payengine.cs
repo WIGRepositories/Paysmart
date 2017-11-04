@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Payengine.Controllers
 {
-    public class Class1
+    public class Payengine
     {
         public Messages.Postbridge.Bitmap.Message GetPositionMssg() {
 
@@ -15,6 +15,11 @@ namespace Payengine.Controllers
 
             msg.ProcessingCode = new Messages.Postbridge.Helpers.ProcessingCode("373030");
             return msg;
+        }
+
+        public string ProcessPayment() {
+
+            return Guid.NewGuid().ToString();
         }
     }
 }

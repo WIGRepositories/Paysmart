@@ -947,12 +947,27 @@ namespace Paysmart.Models
         public string BVerificationCode { get; set; }
         public string OtpVerfied { get; set; }
         public string Active { get; set; }
-        public string CountryId { get; set; }
+        public int CountryId { get; set; }
         public string Mobilenumber { get; set; }
 
         
     }
 
+    public class TripPayment {        
+        public int Id { get; set; }
+        public int BNo { get; set; }
+        public decimal Amount { get; set; }
+        public string GatewayTransId { get; set; }
+        public int StatusId { get; set; }
+        public string Comments { get; set; }
+        public DateTime? TransDate { get; set; }
+        public int CountryId { get; set; }
+        public int PaymentModeId { get; set; }
+        public int CustAccountId { get; set; }
+        public string flag{get;set;}
+
+        public int AppUserId { get; set; }
+    }
 }
 
 
