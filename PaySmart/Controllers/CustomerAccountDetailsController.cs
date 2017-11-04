@@ -9,6 +9,7 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Tracing;
 using Paysmart.Models;
+using Payengine;
 
 namespace Paysmart.Controllers
 {
@@ -211,5 +212,117 @@ namespace Paysmart.Controllers
 
         }
 
+        [HttpPost]
+        [Route("api/CustomerAccountDetails/MakePayment")]
+        public int MakePayment(TripPayment t) {
+
+            int statusId;
+            {
+                SqlConnection conn = new SqlConnection();
+
+                conn.ConnectionString = ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = "InsupdTripPayments";
+                cmd.Connection = conn;
+
+
+                SqlParameter f = new SqlParameter("@flag", SqlDbType.VarChar);
+                f.Value = t.flag;
+                cmd.Parameters.Add(f);
+
+
+                SqlParameter s = new SqlParameter("@Id", SqlDbType.Int);
+                s.Value = t.Id;
+                cmd.Parameters.Add(s);
+
+                SqlParameter BNo = new SqlParameter("@BNo", SqlDbType.Int);
+                BNo.Value = t.BNo;
+                cmd.Parameters.Add(BNo);
+
+                SqlParameter am = new SqlParameter("@Amount", SqlDbType.Decimal);
+                am.Value = t.Amount;
+                cmd.Parameters.Add(am);
+
+                SqlParameter si = new SqlParameter("@StatusId", SqlDbType.Int);
+                si.Value = t.StatusId;
+                cmd.Parameters.Add(si);
+
+                SqlParameter gti = new SqlParameter("@GatewayTransId", SqlDbType.VarChar,50);
+                gti.Value = t.GatewayTransId;
+                cmd.Parameters.Add(gti);
+
+                SqlParameter td = new SqlParameter("@TransDate", SqlDbType.DateTime);
+                td.Value = t.TransDate;
+                cmd.Parameters.Add(td);
+
+                SqlParameter pmi = new SqlParameter("@PaymentModeId", SqlDbType.Int);
+                pmi.Value = t.PaymentModeId;
+                cmd.Parameters.Add(pmi);
+
+                SqlParameter co = new SqlParameter("@Comments", SqlDbType.VarChar, 250);
+                co.Value = t.Comments;
+                cmd.Parameters.Add(co);
+
+                SqlParameter ci = new SqlParameter("@CustAccountId", SqlDbType.Int);
+                ci.Value = t.CustAccountId;
+                cmd.Parameters.Add(ci);
+
+                SqlParameter ai = new SqlParameter("@AppUserId", SqlDbType.Int);
+                ai.Value = t.AppUserId;
+                cmd.Parameters.Add(ai);
+
+                
+                DataTable dt = new DataTable();
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(dt);
+
+                return 1;
+            }
+
+            //1) insert the details with status as new/inprogess into trippayments table
+
+            //2) once the id is obtained call the payment gateway
+            Payengine.Controllers.Payengine e = new Payengine.Controllers.Payengine();
+            string transId = e.ProcessPayment();
+            //3) get the success/failure status from gateway
+            if (transId == "-1") {
+                t.flag = "U";
+                t.StatusId = 1;
+            }
+            //4) update the table again with status and gateway id
+
+            //5) let the customer know the status
+
+
+
+            return statusId;
+        }
+
+        [HttpGet]
+        [Route("api/CustomerAccountDetails/GetTripPayments")]
+        public DataTable GetTripPayments(int id)
+        {
+            DataTable Tbl = new DataTable();
+
+            LogTraceWriter traceWriter = new LogTraceWriter();
+            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetTripPayments credentials....");
+            SqlConnection conn = new SqlConnection();
+            conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.CommandText = "PSGetTripPayments";
+            cmd.Parameters.Add("@id", SqlDbType.Int).Value = id;
+            cmd.Connection = conn;
+            DataSet ds = new DataSet();
+            SqlDataAdapter db = new SqlDataAdapter(cmd);
+            db.Fill(ds);
+            Tbl = ds.Tables[0];
+            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetTripPayments Credentials completed.");
+            // int found = 0;
+            return Tbl;
+
+        }
     }
 }

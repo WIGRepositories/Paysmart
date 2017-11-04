@@ -200,6 +200,10 @@
       <Project>{769665ba-888e-4c5f-85d9-01980f8d5f55}</Project>
       <Name>Messages.Postbridge</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Payengine\Payengine.csproj">
+      <Project>{f0d4c2f0-fb0e-4584-a67d-153906c70028}</Project>
+      <Name>Payengine</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
