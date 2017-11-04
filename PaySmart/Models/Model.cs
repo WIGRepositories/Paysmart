@@ -72,6 +72,15 @@ namespace Paysmart.Models
         public string UserPhoto { get; set; }
 
         public decimal Amount { get; set; }
+        public int PaymentModeId { get; set; }
+        public string AccountNumber { get; set; }
+        public string HolderName { get; set; }
+        public string ExpMonth { get; set; }
+        public string ExpYear { get; set; }
+        public string AccountCode { get; set; }
+        public string AccountType { get; set; }
+        public int CountryId { get; set; }
+       
     }
 
     public class DriverAccount
@@ -914,6 +923,33 @@ namespace Paysmart.Models
         public string MobileNo { get; set; }
         public string RegistrationNo { get; set; }
         public string Email { get; set; }
+        
+    }
+
+    public class CustomerAccounts
+    {
+        public string insUpdDelflag { get; set; }
+        public int Id { get; set; }
+        public int UserId { get; set; }
+        public int PaymentModeId { get; set; }
+        public string AccountNumber { get; set; }
+        public int Type { get; set; }
+        public string HolderName { get; set; }
+        public string code { get; set; }
+        public string ExpMonth { get; set; }
+        public string ExpYear { get; set; }
+        public string AccountCode { get; set; }
+        public string AccountType { get; set; }
+        public string IsPrimary { get; set; }
+        public string IsVerified { get; set; }
+        public DateTime CreatedOn { get; set; }
+        public DateTime UpdatedOn { get; set; }
+        public string BVerificationCode { get; set; }
+        public string OtpVerfied { get; set; }
+        public string Active { get; set; }
+        public string CountryId { get; set; }
+        public string Mobilenumber { get; set; }
+
         
     }
 

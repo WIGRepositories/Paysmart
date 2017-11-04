@@ -78,12 +78,39 @@ namespace Paysmart.Controllers
 
                 SqlParameter u1 = new SqlParameter("@Altemail", SqlDbType.VarChar, 50);
                 u1.Value = ocr.Altemail;
-                cmd.Parameters.Add(u1);
+                cmd.Parameters.Add(u1);                
 
-                SqlParameter i = new SqlParameter("@AccountNo", SqlDbType.VarChar, 50);
+                SqlParameter pmi = new SqlParameter("@PaymentModeId", SqlDbType.Int);
+                pmi.Value = ocr.PaymentModeId;
+                cmd.Parameters.Add(pmi);
+
+                SqlParameter i = new SqlParameter("@AccountNumber", SqlDbType.VarChar, 50);
                 i.Value = ocr.AccountNo;
                 cmd.Parameters.Add(i);
 
+                SqlParameter hn = new SqlParameter("@HolderName", SqlDbType.VarChar, 50);
+                hn.Value = ocr.HolderName;
+                cmd.Parameters.Add(hn);
+
+                SqlParameter em = new SqlParameter("@ExpMonth", SqlDbType.VarChar, 50);
+                em.Value = ocr.ExpMonth;
+                cmd.Parameters.Add(em);
+
+                SqlParameter ey = new SqlParameter("@ExpYear", SqlDbType.VarChar, 50);
+                ey.Value = ocr.ExpYear;
+                cmd.Parameters.Add(ey);
+
+                SqlParameter ac = new SqlParameter("@AccountCode", SqlDbType.VarChar, 50);
+                ac.Value = ocr.AccountCode;
+                cmd.Parameters.Add(ac);
+
+                SqlParameter at = new SqlParameter("@AccountType", SqlDbType.VarChar,50);
+                at.Value = ocr.AccountType;
+                cmd.Parameters.Add(at);
+
+                SqlParameter ci = new SqlParameter("@CountryId", SqlDbType.VarChar, 50);
+                ci.Value = ocr.CountryId;
+                cmd.Parameters.Add(ci);
 
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
                 da.Fill(dt);
