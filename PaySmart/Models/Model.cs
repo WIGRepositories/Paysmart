@@ -72,14 +72,7 @@ namespace Paysmart.Models
         public string UserPhoto { get; set; }
 
         public decimal Amount { get; set; }
-        public int PaymentModeId { get; set; }
-        public string AccountNumber { get; set; }
-        public string HolderName { get; set; }
-        public string ExpMonth { get; set; }
-        public string ExpYear { get; set; }
-        public string AccountCode { get; set; }
-        public string AccountType { get; set; }
-        public int CountryId { get; set; }
+        
        
     }
 
@@ -901,21 +894,7 @@ namespace Paysmart.Models
         public float Longitude { get; set; }
     }
 
-    public class PaymentModes
-    {
-        public string flag { get; set; }
-        public int Id { get; set; }
-        public string Accountnumber { get; set; }
-        public string InstitutionName { get; set; }
-        public string BranchAddress { get; set; }
-        public string InstituteCode { get; set; }
-        public string CustomerCode { get; set; }
-        public int IsPrimary { get; set; }
-
-        public int CustomerId { get; set; }
-        public int PymentType { get; set; }
-       
-    }
+    
     public class Approvals
     {
         public string change { get; set; }
@@ -932,22 +911,21 @@ namespace Paysmart.Models
         public int Id { get; set; }
         public int UserId { get; set; }
         public int PaymentModeId { get; set; }
-        public string AccountNumber { get; set; }
-        public int Type { get; set; }
+        public string AccountNumber { get; set; }        
         public string HolderName { get; set; }
         public string code { get; set; }
         public string ExpMonth { get; set; }
         public string ExpYear { get; set; }
         public string AccountCode { get; set; }
         public string AccountType { get; set; }
-        public string IsPrimary { get; set; }
-        public string IsVerified { get; set; }
+        public int IsPrimary { get; set; }
+        public int IsVerified { get; set; }
         public DateTime CreatedOn { get; set; }
         public DateTime UpdatedOn { get; set; }
         public string BVerificationCode { get; set; }
         public string OtpVerfied { get; set; }
-        public string Active { get; set; }
-        public string CountryId { get; set; }
+        public int Active { get; set; }
+        public int CountryId { get; set; }
         public string Mobilenumber { get; set; }
 
         

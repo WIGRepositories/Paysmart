@@ -28,7 +28,7 @@ namespace Paysmart.Controllers
 
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = CommandType.StoredProcedure;
-            cmd.CommandText = "PSGetCustomerAccountDetails";
+            cmd.CommandText = "GetCustomerAccountDetails";
             cmd.Connection = conn;
             DataSet ds = new DataSet();
             SqlDataAdapter db = new SqlDataAdapter(cmd);
@@ -42,7 +42,7 @@ namespace Paysmart.Controllers
 
         [HttpPost]
         [Route("api/CustomerAccountDetails/CustomerAccount")]
-        public DataTable Vehicles(CustomerAccounts v)
+        public DataTable CustomerAccount(CustomerAccounts v)
         {
             SqlConnection conn = new SqlConnection();
 
@@ -72,25 +72,17 @@ namespace Paysmart.Controllers
 
             SqlParameter an = new SqlParameter("@AccountNumber", SqlDbType.VarChar, 250);
             an.Value = v.AccountNumber;
-            cmd.Parameters.Add(an);
-
-            SqlParameter t = new SqlParameter("@Type", SqlDbType.Int);
-            t.Value = v.Type;
-            cmd.Parameters.Add(t);
+            cmd.Parameters.Add(an);            
 
             SqlParameter hn = new SqlParameter("@HolderName", SqlDbType.VarChar, 250);
             hn.Value = v.HolderName;
-            cmd.Parameters.Add(hn);
+            cmd.Parameters.Add(hn);          
 
-            SqlParameter c = new SqlParameter("@code", SqlDbType.VarChar, 50);
-            c.Value = v.code;
-            cmd.Parameters.Add(c);
-
-            SqlParameter em = new SqlParameter("@ExpMonth", SqlDbType.VarChar, 150);
+            SqlParameter em = new SqlParameter("@ExpMonth", SqlDbType.VarChar,50);
             em.Value = v.ExpMonth;
             cmd.Parameters.Add(em);
 
-            SqlParameter ey = new SqlParameter("@ExpYear", SqlDbType.VarChar, 50);
+            SqlParameter ey = new SqlParameter("@ExpYear", SqlDbType.VarChar,50);
             ey.Value = v.ExpYear;
             cmd.Parameters.Add(ey);
 
@@ -98,36 +90,23 @@ namespace Paysmart.Controllers
             ac.Value = v.AccountCode;
             cmd.Parameters.Add(ac);
 
-            SqlParameter at = new SqlParameter("@AccountType", SqlDbType.VarChar, 150);
+            SqlParameter at = new SqlParameter("@AccountType", SqlDbType.VarChar,50);
             at.Value = v.AccountType;
             cmd.Parameters.Add(at);
 
-            SqlParameter ip = new SqlParameter("@IsPrimary", SqlDbType.VarChar, 15);
+            SqlParameter ip = new SqlParameter("@IsPrimary", SqlDbType.Int);
             ip.Value = v.IsPrimary;
             cmd.Parameters.Add(ip);
 
-            SqlParameter iv = new SqlParameter("@IsVerified", System.Data.SqlDbType.VarChar, 15);
+            SqlParameter iv = new SqlParameter("@IsVerified",SqlDbType.Int);
             iv.Value = v.IsVerified;
-            cmd.Parameters.Add(iv);
-
-            SqlParameter co = new SqlParameter("@CreatedOn", SqlDbType.Date);
-            co.Value = v.CreatedOn;
-            cmd.Parameters.Add(co);
-
-            SqlParameter uo = new SqlParameter("@UpdatedOn", SqlDbType.Date);
-            uo.Value = v.UpdatedOn;
-            cmd.Parameters.Add(uo);
-            SqlParameter o = new SqlParameter("@Otp", SqlDbType.VarChar, 50);
-            o.Value = v.BVerificationCode;
-            cmd.Parameters.Add(o);
-            SqlParameter ov = new SqlParameter("@OtpVerfied", SqlDbType.VarChar, 50);
-            ov.Value = v.OtpVerfied;
-            cmd.Parameters.Add(ov);
-            SqlParameter act = new SqlParameter("@Active", SqlDbType.VarChar, 50);
+            cmd.Parameters.Add(iv);                     
+           
+            SqlParameter act = new SqlParameter("@Active", SqlDbType.Int);
             act.Value = v.Active;
             cmd.Parameters.Add(act);
 
-            SqlParameter ci = new SqlParameter("@CountryId", SqlDbType.VarChar, 50);
+            SqlParameter ci = new SqlParameter("@CountryId", SqlDbType.Int);
             ci.Value = v.CountryId;
             cmd.Parameters.Add(ci);
 
