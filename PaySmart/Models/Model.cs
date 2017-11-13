@@ -931,6 +931,21 @@ namespace Paysmart.Models
         
     }
 
+
+    public class TripPayment
+    {
+        public string flag { get; set; }
+        public int Id { get; set; }
+        public int BNo { get; set; }
+        public decimal Amount { get; set; }
+        public int StatusId { get; set; }
+        public string GatewayTransId { get; set; }
+        public DateTime? TransDate { get; set; }
+        public int PaymentModeId { get; set; }
+        public string Comments { get; set; }
+        public int CustAccountId { get; set; }
+        public int AppUserId { get; set; }        
+    }
 }
 
 
