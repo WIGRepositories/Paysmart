@@ -62,9 +62,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="Messages.Licensing">
-      <HintPath>..\Messages.Licensing\obj\x86\Debug\Messages.Licensing.dll</HintPath>
-    </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Core" />
     <Reference Include="System.XML" />

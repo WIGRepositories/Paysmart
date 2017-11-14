@@ -42,7 +42,8 @@ namespace Paysmart.Controllers
             catch (Exception ex)
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "Getvech...." + ex.Message.ToString());
-                throw ex;
+                //throw ex;
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
             }
             finally
             {
@@ -164,7 +165,8 @@ namespace Paysmart.Controllers
             catch (Exception ex)
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "vechile...." + ex.Message.ToString());
-                throw ex;
+                //throw ex;
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
             }
             finally
             {

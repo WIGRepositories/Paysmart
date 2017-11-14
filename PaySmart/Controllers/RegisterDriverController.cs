@@ -205,7 +205,7 @@ namespace Paysmart.Controllers
                     catch (Exception ex)
                     {
                         traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "Register driver Email otp failed...." + ex.Message);
-                        //throw ex;
+                        //throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
                     }
                 }
                 #endregion Mobile OTP
@@ -278,7 +278,7 @@ namespace Paysmart.Controllers
                     catch (Exception ex)
                     {
                         traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "Register driver Email otp failed...." + ex.Message);
-                        //throw ex;
+                        //throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
                     }
 
                 }
@@ -296,7 +296,7 @@ namespace Paysmart.Controllers
             {   
                 traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "Register driver...." + ex.Message.ToString());
                 transaction.Rollback();
-                throw ex;
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
             }
             finally
             {
@@ -357,7 +357,7 @@ namespace Paysmart.Controllers
                     conn.Close();
                 }
                 traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "MOTPverifications...." + ex.Message.ToString());
-                throw ex;
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
             }
             //Verify mobile otp
 
@@ -417,7 +417,7 @@ namespace Paysmart.Controllers
             catch (Exception ex)
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "EOTPVerification....failed" + ex.Message.ToString());
-                throw ex;
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
             }
             //Verify mobile otp
 
@@ -469,7 +469,7 @@ namespace Paysmart.Controllers
             catch (Exception ex)
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "Passwordverification....failed" + ex.Message.ToString());
-                throw ex;
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
             }
             return (dt);
 

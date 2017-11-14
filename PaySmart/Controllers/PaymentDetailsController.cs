@@ -44,7 +44,7 @@ namespace Paysmart.Controllers
             catch (Exception ex)
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "Getpayments...." + ex.Message.ToString());
-                throw ex;
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
             }
             finally
             {
@@ -109,7 +109,7 @@ namespace Paysmart.Controllers
             catch (Exception ex)
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "Paydetails...." + ex.Message.ToString());
-                throw ex;
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
             }
             finally
             {

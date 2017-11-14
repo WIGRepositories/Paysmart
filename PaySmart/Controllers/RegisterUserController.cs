@@ -152,7 +152,7 @@ namespace Paysmart.Controllers
                     }
                     catch (Exception ex)
                     {
-                        //throw ex;
+                        //throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
                     }
 
                 }
@@ -231,7 +231,7 @@ namespace Paysmart.Controllers
                     }
                     catch (Exception ex)
                     {
-                        //throw ex;
+                        //throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
                     }
                 }
                 #endregion Mobile OTP
@@ -240,7 +240,7 @@ namespace Paysmart.Controllers
             catch (Exception ex)
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "RegisterUser...." + ex.Message.ToString());
-                throw ex;
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
             }
             finally
             {
@@ -299,7 +299,7 @@ namespace Paysmart.Controllers
                 }
                 catch (Exception ex)
                 {
-                    throw ex;
+                    throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
                 }
                 //Verify mobile otp
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "MOTPverifications successful....");
@@ -307,7 +307,7 @@ namespace Paysmart.Controllers
             catch (Exception ex)
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "MOTPverifications...." + ex.Message.ToString());
-                throw ex;
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
             }
             finally
             {
@@ -371,7 +371,7 @@ namespace Paysmart.Controllers
                 }
                 catch (Exception ex)
                 {
-                    throw ex;
+                    throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
                 }
                 //Verify mobile otp
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "EOTPVerification successful....");
@@ -379,7 +379,7 @@ namespace Paysmart.Controllers
             catch (Exception ex)
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "EOTPVerification...." + ex.Message.ToString());
-                throw ex;
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
             }
             finally
             {
@@ -431,7 +431,7 @@ namespace Paysmart.Controllers
             catch (Exception ex)
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "Addbalance...." + ex.Message.ToString());
-                throw ex;
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
             }
             finally
             {
@@ -490,7 +490,7 @@ namespace Paysmart.Controllers
             catch (Exception ex)
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "Passwordverification...." + ex.Message.ToString());
-                throw ex;
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
             }
             finally
             {
