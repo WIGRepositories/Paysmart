@@ -13,8 +13,6 @@ using System.Text;
 using System.Web;
 
 
-
-
 namespace Paysmart.Controllers
 {
     public class UserAccountController : ApiController
@@ -154,7 +152,7 @@ namespace Paysmart.Controllers
                     }
                     catch (Exception ex)
                     {
-                        //throw ex;
+                        //throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
                     }
 
                 }
@@ -233,7 +231,7 @@ namespace Paysmart.Controllers
                     }
                     catch (Exception ex)
                     {
-                        //throw ex;
+                        //throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
                     }
                 }
                 #endregion Mobile OTP
@@ -242,7 +240,7 @@ namespace Paysmart.Controllers
             catch (Exception ex)
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "RegisterUser...." + ex.Message.ToString());
-                throw ex;
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
             }
             finally
             {
@@ -301,7 +299,7 @@ namespace Paysmart.Controllers
                 }
                 catch (Exception ex)
                 {
-                    throw ex;
+                    throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
                 }
                 //Verify mobile otp
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "MOTPverifications successful....");
@@ -309,7 +307,7 @@ namespace Paysmart.Controllers
             catch (Exception ex)
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "MOTPverifications...." + ex.Message.ToString());
-                throw ex;
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
             }
             finally
             {
@@ -373,7 +371,7 @@ namespace Paysmart.Controllers
                 }
                 catch (Exception ex)
                 {
-                    throw ex;
+                    throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
                 }
                 //Verify mobile otp
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "EOTPVerification successful....");
@@ -381,7 +379,7 @@ namespace Paysmart.Controllers
             catch (Exception ex)
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "EOTPVerification...." + ex.Message.ToString());
-                throw ex;
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
             }
             finally
             {
@@ -433,7 +431,7 @@ namespace Paysmart.Controllers
             catch (Exception ex)
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "Addbalance...." + ex.Message.ToString());
-                throw ex;
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
             }
             finally
             {
@@ -457,7 +455,8 @@ namespace Paysmart.Controllers
 
             try
             {
-                traceWriter.Trace(Request, "0", System.Diagnostics.TraceLevel.Info, "{0}", "Passwordverification....");
+                
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Passwordverification....");
 
                 conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
@@ -467,10 +466,17 @@ namespace Paysmart.Controllers
 
                 cmd.Connection = conn;
 
-
-                SqlParameter q1 = new SqlParameter("@Password", SqlDbType.VarChar, 50);
-                q1.Value = ocr.Password;
+                SqlParameter q1 = new SqlParameter("@mobileno", SqlDbType.VarChar, 50);
+                q1.Value = ocr.Mobilenumber;
                 cmd.Parameters.Add(q1);
+
+                SqlParameter ee = new SqlParameter("@Email", SqlDbType.VarChar, 50);
+                ee.Value = ocr.Email;
+                cmd.Parameters.Add(ee);
+
+                SqlParameter po = new SqlParameter("@Password", SqlDbType.VarChar, 50);
+                po.Value = ocr.Password;
+                cmd.Parameters.Add(po);
 
                 SqlParameter e = new SqlParameter("@Passwordotp", SqlDbType.VarChar, 10);
                 e.Value = ocr.Passwordotp;
@@ -484,7 +490,7 @@ namespace Paysmart.Controllers
             catch (Exception ex)
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "Passwordverification...." + ex.Message.ToString());
-                throw ex;
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
             }
             finally
             {
