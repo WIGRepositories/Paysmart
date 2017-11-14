@@ -34,7 +34,7 @@ namespace Paysmart.Controllers
                     traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "invalid input sent");
                 }
 
-
+                str.Append("MobileNo:" + ocr.Mobilenumber + ",");
                 str.Append("email:" + ocr.Email + ",");
                 str.Append("password:" + ocr.Password + ",");
                 str.Append("firstname:" + ocr.Firstname + ",");
@@ -296,7 +296,8 @@ namespace Paysmart.Controllers
             {   
                 traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "Register driver...." + ex.Message.ToString());
                 transaction.Rollback();
-                throw ex;
+                //throw ex;
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
             }
             finally
             {
