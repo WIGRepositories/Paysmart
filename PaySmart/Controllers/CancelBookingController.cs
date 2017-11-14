@@ -122,7 +122,7 @@ namespace Paysmart.Controllers
                     catch (Exception ex)
                     {
 
-                        throw ex;
+                        throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
                     }
                 }
                 #endregion Mobile OTP
@@ -133,7 +133,7 @@ namespace Paysmart.Controllers
             catch (Exception ex)
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "CancelBooking.... failed" + ex.Message.ToString());
-                throw ex;
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
             }
             finally
             {
@@ -198,7 +198,7 @@ namespace Paysmart.Controllers
                     conn.Close();
                 }
                 traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "BookingExpiry.... failed" + ex.Message.ToString());
-                throw ex;
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
                 //return status;
             }
             finally
