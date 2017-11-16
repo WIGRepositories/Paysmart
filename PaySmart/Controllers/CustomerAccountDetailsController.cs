@@ -214,14 +214,17 @@ namespace Paysmart.Controllers
 
         [HttpPost]
         [Route("api/CustomerAccountDetails/MakePayment")]
-        public int MakePayment(TripPayment t) {
+        public DataTable MakePayment(TripPayment t)
+        {
 
-            int statusId;
+            DataTable dt = new DataTable();
+            SqlCommand cmd = new SqlCommand();
+           
             {
                 SqlConnection conn = new SqlConnection();
 
                 conn.ConnectionString = ConfigurationManager.ConnectionStrings["btposdb"].ToString();
-                SqlCommand cmd = new SqlCommand();
+
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.CommandText = "InsupdTripPayments";
                 cmd.Connection = conn;
@@ -230,7 +233,6 @@ namespace Paysmart.Controllers
                 SqlParameter f = new SqlParameter("@flag", SqlDbType.VarChar);
                 f.Value = t.flag;
                 cmd.Parameters.Add(f);
-
 
                 SqlParameter s = new SqlParameter("@Id", SqlDbType.Int);
                 s.Value = t.Id;
@@ -248,7 +250,7 @@ namespace Paysmart.Controllers
                 si.Value = t.StatusId;
                 cmd.Parameters.Add(si);
 
-                SqlParameter gti = new SqlParameter("@GatewayTransId", SqlDbType.VarChar,50);
+                SqlParameter gti = new SqlParameter("@GatewayTransId", SqlDbType.VarChar);
                 gti.Value = t.GatewayTransId;
                 cmd.Parameters.Add(gti);
 
@@ -272,31 +274,47 @@ namespace Paysmart.Controllers
                 ai.Value = t.AppUserId;
                 cmd.Parameters.Add(ai);
 
-                
-                DataTable dt = new DataTable();
+
+
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
                 da.Fill(dt);
 
-                return 1;
+                //return 1;
+
+
+                Payengine.Controllers.Payengine e = new Payengine.Controllers.Payengine();
+                string transId = e.ProcessPayment();
+
+                if (dt.Rows.Count >= 0)
+                {
+                    
+                    
+                    //var GatewayTransId = dt.Rows[0]["GatewayTransId"].ToString();
+                    if (transId != "")
+                    {
+                        f.Value = "U";
+                        s.Value = dt.Rows[0]["Id"].ToString();
+                        var GateTransId = transId;
+
+                        gti.Value = transId;
+                        dt = new DataTable();
+                        da.Fill(dt);
+                    }
+                }
+                //1) insert the details with status as new/inprogess into trippayments table
+
+                //2) once the id is obtained call the payment gateway
+
+                //3) get the success/failure status from gateway
+
+                //4) update the table again with status and gateway id
+
+                //5) let the customer know the status
+
             }
 
-            //1) insert the details with status as new/inprogess into trippayments table
 
-            //2) once the id is obtained call the payment gateway
-            Payengine.Controllers.Payengine e = new Payengine.Controllers.Payengine();
-            string transId = e.ProcessPayment();
-            //3) get the success/failure status from gateway
-            if (transId == "-1") {
-                t.flag = "U";
-                t.StatusId = 1;
-            }
-            //4) update the table again with status and gateway id
-
-            //5) let the customer know the status
-
-
-
-            return statusId;
+            return dt;
         }
 
         [HttpGet]
