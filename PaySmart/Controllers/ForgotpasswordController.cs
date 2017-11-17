@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Mail;
+using System.Text;
 using System.Web.Http;
 using Paysmart.Models;
 using System.Web.Http.Tracing;
@@ -23,10 +24,15 @@ namespace Paysmart.Controllers
 
             LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
+            StringBuilder str = new StringBuilder();
 
             try
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Forgotpassword....");
+                str.Append("Mobilenumber:" + ocr.Mobilenumber + ",");
+                str.Append("Email:" + ocr.Email + ",");
+                
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
 
                 conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 

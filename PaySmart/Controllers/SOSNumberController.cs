@@ -9,6 +9,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Tracing;
+using System.Text;
 
 namespace SmartTicketDashboard.Controllers
 {
@@ -19,9 +20,14 @@ namespace SmartTicketDashboard.Controllers
         public DataTable GetSOSNumber(int utypeId, int userId)
         {
             DataTable Tbl = new DataTable();
+            StringBuilder str = new StringBuilder();
 
             LogTraceWriter traceWriter = new LogTraceWriter();
             traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetSOSNumber ....");
+            str.Append("UserTypeId:" + utypeId + ",");
+            str.Append("UserId:" + userId + ",");
+            
+            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
             //connect to database
             SqlConnection conn = new SqlConnection();
             //connetionString="Data Source=ServerName;Initial Catalog=DatabaseName;User ID=UserName;Password=Password"
@@ -48,7 +54,13 @@ namespace SmartTicketDashboard.Controllers
         {
 
             LogTraceWriter traceWriter = new LogTraceWriter();
+            StringBuilder str = new StringBuilder();
             traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "SaveSOSNumber ...");
+            str.Append("UserId:" + sos.UserId + ",");
+            str.Append("MobileNumber:" + sos.MobileNumber + ",");
+            str.Append("MobiOrder:" + sos.MobiOrder + ",");
+           
+            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
 
             //connect to database
             DataTable dt = new DataTable();

@@ -9,6 +9,7 @@ using System.Web.Http;
 using Paysmart.Models;
 using System.Configuration;
 using System.Web.Http.Tracing;
+using System.Text;
 
 namespace Paysmart.Controllers
 {
@@ -21,6 +22,7 @@ namespace Paysmart.Controllers
         {
             DataTable dt = new DataTable();
             LogTraceWriter traceWriter = new LogTraceWriter();
+            StringBuilder str = new StringBuilder();
             SqlConnection conn = new SqlConnection();
 
 
@@ -28,6 +30,11 @@ namespace Paysmart.Controllers
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "TaxiPrice....");
 
+                str.Append("SourceLoc:" + vdpc.SourceLoc + ",");
+                str.Append("DestinationLoc:" + vdpc.DestinationLoc + ",");
+                str.Append("VehicleTypeId:" + vdpc.VehicleTypeId + ",");
+                str.Append("Amount:" + vdpc.Amount + ",");
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
 
             conn.ConnectionString = ConfigurationManager.ConnectionStrings["btposdb"].ToString();
             SqlCommand cmd = new SqlCommand();

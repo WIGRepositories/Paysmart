@@ -8,6 +8,7 @@ using System.Net.Http;
 using System.Web.Http;
 using Paysmart.Models;
 using System.Web.Http.Tracing;
+using System.Text;
 
 namespace Paysmart.Controllers
 {
@@ -23,9 +24,11 @@ namespace Paysmart.Controllers
             LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
 
+            
             try
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Getfaqs....");
+                
                 //connetionString="Data Source=ServerName;Initial Catalog=DatabaseName;User ID=UserName;Password=Password"
                 conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
@@ -62,10 +65,15 @@ namespace Paysmart.Controllers
             DataTable dt = new DataTable();
             LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
-
+            StringBuilder str = new StringBuilder();
             try
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "faqsdetails....");
+                str.Append("Question:" + f.Question + ",");
+                str.Append("Answer:" + f.Answer + ",");
+                str.Append("Catid:" + f.Catid + ",");
+                
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
 
                 conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 

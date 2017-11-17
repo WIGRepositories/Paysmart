@@ -24,11 +24,18 @@ namespace Paysmart.Controllers
             DataTable dt = new DataTable();
             LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
-
+            StringBuilder str = new StringBuilder();
             try
             {
 
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "RegisterUser....");
+
+                str.Append("Mobilenumber:" + ocr.Mobilenumber + ",");
+                str.Append("Email:" + ocr.Email + ",");
+                str.Append("Username:" + ocr.Username + ",");
+                
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
+
                conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
                 SqlCommand cmd = new SqlCommand();
@@ -260,11 +267,16 @@ namespace Paysmart.Controllers
 
             LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
-
+            StringBuilder str = new StringBuilder();
             try
             {
             
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "MOTPverifications....");
+                str.Append("Mobilenumber:" + ocr.Mobilenumber + ",");
+                str.Append("Mobileotp:" + ocr.Email + ",");
+                
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
+
 
                 conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
@@ -328,11 +340,16 @@ namespace Paysmart.Controllers
 
             LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
-
+            StringBuilder str = new StringBuilder();
             try
             {
 
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "EOTPverifications....");
+                str.Append("Mobileno:" + ocr.Mobilenumber + ",");
+                str.Append("Email:" + ocr.Email + ",");
+                str.Append("Emailotp:" + ocr.EVerificationCode + ",");
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
+
 
                 conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
@@ -398,10 +415,15 @@ namespace Paysmart.Controllers
             DataTable dt = new DataTable();
             LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
+            StringBuilder str = new StringBuilder();
 
             try
             {
                 traceWriter.Trace(Request, "0", System.Diagnostics.TraceLevel.Info, "{0}", "Addbalance....");
+                str.Append("Mobileno:" + ocr.mobileno + ",");
+                str.Append("Amount:" + ocr.Amount + ",");
+                
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
 
                 conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
@@ -452,11 +474,18 @@ namespace Paysmart.Controllers
             DataTable dt = new DataTable();
             LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
-
+            StringBuilder str = new StringBuilder();
             try
             {
                 
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Passwordverification....");
+
+                str.Append("Mobileno:" + ocr.Mobilenumber + ",");
+                str.Append("Email:" + ocr.Email + ",");
+                str.Append("Password:" + ocr.Password + ",");
+                str.Append("Passwordotp:" + ocr.Passwordotp + ",");
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
 
                 conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 

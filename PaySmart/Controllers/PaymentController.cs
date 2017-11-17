@@ -9,7 +9,7 @@ using System.Web.Http;
 using Paysmart.Models;
 using System.Configuration;
 using System.Web.Http.Tracing;
-
+using System.Text;
 //using Payengine;
 //using Payengine.Controllers;
 
@@ -66,10 +66,16 @@ namespace Paysmart.Controllers
             DataTable dt = new DataTable();
             LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
-
+            StringBuilder str = new StringBuilder();
             try
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Pay....");
+
+                
+                str.Append("CardCategories:" + s.cardcategory + ",");
+                str.Append("Status:" + s.status + ",");
+                str.Append("Amount:" + s.Amount + ",");
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
 
                 conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 

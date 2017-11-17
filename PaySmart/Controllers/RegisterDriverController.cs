@@ -316,10 +316,12 @@ namespace Paysmart.Controllers
 
             int status = 0;
             SqlConnection conn = new SqlConnection();
-
+            StringBuilder str = new StringBuilder();
             LogTraceWriter traceWriter = new LogTraceWriter();
             try
             {
+
+
                 conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
                 SqlCommand cmd = new SqlCommand();
@@ -350,6 +352,11 @@ namespace Paysmart.Controllers
                     return Convert.ToInt32(statusres);
                 }
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "MOTPverifications successful....");
+
+                str.Append("Mobilenumber:" + ocr.Mobilenumber + ",");
+                str.Append("Mobileotp:" + ocr.MVerificationCode + ",");
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
             }
             catch (Exception ex)
             {
@@ -373,13 +380,19 @@ namespace Paysmart.Controllers
         public int EOTPVerification(UserAccount ocr)
         {
             int status = 0;
-
+            StringBuilder str = new StringBuilder();
             LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
 
             try
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "EOTPVerification....");
+
+                str.Append("Mobileno:" + ocr.Mobilenumber + ",");
+                str.Append("Email:" + ocr.Email + ",");
+                str.Append("Emailotp:" + ocr.EVerificationCode + ",");
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
 
                 conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
@@ -414,6 +427,8 @@ namespace Paysmart.Controllers
                     return Convert.ToInt32(statusres);
                 }
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "EOTPVerification successful....");
+
+                
             }
             catch (Exception ex)
             {
@@ -432,10 +447,18 @@ namespace Paysmart.Controllers
         {
             LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
+            StringBuilder str = new StringBuilder();
             DataTable dt = new DataTable();
             try
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Passwordverification....");
+
+                str.Append("Password:" + ocr.Password + ",");
+                str.Append("Passwordotp:" + ocr.Passwordotp + ",");
+                str.Append("Email:" + ocr.Email + ",");
+                str.Append("mobileno:" + ocr.Mobilenumber + ",");
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
 
                 conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 

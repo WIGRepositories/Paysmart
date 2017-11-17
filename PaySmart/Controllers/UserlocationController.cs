@@ -9,6 +9,7 @@ using System.Net.Http;
 using System.Web.Http;
 using Paysmart.Models;
 using System.Web.Http.Tracing;
+using System.Text;
 
 namespace Paysmart.Controllers
 {
@@ -22,10 +23,18 @@ namespace Paysmart.Controllers
         {
              LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
+
+            StringBuilder str = new StringBuilder();
             DataTable dt = new DataTable();
             try
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "location....");
+
+                str.Append("Latitude:" + l.lat + ",");
+                str.Append("Longitude:" + l.lng + ",");
+                str.Append("PhoneNo:" + l.PhoneNo + ",");
+               
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
 
             conn.ConnectionString = ConfigurationManager.ConnectionStrings["btposdb"].ToString();
             SqlCommand cmd = new SqlCommand();

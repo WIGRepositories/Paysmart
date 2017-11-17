@@ -10,6 +10,7 @@ using System.Web.Http;
 using Paysmart.Models;
 using System.Web.Http.Tracing;
 using System.Net.Mail;
+using System.Text;
 
 namespace Paysmart.Controllers
 {
@@ -23,9 +24,16 @@ namespace Paysmart.Controllers
             DataTable dt = new DataTable();
             LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
+            StringBuilder str = new StringBuilder();
             try
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Getcurrentbalance....");
+
+                str.Append("Mobilenumber:" + mobileno + ",");
+                
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
+
+
             conn.ConnectionString = ConfigurationManager.ConnectionStrings["btposdb"].ToString();
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = CommandType.StoredProcedure;
@@ -70,11 +78,16 @@ namespace Paysmart.Controllers
             DataTable dt = new DataTable();
             LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
+            StringBuilder str = new StringBuilder();
             SqlCommand cmd = new SqlCommand();
             try
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "WalletBalance....");
 
+                str.Append("Mobilenumber:" + A.Mobilenumber + ",");
+                str.Append("Amount:" + A.Amount + ",");
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
 
                 conn.ConnectionString = ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 

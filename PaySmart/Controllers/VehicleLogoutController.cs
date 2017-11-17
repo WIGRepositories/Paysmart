@@ -9,6 +9,7 @@ using System.Net.Http;
 using System.Web.Http;
 using Paysmart.Models;
 using System.Web.Http.Tracing;
+using System.Text;
 
 namespace Paysmart.Controllers
 {
@@ -22,10 +23,14 @@ namespace Paysmart.Controllers
         {
             LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
+            StringBuilder str = new StringBuilder();
             DataTable dt = new DataTable();
             try
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Getvechout....");
+                str.Append("VechID:" + VechId + ",");
+                
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
 
             conn.ConnectionString = ConfigurationManager.ConnectionStrings["btposdb"].ToString();
             SqlCommand cmd = new SqlCommand();
@@ -61,10 +66,16 @@ namespace Paysmart.Controllers
         {
             LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
+            StringBuilder str = new StringBuilder();
             DataTable dt = new DataTable();
             try
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "vechileout....");
+                str.Append("VechID:" + c.VechId + ",");
+                str.Append("RegNo:" + c.RegNo + ",");
+                str.Append("DriverMobileNo:" + c.DriverMobileNo + ",");
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
 
             conn.ConnectionString = ConfigurationManager.ConnectionStrings["btposdb"].ToString();
             SqlCommand cmd = new SqlCommand();

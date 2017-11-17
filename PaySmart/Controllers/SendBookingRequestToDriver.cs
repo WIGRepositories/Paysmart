@@ -9,6 +9,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Tracing;
+using System.Text;
 
 namespace Paysmart.Controllers
 {
@@ -18,6 +19,7 @@ namespace Paysmart.Controllers
         [Route("api/SendBookingRequestToDriver/GetSendBookingRequestToDriver")]
         public DataTable GetSendBookingRequestToDriver(VehicleBooking b)
         {
+            StringBuilder str = new StringBuilder();
             DataTable Tbl = new DataTable();
             LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
@@ -25,6 +27,13 @@ namespace Paysmart.Controllers
             try
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetSendBookingRequestToDriver....");
+                str.Append("BookingId" + b.BookingId + ",");
+                str.Append("Src" + b.BookingId + ",");
+                str.Append("Dest" + b.Dest + ",");
+                str.Append("Time" + b.Time + ",");
+                str.Append("ETA" + b.ETA + ",");
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetSendBookingRequestToDriver sent...." + str.ToString());
 
                 conn.ConnectionString = ConfigurationManager.ConnectionStrings["btposdb"].ToString();
                 SqlCommand cmd = new SqlCommand();
