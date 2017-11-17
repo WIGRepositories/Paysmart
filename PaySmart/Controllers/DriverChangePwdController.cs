@@ -8,6 +8,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Tracing;
+using System.Text; 
 
 namespace Paysmart.Controllers
 {
@@ -24,6 +25,13 @@ namespace Paysmart.Controllers
             try
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "ChangePassword....");
+                StringBuilder str = new StringBuilder();
+                str.Append("@Mobilenumber" + U.Mobilenumber + ",");
+                str.Append("@Email" + U.Email + ",");
+                str.Append("@Password" + U.Password + ",");
+                str.Append("@NewPassword" + U.NewPassword + ",");
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "ChangePassword Input sent...." + str.ToString());
 
             conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 

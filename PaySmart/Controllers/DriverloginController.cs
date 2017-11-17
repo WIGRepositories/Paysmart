@@ -28,6 +28,10 @@ namespace Paysmart.Controllers
             {
 
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Getdrivers....");
+                StringBuilder str = new StringBuilder();
+                str.Append("@DId" + DId + ",");
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Getdrivers Input sent...." + str.ToString());
 
             conn.ConnectionString = ConfigurationManager.ConnectionStrings["btposdb"].ToString();
             SqlCommand cmd = new SqlCommand();
