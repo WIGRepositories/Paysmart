@@ -9,6 +9,7 @@ using System.Net.Http;
 using System.Web.Http;
 using Paysmart.Models;
 using System.Web.Http.Tracing;
+using System.Text;
 
 namespace Paysmart.Controllers
 {
@@ -22,10 +23,15 @@ namespace Paysmart.Controllers
             int status = 1;
             LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
-
+            StringBuilder str = new StringBuilder();
             try
             {
                 traceWriter.Trace(Request, "0", System.Diagnostics.TraceLevel.Info, "{0}", "TripRating....");
+                str.Append("BookingId:" + b.BookingId + ",");
+                str.Append("Rating:" + b.Rating + ",");
+                
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
+
 
                 conn.ConnectionString = ConfigurationManager.ConnectionStrings["btposdb"].ToString();
                 SqlCommand cmd = new SqlCommand();

@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Tracing;
+using System.Text;
 
 namespace Paysmart.Controllers
 {
@@ -18,11 +19,16 @@ namespace Paysmart.Controllers
         public DataTable vehicle(int VID)
         {
             LogTraceWriter traceWriter = new LogTraceWriter();
+            StringBuilder str = new StringBuilder();
             SqlConnection conn = new SqlConnection();
             DataTable dt = new DataTable();
             try
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "vehicle....");
+
+                str.Append("VID:" + VID + ",");
+                
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
 
                 conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 

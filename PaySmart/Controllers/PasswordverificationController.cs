@@ -8,6 +8,7 @@ using System.Web.Http;
 using Paysmart.Models;
 using System.Data;
 using System.Web.Http.Tracing;
+using System.Text;
 
 namespace Paysmart.Controllers
 {
@@ -20,10 +21,17 @@ namespace Paysmart.Controllers
             int status = 0;
             LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
+            StringBuilder str = new StringBuilder();
 
             try
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "SavePostlist2....");
+                str.Append("Password:" + ocr.Password + ",");
+                str.Append("Passwordotp:" + ocr.Passwordotp + ",");
+                str.Append("Mobilenumber:" + ocr.Mobilenumber + ",");
+                
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
+
 
                 conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 

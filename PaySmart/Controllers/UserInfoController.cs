@@ -8,6 +8,8 @@ using System.Net.Http;
 using System.Web.Http;
 using Paysmart.Models;
 using System.Web.Http.Tracing;
+using System.Text;
+
 namespace Paysmart.Controllers
 {
     public class UserInfoController : ApiController
@@ -18,10 +20,21 @@ namespace Paysmart.Controllers
         {
             LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
+            StringBuilder str = new StringBuilder();
+            
+
+
+
+
             DataTable dt = new DataTable();
             try
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Infodetails....");
+                str.Append("username:" + U.username + ",");
+                str.Append("Emailid:" + U.Emailid + ",");
+                str.Append("Phonenumber:" + U.Phonenumber + ",");
+                
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
 
                 conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
@@ -127,10 +140,13 @@ namespace Paysmart.Controllers
             DataTable Tbl = new DataTable();
             LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
+            StringBuilder str = new StringBuilder();
 
             try
             {
-                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Getinfo....");
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Getinfo....");               
+
+
                 //connetionString="Data Source=ServerName;Initial Catalog=DatabaseName;User ID=UserName;Password=Password"
                 conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 

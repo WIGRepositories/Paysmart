@@ -569,12 +569,18 @@ namespace Paysmart.Models
     {
         public string insupddelflag { get; set; }
         public int Id { get; set; }
-        public int VehicleModelId { get; set; }
-        //public string VehicleModel { get; set; }
-        public string Hours { get; set; }
-        public DateTime FromTime { get; set; }
-        public DateTime ToTime { get; set; }
-        public decimal Price { get; set; }
+        public int VehicleTypeId { get; set; }
+        public DateTime? FromTime { get; set; }
+        public DateTime? ToTime { get; set; }
+        public int PricingType { get; set; }
+        public DateTime? FromDate { get; set; }
+        public DateTime? ToDate { get; set; }
+        public int CreatedBy { get; set; }
+        public int UpdatedBy { get; set; }
+        public int CountryId { get; set; }
+        public int VehicleGroupId { get; set; }
+        public int Hours { get; set; }
+        public decimal price { get; set; }
 
     }
     public class VehicleDist

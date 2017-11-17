@@ -23,10 +23,17 @@ namespace Paysmart.Controllers
             DataTable Tbl = new DataTable();
             LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
+            StringBuilder str = new StringBuilder();
             
             try
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetAvailableServices....");
+
+                str.Append("srcId:" + srcId + ",");
+                str.Append("destId:" + destId + ",");
+                
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
+
             
             //connetionString="Data Source=ServerName;Initial Catalog=DatabaseName;User ID=UserName;Password=Password"
             conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
@@ -68,10 +75,12 @@ namespace Paysmart.Controllers
             DataTable Tbl = new DataTable();
             LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
+            StringBuilder str = new StringBuilder();
             
             try
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetAvailableSeats....");
+                
 
             DataColumn dc = new DataColumn("Id", typeof(int));
             Tbl.Columns.Add("seatno", typeof(String));
@@ -163,6 +172,8 @@ namespace Paysmart.Controllers
            try
            {
               traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "SaveBookingDetails....");
+             
+
 
                #region save booking information
 
@@ -700,10 +711,15 @@ namespace Paysmart.Controllers
            DataTable dt = new DataTable();
             LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
+            StringBuilder str = new StringBuilder();
             
             try
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetticketDetails....");
+
+                str.Append("bookingId:" + bookingId + ",");
+                
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
 
            //connetionString="Data Source=ServerName;Initial Catalog=DatabaseName;User ID=UserName;Password=Password"
            conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
@@ -741,10 +757,14 @@ namespace Paysmart.Controllers
            DataTable dt = new DataTable();
             LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
-            
+            StringBuilder str = new StringBuilder();
             try
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetTicketsForCancellation....");
+                str.Append("ticketNo:" + ticketNo + ",");
+                str.Append("emailidmobileno:" + emailmobileno + ",");
+                
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
            
            conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 

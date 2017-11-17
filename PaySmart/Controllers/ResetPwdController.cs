@@ -8,6 +8,7 @@ using System.Net.Http;
 using System.Web.Http;
 using Paysmart.Models;
 using System.Web.Http.Tracing;
+using System.Text;
 namespace Paysmart.Controllers
 {
     public class ResetPwdController : ApiController
@@ -20,11 +21,17 @@ namespace Paysmart.Controllers
             int status = 0;
             LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
-
+            StringBuilder str = new StringBuilder();
+            
             try
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "reset....");
-
+                str.Append("Passwordotp:" + U.Passwordotp + ",");
+                str.Append("Mobilenumber:" + U.Mobilenumber + ",");
+                str.Append("Email:" + U.Email + ",");
+                str.Append("Password:" + U.Password + ",");
+              
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
                 conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
                 SqlCommand cmd = new SqlCommand();

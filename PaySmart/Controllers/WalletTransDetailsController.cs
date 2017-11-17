@@ -8,6 +8,7 @@ using System.Net.Http;
 using System.Web.Http;
 using Paysmart.Models;
 using System.Web.Http.Tracing;
+using System.Text;
 
 namespace Paysmart.Controllers
 {
@@ -18,6 +19,7 @@ namespace Paysmart.Controllers
         public DataTable GetWalletTransDetails(string MobileNo)
         {
             DataTable Tbl = new DataTable();
+            StringBuilder str = new StringBuilder();
             LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
 
@@ -25,6 +27,10 @@ namespace Paysmart.Controllers
             try
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetWalletTransDetails....");
+
+                str.Append("MobileNo:" + MobileNo + ",");               
+
+             traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
             
             conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
@@ -58,6 +64,7 @@ namespace Paysmart.Controllers
         {
             DataTable dt = new DataTable();
             LogTraceWriter traceWriter = new LogTraceWriter();
+            StringBuilder str = new StringBuilder();
             SqlConnection conn = new SqlConnection();
 
 
@@ -65,7 +72,12 @@ namespace Paysmart.Controllers
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "savewalletTransdetails....");
 
+                str.Append("MobileNo:" + r.MobileNo + ",");
+                str.Append("TransactionType:" + r.TransactionType + ",");
+                str.Append("TransactionMode:" + r.TransactionMode + ",");
+                str.Append("Amount:" + r.Amount + ",");
 
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
             conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
             SqlCommand cmd = new SqlCommand();

@@ -10,6 +10,7 @@ using System.Net.Http;
 using System.Net.Mail;
 using System.Web.Http;
 using System.Web.Http.Tracing;
+using System.Text;
 
 namespace Paysmart.Controllers
 {
@@ -21,10 +22,20 @@ namespace Paysmart.Controllers
         {
             LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
+            StringBuilder str = new StringBuilder();
             DataTable dt = new DataTable();
             try
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "SaveBookingDetails....");
+
+                str.Append("BNo:" + b.BNo + ",");
+                str.Append("Src:" + b.Src + ",");
+                str.Append("Dest:" + b.Dest + ",");
+                str.Append("VechId:" + b.VechId + ",");
+                str.Append("DriverPhoneNo:" + b.DriverPhoneNo + ",");
+                str.Append("CustomerPhoneNo:" + b.CustomerPhoneNo + ",");
+                
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
 
                 conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
@@ -278,11 +289,20 @@ namespace Paysmart.Controllers
         {
             LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
+            StringBuilder str = new StringBuilder();
             DataTable dt = new DataTable();
             try
             {
 
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "AdvanceBookingDetails....");
+                str.Append("BNo:" + b.BNo + ",");
+                str.Append("Src:" + b.Src + ",");
+                str.Append("Dest:" + b.Dest + ",");
+                str.Append("VechId:" + b.VechId + ",");
+                str.Append("DriverPhoneNo:" + b.DriverPhoneNo + ",");
+                str.Append("CustomerPhoneNo:" + b.CustomerPhoneNo + ",");
+                
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
 
 
             conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
@@ -534,11 +554,15 @@ namespace Paysmart.Controllers
         {
             LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
+            StringBuilder str = new StringBuilder();
             DataTable dt = new DataTable();
             try
             {
 
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "BookingStatus....");
+                str.Append("BNo:" + b.BNo + ",");
+                
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
 
             conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
@@ -584,11 +608,17 @@ namespace Paysmart.Controllers
         {
             LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
+            StringBuilder str = new StringBuilder();
             DataTable dt = new DataTable();
             try
             {
 
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "CalculatePrice....");
+
+                str.Append("BNo:" + b.BNo + ",");
+                str.Append("packageId:" + b.PackageId + ",");
+                
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
 
             conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
@@ -633,11 +663,19 @@ namespace Paysmart.Controllers
         {
              LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
+            StringBuilder str = new StringBuilder();
             DataTable dt = new DataTable();
             try
             {
 
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "AvailableVehicles....");
+
+                str.Append("MobileNo:" + vb.CustomerPhoneNo + ",");
+                str.Append("lat:" + vb.SrcLatitude + ",");
+                str.Append("lng:" + vb.SrcLongitude + ",");
+                str.Append("vehicleGroupId:" + vb.VehicleGroupId + ",");
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
 
             conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
@@ -678,11 +716,15 @@ namespace Paysmart.Controllers
         {
              LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
+            StringBuilder str = new StringBuilder();
             DataTable dt = new DataTable();
             try
             {
 
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "VehiclePosition....");
+                str.Append("bno:" + vb.BNo + ",");
+                
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
 
             conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
@@ -721,11 +763,17 @@ namespace Paysmart.Controllers
         {
             LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
+            StringBuilder str = new StringBuilder();
             DataTable dt = new DataTable();
             try
             {
 
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "RateTheRide....");
+                str.Append("MobileNo:" + vb.CustomerPhoneNo + ",");
+                str.Append("BNo:" + vb.BNo + ",");
+                str.Append("rating:" + vb.Rating + ",");
+               
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
 
             conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
@@ -768,11 +816,15 @@ namespace Paysmart.Controllers
         { 
             LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
+            StringBuilder str = new StringBuilder();
             DataSet ds = new DataSet();
             try
             {
 
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "RideDetails....");
+                str.Append("BNo:" + vb.BNo + ",");
+               
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
 
             conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
@@ -810,11 +862,15 @@ namespace Paysmart.Controllers
         {
             LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
+            StringBuilder str = new StringBuilder();
             DataTable dt = new DataTable();
             try
             {
 
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "RidesList....");
+                str.Append("MobileNo:" + vb.CustomerPhoneNo + ",");
+                
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
 
             conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
@@ -852,11 +908,18 @@ namespace Paysmart.Controllers
         {
            LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
+            StringBuilder str = new StringBuilder();
             DataTable dt = new DataTable();
             try
             {
 
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "UpdateBookingStatus....");
+                str.Append("BNo:" + vb.BNo + ",");
+                str.Append("BookingStatus:" + vb.BookingStatus + ",");
+                str.Append("UpdatedBy:" + vb.UpdatedBy + ",");
+                str.Append("UpdatedUserId:" + vb.UpdatedUserId + ",");
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
 
             conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
@@ -898,11 +961,19 @@ namespace Paysmart.Controllers
 
              LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
+            StringBuilder str = new StringBuilder();
             DataTable dt = new DataTable();
             try
             {
 
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "AcceptRejectBooking....");
+
+                str.Append("BookingId:" + b.BookingId + ",");
+                str.Append("BookingStatus:" + b.BookingStatus + ",");
+                str.Append("Vid:" + b.VID + ",");
+                str.Append("DID:" + b.DriverId + ",");
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
 
             conn.ConnectionString = ConfigurationManager.ConnectionStrings["btposdb"].ToString();
             SqlCommand cmd = new SqlCommand();
@@ -963,11 +1034,18 @@ namespace Paysmart.Controllers
             int status = 0;
              LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
-           
+            StringBuilder str = new StringBuilder();
             try
             {
 
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "StartTrip....");
+
+                str.Append("BNo:" + b.BNo + ",");
+                str.Append("DriverPhoneNo:" + b.DriverPhoneNo + ",");
+                str.Append("BookingOTP:" + b.BVerificationCode + ",");
+               
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
 
             conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
@@ -1037,11 +1115,17 @@ namespace Paysmart.Controllers
             int status = 0;
             LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
-           
+            StringBuilder str = new StringBuilder();
             try
             {
 
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "EndTrip....");
+                str.Append("BNo:" + b.BNo + ",");
+                str.Append("DriverPhoneNo:" + b.DriverPhoneNo + ",");
+                
+
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
 
             conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
@@ -1110,11 +1194,15 @@ namespace Paysmart.Controllers
             int status = 0;
              LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
-           
+            StringBuilder str = new StringBuilder();
             try
             {
 
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "ProcessPayment....");
+
+                str.Append("BNo:" + b.BNo + ",");
+                str.Append("Amount:" + b.Amount + ",");
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
 
             conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
@@ -1179,11 +1267,15 @@ namespace Paysmart.Controllers
             DataSet ds = new DataSet();
             LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
-           
+            StringBuilder str = new StringBuilder();
             try
             {
 
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "DriverRatingToRide....");
+                str.Append("Mobilenumber:" + vb.DriverPhoneNo + ",");
+                str.Append("BNo:" + vb.BNo + ",");
+               
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
 
             conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 

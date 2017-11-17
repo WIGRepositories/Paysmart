@@ -1,4 +1,5 @@
 ﻿
+using Paysmart;
 using Paysmart.Models;
 using System;
 using System.Collections.Generic;
@@ -9,6 +10,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Text;
 
 namespace SmartTicketDashboard.Controllers
 {
@@ -19,9 +21,13 @@ namespace SmartTicketDashboard.Controllers
         public DataTable GetSOSMessage(int utypeId, int userId)
         {
             DataTable Tbl = new DataTable();
-
-            //LogTraceWriter traceWriter = new LogTraceWriter();
-            //traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetSOSMessage ....");
+            StringBuilder str = new StringBuilder();
+            LogTraceWriter traceWriter = new LogTraceWriter();
+            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetSOSMessage ....");
+            str.Append("UserTypeId:" + utypeId + ",");
+            str.Append("UserId:" + userId + ",");
+           
+            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
             //connect to database
             SqlConnection conn = new SqlConnection();
             //connetionString="Data Source=ServerName;Initial Catalog=DatabaseName;User ID=UserName;Password=Password"
@@ -47,14 +53,20 @@ namespace SmartTicketDashboard.Controllers
         public DataTable SaveSOSMessage(SOSMessage sos)
         {
 
-            //LogTraceWriter traceWriter = new LogTraceWriter();
-            //traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "SaveSOSMessage ...");
+            LogTraceWriter traceWriter = new LogTraceWriter();
+            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "SaveSOSMessage ...");
 
             //connect to database
             DataTable dt = new DataTable();
             SqlConnection conn = new SqlConnection();
+            StringBuilder str = new StringBuilder();
             try
             {
+
+                str.Append("UserTypeId:" + sos.UserId + ",");
+                str.Append("UserId:" + userId + ",");
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
                 //connetionString="Data Source=ServerName;Initial Catalog=DatabaseName;User ID=UserName;Password=Password"
                 conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
