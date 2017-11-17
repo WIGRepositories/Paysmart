@@ -8,6 +8,7 @@ using System.Net.Http;
 using System.Web.Http;
 using Paysmart.Models;
 using System.Web.Http.Tracing;
+using System.Text; 
 
 namespace Paysmart.Controllers
 {
@@ -56,6 +57,19 @@ namespace Paysmart.Controllers
 
             conn.Close();
             traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "change successful....");
+            StringBuilder str = new StringBuilder();
+            str.Append("@Mobilenumber" + U.Mobilenumber + ",");
+            str.Append("@Email" + U.Email + ",");
+            str.Append("@Password" + U.Password + ",");
+            str.Append("@NewPassword" + U.NewPassword + ",");
+
+
+            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "change Input sent...." + str.ToString());
+
+            if (dt.Rows.Count > 0)
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "change Output...." + dt.Rows[0].ToString());
+            else
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "change Output....ChangePwd ");
             }
             catch (Exception ex)
             {

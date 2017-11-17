@@ -176,5 +176,11 @@
     <Reference Include="System" />
     <Reference Include="System.Messaging" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Messages.Core\Messages.Core.csproj">
+      <Project>{8f9026ec-0a9c-4c6b-b73c-7ec77b83ea7c}</Project>
+      <Name>Messages.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

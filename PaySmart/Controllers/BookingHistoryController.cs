@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Tracing;
+using System.Text; 
 
 namespace Paysmart.Controllers
 {
@@ -38,7 +39,16 @@ namespace Paysmart.Controllers
                 dt = ds.Tables[0];
 
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetBookingHistory successful....");
+                StringBuilder str = new StringBuilder();
+                str.Append("@PhoneNo" + PhoneNo + ",");
+               
 
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetBookedHistory Input sent...." + str.ToString());
+
+                if (dt.Rows.Count > 0)
+                    traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetBookedHistory Output...." + dt.Rows[0].ToString());
+                else
+                    traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetBookedHistory Output....BookedHistory ");
             }
             catch (Exception ex)
             {

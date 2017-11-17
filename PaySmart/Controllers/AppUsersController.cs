@@ -9,6 +9,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Tracing;
+using System.Text; 
 
 namespace Paysmart.Controllers
 {
@@ -38,6 +39,16 @@ namespace Paysmart.Controllers
                 dt = ds.Tables[0];
                 
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "AppUserDetails successful....");
+                StringBuilder str = new StringBuilder();
+                str.Append("@id:" + id + ",");
+
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "AppUserDetails Input sent...." + str.ToString());
+
+                if (dt.Rows.Count > 0)
+                    traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "AppUserDetails Output...." + dt.Rows[0].ToString());
+                else
+                    traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "AppUserDetails Output....App User ");
             }
             catch (Exception ex)
             {

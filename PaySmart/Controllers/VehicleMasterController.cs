@@ -417,9 +417,9 @@ namespace Paysmart.Controllers
         [HttpPost]
         [Route("api/VehicleMaster/TrackVehicle")]
 
-        public int TrackVehicle(vehicledetails l)
+        public DataTable TrackVehicle(vehicledetails l)
         {
-            int Status = 1;
+           // int Status = 1;
             LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
             DataTable currTripList = new DataTable();
@@ -454,10 +454,21 @@ namespace Paysmart.Controllers
                 Lng.Value = l.longitude;
                 cmd.Parameters.Add(Lng);
 
-
                 SqlDataAdapter db = new SqlDataAdapter(cmd);
                 db.Fill(currTripList);
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "TrackVehicle successful....");
+                StringBuilder str = new StringBuilder();
+                str.Append("MobileNo:" + l.PMobNo + ",");
+                str.Append("Latitude:" + l.latitude + ",");
+                str.Append("Longitude:" + l.longitude);
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "TrackVehicle Input sent...." + str.ToString());
+
+                if (currTripList.Rows.Count > 0)
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "TrackVehicle Output...." + currTripList.Rows[0]["BNo"].ToString());
+                else
+                    traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "TrackVehicle Output....No bookings found");
+
             }
             catch (Exception ex)
             {
@@ -471,8 +482,8 @@ namespace Paysmart.Controllers
                 conn.Dispose();
                 SqlConnection.ClearPool(conn);
             }
-            return Status;
-            //return (dt);
+
+            return currTripList;
         }
 
         [HttpPost]
