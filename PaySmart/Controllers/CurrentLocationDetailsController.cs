@@ -9,6 +9,7 @@ using System.Web.Http;
 using Paysmart.Models;
 using System.Data;
 using System.Web.Http.Tracing;
+using System.Text; 
 
 namespace Paysmart.Controllers
 {
@@ -66,7 +67,18 @@ namespace Paysmart.Controllers
                     }
 
                     traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetCurrentLocationDetails successful....");
+                    StringBuilder str = new StringBuilder();
+                    str.Append("@Mobilenumber" + b.PMobNo + ",");
+
+
+                    str.Append("@Latitude" + b.latitude + ",");
+                    str.Append("@Longitude" + b.longitude + ",");
+                    str.Append("@VechicleGroupId" + b.VehicleGroupId + ",");
+
+
+                    traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetCurrentLocationDetails Input sent...." + str.ToString());
                 }
+
                 catch (Exception ex)
                 {
                     traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "GetCurrentLocationDetails...." + ex.Message.ToString());

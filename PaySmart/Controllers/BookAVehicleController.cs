@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Net;
+using System.Text; 
 using System.Net.Http;
 using System.Net.Mail;
 using System.Web.Http;
@@ -240,7 +241,20 @@ namespace Paysmart.Controllers
             #endregion Mobile OTP
 
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "SaveBookingDetails successful....");
+                StringBuilder str = new StringBuilder();
+                str.Append("@BNo" + b.BNo + ",");
+                str.Append("@BookingType" + b.BookingType + ",");           
+                str.Append("@PhoneNo" + b.PhoneNo + ",");
+                str.Append("@PickupPalce" + b.PickupPalce + ",");
+                str.Append("@DropPalce" + b.DropPalce + ",");
+                str.Append("@BookingStatus" + b.BookingStatus + ",");
 
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "SaveBookingDetails Input sent...." + str.ToString());
+
+                if (dt.Rows.Count > 0)
+                    traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "SaveBookingDetails Output...." + dt.Rows[0].ToString());
+                else
+                    traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "SaveBookingDetails Output....ChangePwd ");
             }
             catch (Exception ex)
             {

@@ -135,5 +135,11 @@
     <Compile Include="Messages.Core\Globals.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Messages.Licensing\Messages.Licensing.csproj">
+      <Project>{363851ec-dacd-47bb-ab2e-79cb7e74e0c3}</Project>
+      <Name>Messages.Licensing</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

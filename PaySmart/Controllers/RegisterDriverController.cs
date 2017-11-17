@@ -290,7 +290,13 @@ namespace Paysmart.Controllers
 
                 #endregion email otp                              
                                
-                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Registerdriver successful....");
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Registerdriver successful....");   
+               
+
+                if (dt.Rows.Count > 0)
+                    traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Registerdriver Output...." + dt.Rows[0].ToString());
+                else
+                    traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Registerdriver Output....Driver is not registered ");
             }
             catch (Exception ex)
             {   
@@ -350,6 +356,13 @@ namespace Paysmart.Controllers
                     return Convert.ToInt32(statusres);
                 }
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "MOTPverifications successful....");
+                StringBuilder str = new StringBuilder();
+                str.Append("Mobilenumber:" + ocr.Mobilenumber + ",");
+                str.Append("Mobileotp" + ocr.MVerificationCode + ",");
+
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "TrackVehicle Input sent...." + str.ToString());
+
             }
             catch (Exception ex)
             {

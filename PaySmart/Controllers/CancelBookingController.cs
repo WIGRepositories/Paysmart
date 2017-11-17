@@ -9,6 +9,7 @@ using System.Web.Http;
 using Paysmart.Models;
 using System.Web.Http.Tracing;
 using System.Net.Mail;
+using System.Text; 
 
 namespace Paysmart.Controllers
 {
@@ -128,7 +129,19 @@ namespace Paysmart.Controllers
                 #endregion Mobile OTP
 
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "CancelBooking successful....");
+                StringBuilder str = new StringBuilder();
+                str.Append("@BNo" + c.BNo + ",");
+                str.Append("@BookingStatus" + c.BookingStatus + ",");
+                str.Append("@CancelReason" + c.CancelReason + ",");
+                str.Append("@CancelBy" + c.CancelBy + ",");
 
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "CancelBooking Input sent...." + str.ToString());
+
+                if (dt.Rows.Count > 0)
+                    traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "CancelBooking Output...." + dt.Rows[0].ToString());
+                else
+                    traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "CancelBooking Output....CancelBooking ");
             }
             catch (Exception ex)
             {
