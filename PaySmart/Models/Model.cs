@@ -356,6 +356,7 @@ namespace Paysmart.Models
         public float DriverRating { get; set; }
         public int DriverRated { get; set; }
         public string DriverComments { get; set; }
+        public decimal distance { get; set; }
     }
 
     public class driverdetails
@@ -521,6 +522,7 @@ namespace Paysmart.Models
         public string JourneyType { get; set; }
         public int JourneyTypeId { get; set; }
         public int UserId { get; set; }
+        public decimal distance { get; set; }
         public string insupddelflag { get; set; }
 
         public IEnumerable<BookedSeats> BookedSeats { get; set; }

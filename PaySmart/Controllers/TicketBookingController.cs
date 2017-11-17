@@ -283,6 +283,10 @@ namespace Paysmart.Controllers
                Address.Value = B.Address;
                PnrDeatilscmd.Parameters.Add(Address);
 
+               SqlParameter dist = new SqlParameter("@distance", SqlDbType.Decimal);
+               dist.Value = B.distance;
+               PnrDeatilscmd.Parameters.Add(dist);
+
                SqlParameter insupddelflag = new SqlParameter("@insupddelflag", SqlDbType.VarChar);
                insupddelflag.Value = B.insupddelflag;
                PnrDeatilscmd.Parameters.Add(insupddelflag);

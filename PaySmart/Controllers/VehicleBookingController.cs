@@ -174,6 +174,8 @@ namespace Paysmart.Controllers
                 ps.Value = b.PaymentStatus;
                 cmd.Parameters.Add(ps);
 
+
+
               
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
                 da.Fill(dt);
