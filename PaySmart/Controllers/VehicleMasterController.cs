@@ -456,13 +456,8 @@ namespace Paysmart.Controllers
 
                 SqlDataAdapter db = new SqlDataAdapter(cmd);
                 db.Fill(currTripList);
-                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "TrackVehicle successful....");
-                StringBuilder str = new StringBuilder();
-                str.Append("MobileNo:" + l.PMobNo + ",");
-                str.Append("Latitude:" + l.latitude + ",");
-                str.Append("Longitude:" + l.longitude);
-
-                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "TrackVehicle Input sent...." + str.ToString());
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "TrackVehicle successful....");                
+                
 
                 if (currTripList.Rows.Count > 0)
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "TrackVehicle Output...." + currTripList.Rows[0]["BNo"].ToString());

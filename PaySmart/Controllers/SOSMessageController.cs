@@ -63,8 +63,8 @@ namespace SmartTicketDashboard.Controllers
             try
             {
 
-                str.Append("UserTypeId:" + sos.UserId + ",");
-                str.Append("UserId:" + userId + ",");
+                str.Append("UserTypeId:" + sos.UserTypeId + ",");
+                str.Append("UserId:" + sos.UserId + ",");
 
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
                 //connetionString="Data Source=ServerName;Initial Catalog=DatabaseName;User ID=UserName;Password=Password"
@@ -174,7 +174,7 @@ namespace SmartTicketDashboard.Controllers
                 {
                     conn.Close();
                 }
-                string str = ex.Message;
+                string st = ex.Message;
 
                 //traceWriter.Trace(Request, "1", TraceLevel.Info, "{0}", "Error in SaveMandUserDocs:" + ex.Message);
 
