@@ -111,6 +111,9 @@ namespace Paysmart.Controllers
             ci.Value = v.CountryId;
             cmd.Parameters.Add(ci);
 
+            SqlParameter uti = new SqlParameter("@UserTypeId", SqlDbType.Int);
+            uti.Value = v.UserTypeId;
+            cmd.Parameters.Add(uti);
             DataTable dt = new DataTable();
             SqlDataAdapter da = new SqlDataAdapter(cmd);
             da.Fill(dt);

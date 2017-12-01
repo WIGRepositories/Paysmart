@@ -135,8 +135,7 @@ namespace SmartTicketDashboard.Controllers
                 if (conn != null && conn.State == ConnectionState.Open)
                 {
                     conn.Close();
-                }
-                string str = ex.Message;
+                }                
 
                 traceWriter.Trace(Request, "1", TraceLevel.Info, "{0}", "Error in SaveSOSNumber:" + ex.Message);
 

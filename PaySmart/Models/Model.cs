@@ -341,6 +341,7 @@ namespace Paysmart.Models
         public int CustomerId { get; set; }
         public int NoofSeats { get; set; }
         public DateTime? ClosingDate { get; set; }
+        public DateTime? ClosingTime { get; set; }
         public DateTime? CancelledOn { get; set; }
         public int cancellationType { get; set; }
         public string CancelledBy { get; set; }
@@ -935,7 +936,7 @@ namespace Paysmart.Models
         public int Active { get; set; }
         public int CountryId { get; set; }
         public string Mobilenumber { get; set; }
-
+        public int UserTypeId { get; set; }
         
     }
 

@@ -32,6 +32,7 @@ namespace Paysmart.Controllers
                 str.Append("Src:" + b.Src + ",");
                 str.Append("Dest:" + b.Dest + ",");
                 str.Append("VechId:" + b.VechId + ",");
+
                 str.Append("DriverPhoneNo:" + b.DriverPhoneNo + ",");
                 str.Append("CustomerPhoneNo:" + b.CustomerPhoneNo + ",");
                 
@@ -426,7 +427,7 @@ namespace Paysmart.Controllers
             cmd.Parameters.Add(cd);
 
             SqlParameter ct = new SqlParameter("@ClosingTime", System.Data.SqlDbType.DateTime);
-            ct.Value = b.ClosingDate;
+            ct.Value = b.ClosingTime;
             cmd.Parameters.Add(ct);
 
             SqlParameter cto = new SqlParameter("@CancelledOn", SqlDbType.DateTime);
@@ -452,6 +453,10 @@ namespace Paysmart.Controllers
             SqlParameter ps = new SqlParameter("@PaymentStatus", SqlDbType.VarChar, 50);
             ps.Value = b.PaymentStatus;
             cmd.Parameters.Add(ps);
+
+            SqlParameter dist = new SqlParameter("@distance", SqlDbType.Decimal);
+            dist.Value = b.distance;
+            cmd.Parameters.Add(dist);
 
            
             SqlDataAdapter da = new SqlDataAdapter(cmd);
