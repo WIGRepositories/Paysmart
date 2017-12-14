@@ -95,7 +95,7 @@ namespace Paysmart.Controllers
                 u.Value = ocr.bioMetricData;
                 cmd.Parameters.Add(u);
 
-                SqlParameter p = new SqlParameter("@DPhoto", SqlDbType.VarChar);
+                SqlParameter p = new SqlParameter("@DPhoto", SqlDbType.VarChar,-1);
                 p.Value = ocr.DPhoto;
                 cmd.Parameters.Add(p);
 
@@ -118,7 +118,7 @@ namespace Paysmart.Controllers
                     isDriverOwned.Value = ocr.isDriverOwned;
                     cmd.Parameters.Add(isDriverOwned);
 
-                    SqlParameter vcode = new SqlParameter("@VPhoto ", SqlDbType.VarChar);
+                    SqlParameter vcode = new SqlParameter("@VPhoto ", SqlDbType.VarChar,-1);
                     vcode.Value = ocr.VPhoto;
                     cmd.Parameters.Add(vcode);
 

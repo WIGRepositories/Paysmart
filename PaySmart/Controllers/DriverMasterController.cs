@@ -243,7 +243,7 @@ namespace Paysmart.Controllers
                 dc.Value = d.drivercode;
                 cmd.Parameters.Add(dc);
 
-                SqlParameter pr = new SqlParameter("@Photo", SqlDbType.VarChar);
+                SqlParameter pr = new SqlParameter("@Photo", SqlDbType.VarChar,-1);
                 pr.Value = d.Photo;
                 cmd.Parameters.Add(pr);
 

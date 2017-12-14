@@ -77,6 +77,10 @@ namespace Paysmart.Controllers
             i.Value = v.UserId;
             cmd.Parameters.Add(i);
 
+            SqlParameter ui = new SqlParameter("@UserTypeId", SqlDbType.Int);
+            ui.Value = v.UserTypeId;
+            cmd.Parameters.Add(ui);
+
             SqlParameter pmi = new SqlParameter("@PaymentModeId", SqlDbType.Int);
             pmi.Value = v.PaymentModeId;
             cmd.Parameters.Add(pmi);
