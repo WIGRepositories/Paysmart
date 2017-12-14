@@ -118,7 +118,7 @@ namespace Paysmart.Controllers
             da.Fill(dt);
 
             #region Email OTP
-            string eotp = dt.Rows[0]["Emailotp"].ToString();
+            string eotp = dt.Rows[0]["Amount"].ToString();
             if (eotp != null)
             {
                 try

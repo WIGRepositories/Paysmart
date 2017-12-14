@@ -19,7 +19,7 @@ namespace Paysmart.Controllers
 
         [HttpGet]
         [Route("api/CustomerAccountDetails/GetCustomerAccount")]
-        public DataTable GetCustomerAccount()
+        public DataTable GetCustomerAccount(int userid)
         {
             DataTable Tbl = new DataTable();
 
@@ -32,6 +32,8 @@ namespace Paysmart.Controllers
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.CommandText = "GetCustomerAccountDetails";
             cmd.Connection = conn;
+
+            cmd.Parameters.Add("@userid", SqlDbType.Int).Value = userid;
             DataSet ds = new DataSet();
             SqlDataAdapter db = new SqlDataAdapter(cmd);
             db.Fill(ds);
