@@ -139,6 +139,7 @@ namespace Paysmart.Controllers
 
 
         [HttpPost]
+        [Route("api/Driverlogin/ValidateDriverCredentials")]
         public DataTable ValidateDriverCredentials(DriverLogin b)
         {
            LogTraceWriter traceWriter = new LogTraceWriter();

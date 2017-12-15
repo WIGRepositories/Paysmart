@@ -956,13 +956,13 @@ namespace Paysmart.Controllers
 
         [HttpPost]
         [Route("api/VehicleBooking/AcceptRejectBooking")]
-        public DataTable AcceptBooking(VehicleBooking b)
+        public DataSet AcceptBooking(VehicleBooking b)
         {
 
              LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
             StringBuilder str = new StringBuilder();
-            DataTable dt = new DataTable();
+            DataSet dt = new DataSet();
             try
             {
 
