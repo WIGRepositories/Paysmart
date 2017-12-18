@@ -321,6 +321,13 @@ namespace Paysmart.Controllers
             try
             {
 
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "MOTPverifications....");
+
+                str.Append("Mobilenumber:" + ocr.Mobilenumber + ",");
+                str.Append("Mobileotp:" + ocr.MVerificationCode + ",");
+                
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "MOTPverifications Input sent...." + str.ToString());
 
                 conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
@@ -351,12 +358,9 @@ namespace Paysmart.Controllers
                     }
                     return Convert.ToInt32(statusres);
                 }
-                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "MOTPverifications successful....");
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "MOTPverifications successful....");             
 
-                str.Append("Mobilenumber:" + ocr.Mobilenumber + ",");
-                str.Append("Mobileotp:" + ocr.MVerificationCode + ",");
-
-                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
+               
             }
             catch (Exception ex)
             {
