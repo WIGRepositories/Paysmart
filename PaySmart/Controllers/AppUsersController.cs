@@ -166,7 +166,8 @@ namespace Paysmart.Controllers
             DataTable dt = new DataTable();
             DataSet ds = new DataSet();
             LogTraceWriter traceWriter = new LogTraceWriter();
-            SqlConnection conn = new SqlConnection(); try
+            SqlConnection conn = new SqlConnection(); 
+            try
             {
                 conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
                 SqlCommand cmd = new SqlCommand();
