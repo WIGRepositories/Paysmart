@@ -962,6 +962,7 @@ namespace Paysmart.Controllers
              LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
             StringBuilder str = new StringBuilder();
+            //DataSet dt = new DataSet();
             DataTable dt = new DataTable();
             try
             {

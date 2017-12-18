@@ -95,7 +95,7 @@ namespace Paysmart.Controllers
                 u.Value = ocr.bioMetricData;
                 cmd.Parameters.Add(u);
 
-                SqlParameter p = new SqlParameter("@DPhoto", SqlDbType.VarChar);
+                SqlParameter p = new SqlParameter("@DPhoto", SqlDbType.VarChar,-1);
                 p.Value = ocr.DPhoto;
                 cmd.Parameters.Add(p);
 
@@ -118,7 +118,7 @@ namespace Paysmart.Controllers
                     isDriverOwned.Value = ocr.isDriverOwned;
                     cmd.Parameters.Add(isDriverOwned);
 
-                    SqlParameter vcode = new SqlParameter("@VPhoto ", SqlDbType.VarChar);
+                    SqlParameter vcode = new SqlParameter("@VPhoto ", SqlDbType.VarChar,-1);
                     vcode.Value = ocr.VPhoto;
                     cmd.Parameters.Add(vcode);
 
@@ -321,6 +321,13 @@ namespace Paysmart.Controllers
             try
             {
 
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "MOTPverifications....");
+
+                str.Append("Mobilenumber:" + ocr.Mobilenumber + ",");
+                str.Append("Mobileotp:" + ocr.MVerificationCode + ",");
+                
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "MOTPverifications Input sent...." + str.ToString());
 
                 conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
@@ -351,12 +358,9 @@ namespace Paysmart.Controllers
                     }
                     return Convert.ToInt32(statusres);
                 }
-                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "MOTPverifications successful....");
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "MOTPverifications successful....");             
 
-                str.Append("Mobilenumber:" + ocr.Mobilenumber + ",");
-                str.Append("Mobileotp:" + ocr.MVerificationCode + ",");
-
-                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
+               
             }
             catch (Exception ex)
             {
