@@ -155,7 +155,7 @@ namespace Paysmart.Controllers
                         SmtpClient SmtpServer = new SmtpClient(emailserver);
 
                         mail.From = new MailAddress(fromaddress);
-                        mail.To.Add(fromaddress);
+                        mail.To.Add(ocr.Email);
                         mail.Subject = "Driver registration - Mobile OTP";
                         mail.IsBodyHtml = true;
 
@@ -228,7 +228,7 @@ namespace Paysmart.Controllers
                         SmtpClient SmtpServer = new SmtpClient(emailserver);
 
                         mail.From = new MailAddress(fromaddress);
-                        mail.To.Add(fromaddress);
+                        mail.To.Add(ocr.Email);
                         mail.Subject = "Driver registration - Email OTP";
                         mail.IsBodyHtml = true;
 
