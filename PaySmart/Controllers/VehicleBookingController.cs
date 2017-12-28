@@ -812,12 +812,12 @@ namespace Paysmart.Controllers
 
         [HttpPost]
         [Route("api/VehicleBooking/RideDetails")]
-        public DataSet RideDetails(VehicleBooking vb)
+        public DataTable RideDetails(VehicleBooking vb)
         { 
             LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
             StringBuilder str = new StringBuilder();
-            DataSet ds = new DataSet();
+            DataTable ds = new DataTable();
             try
             {
 
