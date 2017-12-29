@@ -551,48 +551,7 @@ namespace Paysmart.Controllers
         }
 
 
-        [HttpGet]
-        [Route("api/DriverMaster/CurrentState")]
-        public DataTable CurrentState(int DId)
-        {
-            DataTable dt = new DataTable();
-            LogTraceWriter traceWriter = new LogTraceWriter();
-            SqlConnection conn = new SqlConnection();
-
-            try
-            {
-                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "CurrentState....");
-                StringBuilder str = new StringBuilder();
-                str.Append("@DId" + DId + ",");
-                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "CurrentState Input sent...." + str.ToString());
-                conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
-
-                SqlCommand cmd = new SqlCommand();
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.CommandText = "PSGetCurrentDriverStatus";
-                cmd.Parameters.Add("@DId", SqlDbType.Int).Value = DId;
-                cmd.Connection = conn;
-                DataSet ds = new DataSet();
-                SqlDataAdapter db = new SqlDataAdapter(cmd);
-                db.Fill(dt);
-
-                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "CurrentState successful....");
-
-            }
-            catch (Exception ex)
-            {
-                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "CurrentState...." + ex.Message.ToString());
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
-            }
-            finally
-            {
-                conn.Close();
-                conn.Dispose();
-                SqlConnection.ClearPool(conn);
-            }
-            return dt;
-
-        }
+       
         //[HttpGet]
         //[Route("api/DriverMaster/Master")]
         //public DataTable Master(int DId)
