@@ -922,8 +922,7 @@ namespace Paysmart.Models
         public int Active { get; set; }
         public int CountryId { get; set; }
         public string Mobilenumber { get; set; }
-        public int UserTypeId { get; set; }
-        
+       
     }
 
 

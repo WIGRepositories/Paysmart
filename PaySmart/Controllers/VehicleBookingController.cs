@@ -1317,5 +1317,31 @@ namespace Paysmart.Controllers
             }
             return dt;
         }
+
+        [HttpGet]
+        [Route("api/VehicleBooking/TripStatus")]
+        public DataTable TripStatus()
+        {
+            DataTable Tbl = new DataTable();
+
+            LogTraceWriter traceWriter = new LogTraceWriter();
+            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "CustomerAccount credentials....");
+            SqlConnection conn = new SqlConnection();
+            conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.CommandText = "GetTripStatus";
+            cmd.Connection = conn;
+
+          
+            SqlDataAdapter db = new SqlDataAdapter(cmd);
+            db.Fill(Tbl);
+            return Tbl;
+
+        }
+    
+    
+    
     }
 }
