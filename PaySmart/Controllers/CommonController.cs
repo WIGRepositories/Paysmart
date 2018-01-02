@@ -6,6 +6,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text;
 using System.Web.Http;
 using System.Web.Http.Tracing;
 
@@ -291,6 +292,51 @@ namespace Paysmart.Controllers
             }
 
             return ds;
+        }
+
+        [HttpGet]
+        [Route("api/Common/CurrentState")]
+        public DataTable CurrentState(int UserId,int UserTypeId)
+        {
+            DataTable dt = new DataTable();
+            LogTraceWriter traceWriter = new LogTraceWriter();
+            SqlConnection conn = new SqlConnection();
+
+            try
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "CurrentState....");
+                StringBuilder str = new StringBuilder();
+                str.Append("@UserId" + UserId + ",");
+                str.Append("@UserTypeId" + UserTypeId + ",");
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "CurrentState Input sent...." + str.ToString());
+                conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = "PSGetCurrentDriverStatus";
+                cmd.Parameters.Add("@UserId", SqlDbType.Int).Value = UserId;
+                cmd.Parameters.Add("@UserTypeId", SqlDbType.Int).Value = UserTypeId;
+                cmd.Connection = conn;
+                DataSet ds = new DataSet();
+                SqlDataAdapter db = new SqlDataAdapter(cmd);
+                db.Fill(dt);
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "CurrentState successful....");
+
+            }
+            catch (Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "CurrentState...." + ex.Message.ToString());
+                throw ex;//new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
+            }
+            return dt;
+
         }
     }
 }

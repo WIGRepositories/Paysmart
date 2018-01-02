@@ -174,7 +174,7 @@ namespace SmartTicketDashboard.Controllers
                 {
                     conn.Close();
                 }
-                
+                string st = ex.Message;
 
                 //traceWriter.Trace(Request, "1", TraceLevel.Info, "{0}", "Error in SaveMandUserDocs:" + ex.Message);
 

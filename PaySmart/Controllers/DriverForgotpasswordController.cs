@@ -9,6 +9,7 @@ using System.Net.Http;
 using System.Net.Mail;
 using System.Web.Http;
 using System.Web.Http.Tracing;
+using System.Text; 
 
 namespace Paysmart.Controllers
 {
@@ -26,6 +27,11 @@ namespace Paysmart.Controllers
             try
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Forgotpassword....");
+                StringBuilder str = new StringBuilder();
+                str.Append("@mobileno" + ocr.Mobilenumber + ",");
+                str.Append("@Email" + ocr.Email + ",");
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Forgotpassword Input sent...." + str.ToString());
 
             conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 

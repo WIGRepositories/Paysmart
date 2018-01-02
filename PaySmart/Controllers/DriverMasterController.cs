@@ -27,6 +27,10 @@ namespace Paysmart.Controllers
             try
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Master....");
+                StringBuilder str = new StringBuilder();
+                str.Append("@DId" + DId + ",");
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Master Input sent...." + str.ToString());
 
                 conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
@@ -62,9 +66,14 @@ namespace Paysmart.Controllers
         public DataTable GetMaster(int DId)
         {
             DataTable dt = new DataTable();
-
+            LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
 
+            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetMaster....");
+            StringBuilder str = new StringBuilder();
+            str.Append("@DId" + DId + ",");
+
+            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetMaster Input sent...." + str.ToString());
             conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
             SqlCommand cmd = new SqlCommand();
@@ -87,8 +96,13 @@ namespace Paysmart.Controllers
         public DataTable GetDriverApproval(String MobileNo)
         {
             DataTable dt = new DataTable();
-
+            LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
+            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetDriverApproval....");
+            StringBuilder str = new StringBuilder();
+            str.Append("@MobileNumber" + MobileNo + ",");
+
+            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetDriverApproval Input sent...." + str.ToString());
 
             conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
@@ -118,7 +132,10 @@ namespace Paysmart.Controllers
             try
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetDriverDetails....");
+                StringBuilder str = new StringBuilder();
+                str.Append("@DID" + DID + ",");
 
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetDriverDetails Input sent...." + str.ToString());
                 conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
                 SqlCommand cmd = new SqlCommand();
@@ -158,7 +175,14 @@ namespace Paysmart.Controllers
             try
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Driver....");
+                StringBuilder str = new StringBuilder();
+                str.Append("@CompanyId" + d.Company + ",");
+                str.Append("@NAme" + d.Name + ",");
+                str.Append("@PAddress" + d.PermanentAddress + ",");
+                str.Append("@PMobNo" + d.Mobilenumber + ",");
+                str.Append("@DriverCode" + d.drivercode + ",");
 
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Driver Input sent...." + str.ToString());
                 conn.ConnectionString = ConfigurationManager.ConnectionStrings["btposdb"].ToString();
                 SqlCommand cmd = new SqlCommand();
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -219,7 +243,7 @@ namespace Paysmart.Controllers
                 dc.Value = d.drivercode;
                 cmd.Parameters.Add(dc);
 
-                SqlParameter pr = new SqlParameter("@Photo", SqlDbType.VarChar);
+                SqlParameter pr = new SqlParameter("@Photo", SqlDbType.VarChar,-1);
                 pr.Value = d.Photo;
                 cmd.Parameters.Add(pr);
 
@@ -362,6 +386,13 @@ namespace Paysmart.Controllers
             try
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "SaveBankingdetails....");
+                StringBuilder str = new StringBuilder();
+                str.Append("@Accountnumber" + b.Accountnumber + ",");
+                str.Append("@BankName" + b.BankName + ",");
+                str.Append("@BankCode" + b.Bankcode + ",");
+                str.Append("@BranchAddress" + b.BranchAddress + ",");
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "SaveBankingdetails Input sent...." + str.ToString());
                 conn.ConnectionString = ConfigurationManager.ConnectionStrings["btposdb"].ToString();
                 SqlCommand cmd = new SqlCommand();
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -450,6 +481,9 @@ namespace Paysmart.Controllers
             try
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetBankingDetails....");
+                StringBuilder str = new StringBuilder();
+                str.Append("@DId" + DId + ",");
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetBankingDetails Input sent...." + str.ToString());
                 conn.ConnectionString = ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -487,6 +521,9 @@ namespace Paysmart.Controllers
             try
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetQrCode....");
+                StringBuilder str = new StringBuilder();
+                str.Append("@DId" + DId + ",");
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetQrCode Input sent...." + str.ToString());
                 conn.ConnectionString = ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -514,46 +551,7 @@ namespace Paysmart.Controllers
         }
 
 
-        [HttpGet]
-        [Route("api/DriverMaster/CurrentState")]
-        public DataTable CurrentState(int DId)
-        {
-            DataTable dt = new DataTable();
-            LogTraceWriter traceWriter = new LogTraceWriter();
-            SqlConnection conn = new SqlConnection();
-
-            try
-            {
-                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "CurrentState....");
-
-                conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
-
-                SqlCommand cmd = new SqlCommand();
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.CommandText = "PSGetCurrentDriverStatus";
-                cmd.Parameters.Add("@DId", SqlDbType.Int).Value = DId;
-                cmd.Connection = conn;
-                DataSet ds = new DataSet();
-                SqlDataAdapter db = new SqlDataAdapter(cmd);
-                db.Fill(dt);
-
-                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "CurrentState successful....");
-
-            }
-            catch (Exception ex)
-            {
-                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "CurrentState...." + ex.Message.ToString());
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
-            }
-            finally
-            {
-                conn.Close();
-                conn.Dispose();
-                SqlConnection.ClearPool(conn);
-            }
-            return dt;
-
-        }
+       
         //[HttpGet]
         //[Route("api/DriverMaster/Master")]
         //public DataTable Master(int DId)
@@ -601,10 +599,17 @@ namespace Paysmart.Controllers
         public DataTable SaveDriverApprovals(Approvals a)
         {
             //connect to database
+            LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
             DataTable dt = new DataTable();
             try
             {
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "SaveDriverApprovals....");
+                StringBuilder str = new StringBuilder();
+                str.Append("@Change" + a.change + ",");
+                str.Append("@IsApproved" + a.IsApproved + ",");
+                str.Append("@MobileNo" + a.MobileNo + ",");
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "SaveDriverApprovals Input sent...." + str.ToString());
                 //connetionString="Data Source=ServerName;Initial Catalog=DatabaseName;User ID=UserName;Password=Password"
                 conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 

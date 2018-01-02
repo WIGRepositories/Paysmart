@@ -10,6 +10,7 @@ using System.Web.Http;
 using System.Web.Http.Tracing;
 using Paysmart.Models;
 using Payengine;
+using System.Text; 
 
 namespace Paysmart.Controllers
 {
@@ -18,7 +19,7 @@ namespace Paysmart.Controllers
 
         [HttpGet]
         [Route("api/CustomerAccountDetails/GetCustomerAccount")]
-        public DataTable GetCustomerAccount()
+        public DataTable GetCustomerAccount(int userid)
         {
             DataTable Tbl = new DataTable();
 
@@ -31,6 +32,8 @@ namespace Paysmart.Controllers
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.CommandText = "GetCustomerAccountDetails";
             cmd.Connection = conn;
+
+            cmd.Parameters.Add("@userid", SqlDbType.Int).Value = userid;
             DataSet ds = new DataSet();
             SqlDataAdapter db = new SqlDataAdapter(cmd);
             db.Fill(ds);
@@ -46,6 +49,15 @@ namespace Paysmart.Controllers
         public DataTable CustomerAccount(CustomerAccounts v)
         {
             SqlConnection conn = new SqlConnection();
+            LogTraceWriter traceWriter = new LogTraceWriter();
+            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "CustomerAccount....");
+            StringBuilder str = new StringBuilder();
+            str.Append("@UserId" + v.UserId + ",");
+            str.Append("@PaymentModeId" + v.PaymentModeId + ",");
+            str.Append("@AccountNumber" + v.AccountNumber + ",");
+            str.Append("@AccountType" + v.AccountType + ",");
+
+            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "CustomerAccount Input sent...." + str.ToString());
 
             conn.ConnectionString = ConfigurationManager.ConnectionStrings["btposdb"].ToString();
             SqlCommand cmd = new SqlCommand();
@@ -66,6 +78,10 @@ namespace Paysmart.Controllers
             SqlParameter i = new SqlParameter("@UserId", SqlDbType.Int);
             i.Value = v.UserId;
             cmd.Parameters.Add(i);
+
+            SqlParameter ui = new SqlParameter("@UserTypeId", SqlDbType.Int);
+            ui.Value = v.UserTypeId;
+            cmd.Parameters.Add(ui);
 
             SqlParameter pmi = new SqlParameter("@PaymentModeId", SqlDbType.Int);
             pmi.Value = v.PaymentModeId;
@@ -153,6 +169,7 @@ namespace Paysmart.Controllers
         {
 
             int status = 0;
+            DataTable dt = new DataTable();
             LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
 
@@ -160,6 +177,16 @@ namespace Paysmart.Controllers
             {
 
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "AccountVerification....");
+                StringBuilder str = new StringBuilder();
+                str.Append("@Mobilenumber" +b. Mobilenumber + ",");
+                str.Append("@Otp" + b.BVerificationCode + ",");
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "AccountVerification Input sent...." + str.ToString());
+
+                if (dt.Rows.Count > 0)
+                    traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "AccountVerification Output...." + dt.Rows[0].ToString());
+                else
+                    traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "AccountVerification Output....BookedHistory ");
 
                 conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
@@ -191,6 +218,7 @@ namespace Paysmart.Controllers
                         return Convert.ToInt32(statusres);
                     }
                     traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "AccountVerification successful....");
+
                 }
                 catch (Exception ex)
                 {
@@ -221,11 +249,25 @@ namespace Paysmart.Controllers
         {
 
             DataTable dt = new DataTable();
+            LogTraceWriter traceWriter = new LogTraceWriter();
             SqlCommand cmd = new SqlCommand();
            
             {
                 SqlConnection conn = new SqlConnection();
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "MakePayment....");
+                StringBuilder str = new StringBuilder();
+                str.Append("@BNo" + t.BNo + ",");
+                str.Append("@Amount" + t.Amount + ",");
+                str.Append("@GatewayTransId" + t.GatewayTransId + ",");
+                str.Append("@TransDate" + t.TransDate + ",");
+                str.Append("@AppUserId" + t.AppUserId + ",");
+            
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "MakePayment Input sent...." + str.ToString());
 
+                if (dt.Rows.Count > 0)
+                    traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "MakePayment Output...." + dt.Rows[0].ToString());
+                else
+                    traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "MakePayment Output....BookedHistory ");
                 conn.ConnectionString = ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
                 cmd.CommandType = CommandType.StoredProcedure;
@@ -324,10 +366,21 @@ namespace Paysmart.Controllers
         [Route("api/CustomerAccountDetails/GetTripPayments")]
         public DataTable GetTripPayments(int id)
         {
+            DataTable dt = new DataTable();
             DataTable Tbl = new DataTable();
 
             LogTraceWriter traceWriter = new LogTraceWriter();
             traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetTripPayments credentials....");
+            StringBuilder str = new StringBuilder();
+            str.Append("@id" + id + ",");
+
+
+            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetTripPayments Input sent...." + str.ToString());
+
+            if (dt.Rows.Count > 0)
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetTripPayments Output...." + dt.Rows[0].ToString());
+            else
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetTripPayments Output....BookedHistory ");
             SqlConnection conn = new SqlConnection();
             conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 

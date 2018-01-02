@@ -28,6 +28,10 @@ namespace Paysmart.Controllers
             {
 
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Getdrivers....");
+                StringBuilder str = new StringBuilder();
+                str.Append("@DId" + DId + ",");
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Getdrivers Input sent...." + str.ToString());
 
             conn.ConnectionString = ConfigurationManager.ConnectionStrings["btposdb"].ToString();
             SqlCommand cmd = new SqlCommand();
@@ -70,6 +74,15 @@ namespace Paysmart.Controllers
 
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Driverlogin....");
 
+                StringBuilder str = new StringBuilder();
+                str.Append("@loginlogout" + dl.loginlogout + ",");
+                str.Append("@DriverNo" + dl.DriverNo + ",");
+                str.Append("@Reason" + dl.Reason + ",");
+                str.Append("@LoginLatitude" + dl.LoginLatitude + ",");
+                str.Append("@LoginLongitude" + dl.LoginLongitude + ",");
+
+           traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Driverlogin Input sent...." + str.ToString());               
+
             conn.ConnectionString = ConfigurationManager.ConnectionStrings["btposdb"].ToString();
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = CommandType.StoredProcedure;
@@ -103,21 +116,6 @@ namespace Paysmart.Controllers
 
             traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Driverlogin successful....");
 
-            StringBuilder str = new StringBuilder();
-            str.Append("@loginlogout" + dl.loginlogout + ",");
-            str.Append("@DriverNo" + dl.DriverNo + ",");
-            str.Append("@Reason" + dl.Reason + ",");
-            str.Append("@LoginLatitude" + dl.LoginLatitude + ",");
-            str.Append("@LoginLongitude" + dl.LoginLongitude + ",");
-
-
-            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Driverlogin Input sent...." + str.ToString());
-
-            if (dt.Rows.Count > 0)
-                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Driverlogin Output...." + dt.Rows[0].ToString());
-            else
-                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Driverlogin Output....DriverLogin ");
-
             }
             catch (Exception ex)
             {
@@ -135,6 +133,7 @@ namespace Paysmart.Controllers
 
 
         [HttpPost]
+        [Route("api/Driverlogin/ValidateDriverCredentials")]
         public DataTable ValidateDriverCredentials(DriverLogin b)
         {
            LogTraceWriter traceWriter = new LogTraceWriter();
@@ -144,8 +143,14 @@ namespace Paysmart.Controllers
             {
 
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "ValidateDriverCredentials....");
-           
-                //connetionString="Data Source=ServerName;Initial Catalog=DatabaseName;User ID=UserName;Password=Password"
+
+
+                StringBuilder str = new StringBuilder();
+                str.Append("@DriverNo" + b.Mobilenumber + ",");
+                str.Append("@Password" + b.Password + ",");
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "ValidateDriverCredentials Input sent...." + str.ToString());
+                
                 conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
                 SqlCommand cmd = new SqlCommand();
@@ -168,19 +173,6 @@ namespace Paysmart.Controllers
                 da.Fill(dt);
 
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "ValidateDriverCredentials successful....");
-                StringBuilder str = new StringBuilder();
-                str.Append("@DriverNo" + b.Mobilenumber + ",");
-                str.Append("@Password" + b.Password + ",");
-
-
-
-                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "ValidateDriverCredentials Input sent...." + str.ToString());
-
-                if (dt.Rows.Count > 0)
-                    traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "ValidateDriverCredentials Output...." + dt.Rows[0].ToString());
-                else
-                    traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "ValidateDriverCredentials Output....DriverCredentials ");
-
             }
             catch (Exception ex)
             {

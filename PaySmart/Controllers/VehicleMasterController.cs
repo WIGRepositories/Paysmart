@@ -456,8 +456,7 @@ namespace Paysmart.Controllers
 
                 SqlDataAdapter db = new SqlDataAdapter(cmd);
                 db.Fill(currTripList);
-                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "TrackVehicle successful....");           
-
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "TrackVehicle successful....");                
                 
 
                 if (currTripList.Rows.Count > 0)

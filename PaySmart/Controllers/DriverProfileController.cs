@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Tracing;
+using System.Text; 
 
 namespace Paysmart.Controllers
 {
@@ -25,6 +26,12 @@ namespace Paysmart.Controllers
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Profile....");
 
+                StringBuilder str = new StringBuilder();
+                str.Append("@DId" + DId + ",");
+
+
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Profile Input sent...." + str.ToString());
                 conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
                 SqlCommand cmd = new SqlCommand();

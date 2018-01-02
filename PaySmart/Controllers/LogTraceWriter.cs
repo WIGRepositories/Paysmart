@@ -25,6 +25,7 @@ namespace Paysmart
                         File.Create(path);
 
                     File.AppendAllText(path, DateTime.Now.ToString() + ": " + category + " -- " + record.Message + "\r\n");
+                    
                 }
                 catch { }
             }
