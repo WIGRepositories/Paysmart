@@ -1319,8 +1319,8 @@ namespace Paysmart.Controllers
         }
 
         [HttpGet]
-        [Route("api/VehicleBooking/TripStatus")]
-        public DataTable TripStatus()
+        [Route("api/VehicleBooking/OngoingTrips")]
+        public DataTable OngoingTrips()
         {
             DataTable Tbl = new DataTable();
 

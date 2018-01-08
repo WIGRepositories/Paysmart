@@ -339,6 +339,38 @@ namespace Paysmart.Controllers
 
         }
 
+
+        [HttpGet]
+        [Route("api/Sostemplates/Gettemplates")]
+        public DataTable Gettemplates(int Usertypeid)
+        {
+            DataTable Tbl = new DataTable();
+            LogTraceWriter traceWriter = new LogTraceWriter();
+            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Gettemplates credentials....");
+
+            //connect to database
+            SqlConnection conn = new SqlConnection();
+            //connetionString="Data Source=ServerName;Initial Catalog=DatabaseName;User ID=UserName;Password=Password"
+            conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.CommandText = "GetSostemplates";
+            cmd.Connection = conn;
+
+            cmd.Parameters.Add("@usertypeid", SqlDbType.Int).Value = Usertypeid;
+
+
+            SqlDataAdapter db = new SqlDataAdapter(cmd);
+            db.Fill(Tbl);
+
+            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Gettemplates Credentials completed.");
+
+            // int found = 0;
+            return Tbl;
+
+        }
+
         
          }
 }
