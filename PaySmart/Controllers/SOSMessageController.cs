@@ -1,5 +1,4 @@
-﻿
-using Paysmart;
+﻿using Paysmart;
 using Paysmart.Models;
 using System;
 using System.Collections.Generic;
@@ -13,7 +12,7 @@ using System.Web.Http;
 using System.Text;
 using System.Net.Mail;
 
-namespace SmartTicketDashboard.Controllers
+namespace Paysmart.Controllers
 {
     public class SOSMessageController : ApiController
     {
