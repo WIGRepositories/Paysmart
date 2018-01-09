@@ -1320,7 +1320,7 @@ namespace Paysmart.Controllers
 
         [HttpGet]
         [Route("api/VehicleBooking/OngoingTrips")]
-        public DataTable OngoingTrips()
+        public DataTable OngoingTrips(string Mobilenumber)
         {
             DataTable Tbl = new DataTable();
 
@@ -1333,7 +1333,7 @@ namespace Paysmart.Controllers
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.CommandText = "GetTripStatus";
             cmd.Connection = conn;
-
+            cmd.Parameters.Add("@Mobilenumber", SqlDbType.VarChar).Value = Mobilenumber;
           
             SqlDataAdapter db = new SqlDataAdapter(cmd);
             db.Fill(Tbl);
