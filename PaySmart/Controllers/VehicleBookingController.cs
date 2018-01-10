@@ -1325,18 +1325,36 @@ namespace Paysmart.Controllers
             DataTable Tbl = new DataTable();
 
             LogTraceWriter traceWriter = new LogTraceWriter();
-            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "CustomerAccount credentials....");
+            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "OngoingTrips credentials....");
             SqlConnection conn = new SqlConnection();
-            conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+            StringBuilder str = new StringBuilder();
+            str.Append("Mobilenumber:" + Mobilenumber + ",");
+            try
+            {
+                conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
-            SqlCommand cmd = new SqlCommand();
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.CommandText = "GetTripStatus";
-            cmd.Connection = conn;
-            cmd.Parameters.Add("@Mobilenumber", SqlDbType.VarChar).Value = Mobilenumber;
-          
-            SqlDataAdapter db = new SqlDataAdapter(cmd);
-            db.Fill(Tbl);
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = "GetTripStatus";
+                cmd.Connection = conn;
+                cmd.Parameters.Add("@Mobilenumber", SqlDbType.VarChar).Value = Mobilenumber;
+
+                SqlDataAdapter db = new SqlDataAdapter(cmd);
+                db.Fill(Tbl);
+
+            }
+            catch (Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "OngoingTrips...." + ex.Message.ToString());
+                //throw ex;
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
+            }
             return Tbl;
 
         }
