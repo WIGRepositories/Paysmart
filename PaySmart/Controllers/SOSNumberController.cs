@@ -59,6 +59,7 @@ namespace SmartTicketDashboard.Controllers
             str.Append("UserId:" + sos.UserId + ",");
             str.Append("MobileNumber:" + sos.MobileNumber + ",");
             str.Append("MobiOrder:" + sos.MobiOrder + ",");
+            str.Append("UserName:" + sos.Username + ",");
            
             traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
 
@@ -107,9 +108,9 @@ namespace SmartTicketDashboard.Controllers
                     cmd.Parameters.Add(ustid);
 
                     SqlParameter CreatedOn = new SqlParameter();
-                    CreatedOn.ParameterName = "@CreatedOn";
-                    CreatedOn.SqlDbType = SqlDbType.DateTime;
-                    CreatedOn.Value = sos.CreatedOn;
+                    CreatedOn.ParameterName = "@UserName";
+                    CreatedOn.SqlDbType = SqlDbType.VarChar;
+                    CreatedOn.Value = sos.Username;
                     cmd.Parameters.Add(CreatedOn);
 
                     SqlParameter Active = new SqlParameter();

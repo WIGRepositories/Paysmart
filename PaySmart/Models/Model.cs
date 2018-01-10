@@ -831,7 +831,7 @@ namespace Paysmart.Models
 
         public int UserTypeId { get; set; }
 
-        public DateTime CreatedOn { get; set; }
+        public string Username { get; set; }
 
         public int Active { get; set; }
 
