@@ -32,6 +32,7 @@ namespace Paysmart.Controllers
                 str.Append("Src:" + b.Src + ",");
                 str.Append("Dest:" + b.Dest + ",");
                 str.Append("VechId:" + b.VechId + ",");
+
                 str.Append("DriverPhoneNo:" + b.DriverPhoneNo + ",");
                 str.Append("CustomerPhoneNo:" + b.CustomerPhoneNo + ",");
                 
@@ -426,7 +427,7 @@ namespace Paysmart.Controllers
             cmd.Parameters.Add(cd);
 
             SqlParameter ct = new SqlParameter("@ClosingTime", System.Data.SqlDbType.DateTime);
-            ct.Value = b.ClosingDate;
+            ct.Value = b.ClosingTime;
             cmd.Parameters.Add(ct);
 
             SqlParameter cto = new SqlParameter("@CancelledOn", SqlDbType.DateTime);
@@ -453,6 +454,10 @@ namespace Paysmart.Controllers
             ps.Value = b.PaymentStatus;
             cmd.Parameters.Add(ps);
 
+            SqlParameter dist = new SqlParameter("@distance", SqlDbType.Decimal);
+            dist.Value = b.distance;
+            cmd.Parameters.Add(dist);
+           
            
             SqlDataAdapter da = new SqlDataAdapter(cmd);
             da.Fill(dt);
@@ -1312,5 +1317,49 @@ namespace Paysmart.Controllers
             }
             return dt;
         }
+
+        [HttpGet]
+        [Route("api/VehicleBooking/OngoingTrips")]
+        public DataTable OngoingTrips(string Mobilenumber)
+        {
+            DataTable Tbl = new DataTable();
+
+            LogTraceWriter traceWriter = new LogTraceWriter();
+            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "OngoingTrips credentials....");
+            SqlConnection conn = new SqlConnection();
+            StringBuilder str = new StringBuilder();
+            str.Append("Mobilenumber:" + Mobilenumber + ",");
+            try
+            {
+                conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = "GetTripStatus";
+                cmd.Connection = conn;
+                cmd.Parameters.Add("@Mobilenumber", SqlDbType.VarChar).Value = Mobilenumber;
+
+                SqlDataAdapter db = new SqlDataAdapter(cmd);
+                db.Fill(Tbl);
+
+            }
+            catch (Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "OngoingTrips...." + ex.Message.ToString());
+                //throw ex;
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
+            }
+            return Tbl;
+
+        }
+    
+    
+    
     }
 }

@@ -6,6 +6,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text;
 using System.Web.Http;
 using System.Web.Http.Tracing;
 
@@ -20,7 +21,7 @@ namespace Paysmart.Controllers
             LogTraceWriter traceWriter = new LogTraceWriter();
             traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "ConfigData....");
             DataSet ds = new DataSet();
-            
+
             //connect to database
             SqlConnection conn = new SqlConnection();
             try
@@ -203,7 +204,7 @@ namespace Paysmart.Controllers
                 vdid4.Value = vc.includeUserType;
                 cmd.Parameters.Add(vdid4);
 
-              
+
                 SqlDataAdapter db = new SqlDataAdapter(cmd);
                 db.Fill(ds);
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "ConfigData completed.");
@@ -213,19 +214,20 @@ namespace Paysmart.Controllers
                 traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "ConfigData...." + ex.Message.ToString());
                 throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
             }
-           
+
             return ds;
 
         }
 
         [HttpGet]
         [Route("api/Common/PendingDocs")]
-        public DataSet PendingDocs(int userid) { 
+        public DataSet PendingDocs(int userid)
+        {
 
-             LogTraceWriter traceWriter = new LogTraceWriter();
-             traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "PendingDocs....");
+            LogTraceWriter traceWriter = new LogTraceWriter();
+            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "PendingDocs....");
             DataSet ds = new DataSet();
-            
+
             //connect to database
             SqlConnection conn = new SqlConnection();
             try
@@ -292,5 +294,100 @@ namespace Paysmart.Controllers
 
             return ds;
         }
+
+        [HttpGet]
+        [Route("api/Common/CurrentState")]
+        public DataTable CurrentState(int UserId, int UserTypeId)
+        {
+            DataTable dt = new DataTable();
+            LogTraceWriter traceWriter = new LogTraceWriter();
+            SqlConnection conn = new SqlConnection();
+
+            try
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "CurrentState....");
+                StringBuilder str = new StringBuilder();
+                str.Append("@UserId" + UserId + ",");
+                str.Append("@UserTypeId" + UserTypeId + ",");
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "CurrentState Input sent...." + str.ToString());
+                conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = "PSGetCurrentDriverStatus";
+                cmd.Parameters.Add("@UserId", SqlDbType.Int).Value = UserId;
+                cmd.Parameters.Add("@UserTypeId", SqlDbType.Int).Value = UserTypeId;
+                cmd.Connection = conn;
+                DataSet ds = new DataSet();
+                SqlDataAdapter db = new SqlDataAdapter(cmd);
+                db.Fill(dt);
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "CurrentState successful....");
+
+            }
+            catch (Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "CurrentState...." + ex.Message.ToString());
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
+            }
+            return dt;
+
+        }
+
+
+        [HttpGet]
+        [Route("api/Sostemplates/Gettemplates")]
+        public DataTable Gettemplates(int Usertypeid)
+        {
+            DataTable Tbl = new DataTable();
+            LogTraceWriter traceWriter = new LogTraceWriter();
+            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Gettemplates credentials....");
+            StringBuilder str = new StringBuilder();
+            str.Append("@usertypeid" + Usertypeid + ",");
+           
+            //connect to database
+            SqlConnection conn = new SqlConnection();
+            try
+            {
+                //connetionString="Data Source=ServerName;Initial Catalog=DatabaseName;User ID=UserName;Password=Password"
+                conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = "GetSostemplates";
+                cmd.Connection = conn;
+
+                cmd.Parameters.Add("@usertypeid", SqlDbType.Int).Value = Usertypeid;
+
+
+                SqlDataAdapter db = new SqlDataAdapter(cmd);
+                db.Fill(Tbl);
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Gettemplates Credentials completed.");
+            }
+            catch (Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "Gettemplates...." + ex.Message.ToString());
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
+            }
+            // int found = 0;
+            return Tbl;
+
+        }
+
+
     }
 }
+

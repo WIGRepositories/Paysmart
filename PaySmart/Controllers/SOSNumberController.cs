@@ -30,22 +30,38 @@ namespace SmartTicketDashboard.Controllers
             traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
             //connect to database
             SqlConnection conn = new SqlConnection();
-            //connetionString="Data Source=ServerName;Initial Catalog=DatabaseName;User ID=UserName;Password=Password"
-            conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+            try
+            {
+                //connetionString="Data Source=ServerName;Initial Catalog=DatabaseName;User ID=UserName;Password=Password"
+                conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
-            SqlCommand cmd = new SqlCommand();
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.CommandText = "GetSOSNumber";
-            cmd.Parameters.Add("@UserTypeId", SqlDbType.Int).Value = utypeId;
-            cmd.Parameters.Add("@UserId", SqlDbType.Int).Value = userId;
-            cmd.Connection = conn;
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = "GetSOSNumber";
+                cmd.Parameters.Add("@UserTypeId", SqlDbType.Int).Value = utypeId;
+                cmd.Parameters.Add("@UserId", SqlDbType.Int).Value = userId;
+                cmd.Connection = conn;
 
-            //DataSet ds = new DataSet();
-            SqlDataAdapter db = new SqlDataAdapter(cmd);
-            db.Fill(Tbl);
-            //Tbl = ds.Tables[0];
-            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetSOSNumber completed.");
-            // int found = 0;
+                //DataSet ds = new DataSet();
+                SqlDataAdapter db = new SqlDataAdapter(cmd);
+                db.Fill(Tbl);
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetSOSNumber completed.");
+            }
+            catch(Exception ex)
+            {
+                
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "GetSOSNumber...." + ex.Message.ToString());
+                //throw ex;
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
+            }
+           
             return Tbl;
         }
         [HttpPost]
@@ -59,6 +75,7 @@ namespace SmartTicketDashboard.Controllers
             str.Append("UserId:" + sos.UserId + ",");
             str.Append("MobileNumber:" + sos.MobileNumber + ",");
             str.Append("MobiOrder:" + sos.MobiOrder + ",");
+            str.Append("UserName:" + sos.Username + ",");
            
             traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
 
@@ -107,9 +124,9 @@ namespace SmartTicketDashboard.Controllers
                     cmd.Parameters.Add(ustid);
 
                     SqlParameter CreatedOn = new SqlParameter();
-                    CreatedOn.ParameterName = "@CreatedOn";
-                    CreatedOn.SqlDbType = SqlDbType.DateTime;
-                    CreatedOn.Value = sos.CreatedOn;
+                    CreatedOn.ParameterName = "@UserName";
+                    CreatedOn.SqlDbType = SqlDbType.VarChar;
+                    CreatedOn.Value = sos.Username;
                     cmd.Parameters.Add(CreatedOn);
 
                     SqlParameter Active = new SqlParameter();
@@ -132,14 +149,16 @@ namespace SmartTicketDashboard.Controllers
             }
             catch (Exception ex)
             {
-                if (conn != null && conn.State == ConnectionState.Open)
-                {
-                    conn.Close();
-                }
-                string st = ex.Message;
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "SaveSOSNumber...." + ex.Message.ToString());
+                //throw ex;
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
 
-                traceWriter.Trace(Request, "1", TraceLevel.Info, "{0}", "Error in SaveSOSNumber:" + ex.Message);
-
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
             }
             return dt;
         }

@@ -114,6 +114,7 @@
     <Compile Include="Controllers\MeteredTaxiController.cs" />
     <Compile Include="Controllers\SOSMessageController.cs" />
     <Compile Include="Controllers\SOSNumberController.cs" />
+    <Compile Include="Controllers\TransactionController.cs" />
     <Compile Include="Controllers\VehicleBookingController.cs" />
     <Compile Include="Controllers\DriverProfileController.cs" />
     <Compile Include="Controllers\TaxiPriceController.cs" />

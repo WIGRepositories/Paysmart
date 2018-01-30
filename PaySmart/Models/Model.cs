@@ -341,6 +341,7 @@ namespace Paysmart.Models
         public int CustomerId { get; set; }
         public int NoofSeats { get; set; }
         public DateTime? ClosingDate { get; set; }
+        public DateTime? ClosingTime { get; set; }
         public DateTime? CancelledOn { get; set; }
         public int cancellationType { get; set; }
         public string CancelledBy { get; set; }
@@ -830,7 +831,7 @@ namespace Paysmart.Models
 
         public int UserTypeId { get; set; }
 
-        public DateTime CreatedOn { get; set; }
+        public string Username { get; set; }
 
         public int Active { get; set; }
 
@@ -885,6 +886,7 @@ namespace Paysmart.Models
         public int UpdatedBy { get; set; }
         public float Latitude { get; set; }
         public float Longitude { get; set; }
+        public string Mobilenumber { get; set; }
     }
 
     
@@ -921,6 +923,7 @@ namespace Paysmart.Models
         public int Active { get; set; }
         public int CountryId { get; set; }
         public string Mobilenumber { get; set; }
+       
     }
 
 
@@ -937,6 +940,28 @@ namespace Paysmart.Models
         public string Comments { get; set; }
         public int CustAccountId { get; set; }
         public int AppUserId { get; set; }        
+    }
+    public class Transmaster
+    {
+        public int Id { get; set; }
+        public decimal Amount { get; set; }
+        public int StatusId { get; set; }
+        public decimal Charges { get; set; }
+        public decimal Discount { get; set; }
+        public decimal TotalAmount { get; set; }
+        public int TransferId { get; set; }
+        public string TransGatewayId { get; set; }
+        public int TransCatId { get; set; }
+        public int TransModeId { get; set; }
+        public int TransactionTypeId { get; set; }
+        public string AccountNumber { get; set; }
+        public string HolderName { get; set; }
+        public string Code { get; set; }
+        public string ExpMonth { get; set; }
+        public string ExpYear { get; set; }
+        public string AccountCode { get; set; }
+        public string TransCode { get; set; }
+        public string Mobileno { get; set; }
     }
 }
 
