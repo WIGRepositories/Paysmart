@@ -127,9 +127,6 @@ namespace Paysmart.Controllers
             ci.Value = v.CountryId;
             cmd.Parameters.Add(ci);
 
-            SqlParameter uti = new SqlParameter("@UserTypeId", SqlDbType.Int);
-            uti.Value = v.UserTypeId;
-            cmd.Parameters.Add(uti);
             DataTable dt = new DataTable();
             SqlDataAdapter da = new SqlDataAdapter(cmd);
             da.Fill(dt);
@@ -298,10 +295,7 @@ namespace Paysmart.Controllers
                 SqlParameter gti = new SqlParameter("@GatewayTransId", SqlDbType.VarChar);
                 gti.Value = t.GatewayTransId;
                 cmd.Parameters.Add(gti);
-
-                SqlParameter td = new SqlParameter("@TransDate", SqlDbType.DateTime);
-                td.Value = t.TransDate;
-                cmd.Parameters.Add(td);
+               
 
                 SqlParameter pmi = new SqlParameter("@PaymentModeId", SqlDbType.Int);
                 pmi.Value = t.PaymentModeId;

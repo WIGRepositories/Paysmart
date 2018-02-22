@@ -186,7 +186,7 @@ namespace Paysmart.Controllers
                 conn.ConnectionString = ConfigurationManager.ConnectionStrings["btposdb"].ToString();
                 SqlCommand cmd = new SqlCommand();
                 cmd.CommandType = CommandType.StoredProcedure;
-                cmd.CommandText = "HVInsUpddrivers";
+                cmd.CommandText = "HVInsUpddriver";
                 cmd.Connection = conn;
 
 
@@ -251,6 +251,14 @@ namespace Paysmart.Controllers
                 cs.Value = d.CurrentStateId;
                 cmd.Parameters.Add(cs);
 
+                SqlParameter ctry = new SqlParameter("@Country", SqlDbType.VarChar,50);
+                ctry.Value = d.CountryId;
+                cmd.Parameters.Add(ctry);
+
+                SqlParameter vg = new SqlParameter("@VehicleGroupId", SqlDbType.VarChar, 50);
+                vg.Value = d.VehicleGroup;
+                cmd.Parameters.Add(vg);
+
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
                 da.Fill(dt);
 
@@ -260,7 +268,8 @@ namespace Paysmart.Controllers
             catch (Exception ex)
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "Driver...." + ex.Message.ToString());
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+                //throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+                throw ex;
             }
             finally
             {

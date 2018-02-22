@@ -19,7 +19,7 @@ namespace Paysmart.Controllers
         [HttpGet]
         [Route("api/MeteredTaxi/TaxiStops")]
 
-        public DataTable AllStops()
+        public DataTable AllStops(int ctryid)
         {
 
             DataTable dt = new DataTable();
@@ -36,6 +36,7 @@ namespace Paysmart.Controllers
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.CommandText = "GetTaxiStopsList";
                 cmd.Connection = conn;
+                cmd.Parameters.Add("@ctryid", SqlDbType.Int).Value = ctryid;
 
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
                 da.Fill(dt);
@@ -45,7 +46,8 @@ namespace Paysmart.Controllers
             catch (Exception ex)
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "TaxiPrice...." + ex.Message.ToString());
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+                //throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+                throw ex;
             }
             finally
             {
