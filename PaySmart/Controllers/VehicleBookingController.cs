@@ -457,7 +457,7 @@ namespace Paysmart.Controllers
             SqlParameter dist = new SqlParameter("@distance", SqlDbType.Decimal);
             dist.Value = b.distance;
             cmd.Parameters.Add(dist);
-
+           
            
             SqlDataAdapter da = new SqlDataAdapter(cmd);
             da.Fill(dt);
