@@ -294,11 +294,19 @@ namespace Paysmart.Controllers
             }
             catch (Exception ex)
             {   
+                
                 traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "Register driver...." + ex.Message.ToString());
                 transaction.Rollback();
-                //throw ex;
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+                //throw InnerException;
+                //throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.OK, ex.Message));
+                dt.Columns.Add("Code");
+                dt.Columns.Add("description");
+                DataRow dr = dt.NewRow();
+                dr[0] = "SCC001";
+                dr[1] = ex.Message;
+                dt.Rows.Add(dr);
             }
+           
             finally
             {
                 transaction.Dispose();
@@ -369,7 +377,8 @@ namespace Paysmart.Controllers
                     conn.Close();
                 }
                 traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "MOTPverifications...." + ex.Message.ToString());
-                throw ex;
+                //throw ex;
+               
             }
             //Verify mobile otp
 
@@ -497,7 +506,13 @@ namespace Paysmart.Controllers
             catch (Exception ex)
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "Passwordverification....failed" + ex.Message.ToString());
-                throw ex;
+                //throw ex;
+                dt.Columns.Add("Code");
+                dt.Columns.Add("description");
+                DataRow dr = dt.NewRow();
+                dr[0] = "SCC001";
+                dr[1] = ex.Message;
+                dt.Rows.Add(dr);
             }
             return (dt);
 

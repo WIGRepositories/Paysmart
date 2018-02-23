@@ -49,7 +49,13 @@ namespace Paysmart.Controllers
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "GetVehcileMaster...." + ex.Message.ToString());
                 //throw ex;
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+                //throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+                dt.Columns.Add("Code");
+                dt.Columns.Add("description");
+                DataRow dr = dt.NewRow();
+                dr[0] = "SCC001";
+                dr[1] = ex.Message;
+                dt.Rows.Add(dr);
             }
             finally
             {
@@ -97,7 +103,13 @@ namespace Paysmart.Controllers
           {
               traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "GetVehicleApproval...." + ex.Message.ToString());
               //throw ex;
-              throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+              //throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+              dt.Columns.Add("Code");
+              dt.Columns.Add("description");
+              DataRow dr = dt.NewRow();
+              dr[0] = "SCC001";
+              dr[1] = ex.Message;
+              dt.Rows.Add(dr);
           }
           finally
           {
@@ -140,7 +152,13 @@ namespace Paysmart.Controllers
           {
               traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "GetVehcileList...." + ex.Message.ToString());
               //throw ex;
-              throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+              //throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+              dt.Columns.Add("Code");
+              dt.Columns.Add("description");
+              DataRow dr = dt.NewRow();
+              dr[0] = "SCC001";
+              dr[1] = ex.Message;
+              dt.Rows.Add(dr);
           }
           finally
           {
@@ -186,7 +204,14 @@ namespace Paysmart.Controllers
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "GetVehicleDetails...." + ex.Message.ToString());
                 //throw ex;
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.OK, ex.Message));
+                
+                //dt.Columns.Add("Code");
+                //dt.Columns.Add("description");
+                //DataRow dr = dt.NewRow();
+                //dr[0] = "SCC001";
+                //dr[1] = ex.Message;
+                //dt.Rows.Add(dr);
             }
             finally
             {
@@ -305,7 +330,13 @@ namespace Paysmart.Controllers
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "Vehicles...." + ex.Message.ToString());
                 //throw ex;
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+                //throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+                dt.Columns.Add("Code");
+                dt.Columns.Add("description");
+                DataRow dr = dt.NewRow();
+                dr[0] = "SCC001";
+                dr[1] = ex.Message;
+                dt.Rows.Add(dr);
             }
             finally
             {
@@ -409,7 +440,13 @@ namespace Paysmart.Controllers
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "SaveVehicleDoc....failed" + ex.Message.ToString());
                 //throw ex;
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+                //throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+                dt.Columns.Add("Code");
+                dt.Columns.Add("description");
+                DataRow dr = dt.NewRow();
+                dr[0] = "SCC001";
+                dr[1] = ex.Message;
+                dt.Rows.Add(dr);
             }
             return status;
         }
@@ -596,10 +633,6 @@ namespace Paysmart.Controllers
                     }
                 }
                 #endregion Mobile OTP
-
-
-
-                return dt;
             }
             catch (Exception ex)
             {
@@ -609,8 +642,15 @@ namespace Paysmart.Controllers
                     conn.Close();
                 }
                 //throw ex;
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+                //throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+                dt.Columns.Add("Code");
+                dt.Columns.Add("description");
+                DataRow dr = dt.NewRow();
+                dr[0] = "SCC001";
+                dr[1] = ex.Message;
+                dt.Rows.Add(dr);
             }
+            return dt;
         }
 
     }

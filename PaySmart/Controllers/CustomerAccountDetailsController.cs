@@ -223,14 +223,26 @@ namespace Paysmart.Controllers
                 catch (Exception ex)
                 {
                     traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "AccountVerification...." + ex.Message.ToString());
-                    throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+                    //throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+                    dt.Columns.Add("Code");
+                    dt.Columns.Add("description");
+                    DataRow dr = dt.NewRow();
+                    dr[0] = "SCC001";
+                    dr[1] = ex.Message;
+                    dt.Rows.Add(dr);
                 }
                 //Verify mobile otp
             }
             catch (Exception ex)
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "AccountVerification...." + ex.Message.ToString());
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+                //throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+                dt.Columns.Add("Code");
+                dt.Columns.Add("description");
+                DataRow dr = dt.NewRow();
+                dr[0] = "SCC001";
+                dr[1] = ex.Message;
+                dt.Rows.Add(dr);
             }
             finally
             {
@@ -366,34 +378,58 @@ namespace Paysmart.Controllers
         [Route("api/CustomerAccountDetails/GetTripPayments")]
         public DataTable GetTripPayments(int id)
         {
-            DataTable dt = new DataTable();
+            
             DataTable Tbl = new DataTable();
-
-            LogTraceWriter traceWriter = new LogTraceWriter();
-            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetTripPayments credentials....");
-            StringBuilder str = new StringBuilder();
-            str.Append("@id" + id + ",");
-
-
-            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetTripPayments Input sent...." + str.ToString());
-
-            if (dt.Rows.Count > 0)
-                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetTripPayments Output...." + dt.Rows[0].ToString());
-            else
-                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetTripPayments Output....BookedHistory ");
             SqlConnection conn = new SqlConnection();
-            conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+            LogTraceWriter traceWriter = new LogTraceWriter();
+            try
+            {
 
-            SqlCommand cmd = new SqlCommand();
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.CommandText = "PSGetTripPayments";
-            cmd.Parameters.Add("@id", SqlDbType.Int).Value = id;
-            cmd.Connection = conn;
-            DataSet ds = new DataSet();
-            SqlDataAdapter db = new SqlDataAdapter(cmd);
-            db.Fill(ds);
-            Tbl = ds.Tables[0];
-            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetTripPayments Credentials completed.");
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetTripPayments credentials....");
+                StringBuilder str = new StringBuilder();
+                str.Append("@id" + id + ",");
+
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetTripPayments Input sent...." + str.ToString());
+
+                if (Tbl.Rows.Count > 0)
+                    traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetTripPayments Output...." + Tbl.Rows[0].ToString());
+                else
+                    traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetTripPayments Output....BookedHistory ");
+                
+                conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = "PSGetTripPayments";
+                cmd.Parameters.Add("@id", SqlDbType.Int).Value = id;
+                cmd.Connection = conn;
+                DataSet ds = new DataSet();
+                SqlDataAdapter db = new SqlDataAdapter(cmd);
+                db.Fill(ds);
+                Tbl = ds.Tables[0];
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetTripPayments Credentials completed.");
+            }
+            catch(Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "GetTripPayments...." + ex.Message.ToString());
+                Tbl.Columns.Add("Code");
+                Tbl.Columns.Add("description");
+                DataRow dr = Tbl.NewRow();
+                dr[0] = "SCC001";
+                dr[1] = ex.Message;
+                Tbl.Rows.Add(dr);
+
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
+            }
+
             // int found = 0;
             return Tbl;
 

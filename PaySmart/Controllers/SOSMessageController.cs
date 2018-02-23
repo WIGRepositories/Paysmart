@@ -23,26 +23,40 @@ namespace Paysmart.Controllers
             DataTable Tbl = new DataTable();
             StringBuilder str = new StringBuilder();
             LogTraceWriter traceWriter = new LogTraceWriter();
-            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetSOSMessage ....");
-            str.Append("UserTypeId:" + utypeId + ",");
-            str.Append("UserId:" + userId + ",");
-           
-            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
-            //connect to database
-            SqlConnection conn = new SqlConnection();
-            //connetionString="Data Source=ServerName;Initial Catalog=DatabaseName;User ID=UserName;Password=Password"
-            conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+            try
+            {
 
-            SqlCommand cmd = new SqlCommand();
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.CommandText = "GetSOSMessages";
-            cmd.Parameters.Add("@UserTypeId", SqlDbType.Int).Value = utypeId;
-            cmd.Parameters.Add("@UserId", SqlDbType.Int).Value = userId;
-            cmd.Connection = conn;
 
-            //DataSet ds = new DataSet();
-            SqlDataAdapter db = new SqlDataAdapter(cmd);
-            db.Fill(Tbl);
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetSOSMessage ....");
+                str.Append("UserTypeId:" + utypeId + ",");
+                str.Append("UserId:" + userId + ",");
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
+                //connect to database
+                SqlConnection conn = new SqlConnection();
+                //connetionString="Data Source=ServerName;Initial Catalog=DatabaseName;User ID=UserName;Password=Password"
+                conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = "GetSOSMessages";
+                cmd.Parameters.Add("@UserTypeId", SqlDbType.Int).Value = utypeId;
+                cmd.Parameters.Add("@UserId", SqlDbType.Int).Value = userId;
+                cmd.Connection = conn;
+
+                //DataSet ds = new DataSet();
+                SqlDataAdapter db = new SqlDataAdapter(cmd);
+                db.Fill(Tbl);
+            }
+            catch(Exception ex)
+            {
+                Tbl.Columns.Add("Code");
+                Tbl.Columns.Add("description");
+                DataRow dr = Tbl.NewRow();
+                dr[0] = "SCC001";
+                dr[1] = ex.Message;
+                Tbl.Rows.Add(dr);
+            }
             //Tbl = ds.Tables[0];
             //traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetSOSMessage completed.");
             // int found = 0;
@@ -110,10 +124,15 @@ namespace Paysmart.Controllers
                 {
                     conn.Close();
                 }
-                string st = ex.Message;
+                //string st = ex.Message;
 
                 //traceWriter.Trace(Request, "1", TraceLevel.Info, "{0}", "Error in SOSVerification:" + ex.Message);
-
+                dt.Columns.Add("Code");
+                dt.Columns.Add("description");
+                DataRow dr = dt.NewRow();
+                dr[0] = "SCC001";
+                dr[1] = ex.Message;
+                dt.Rows.Add(dr);
             }
             return dt;
         }
@@ -313,8 +332,13 @@ namespace Paysmart.Controllers
                 {
                     conn.Close();
                 }
-                string st = ex.Message;
-
+                //string st = ex.Message;
+                dt.Columns.Add("Code");
+                dt.Columns.Add("description");
+                DataRow dr = dt.NewRow();
+                dr[0] = "SCC001";
+                dr[1] = ex.Message;
+                dt.Rows.Add(dr);
                 //traceWriter.Trace(Request, "1", TraceLevel.Info, "{0}", "Error in SaveMandUserDocs:" + ex.Message);
 
             }
