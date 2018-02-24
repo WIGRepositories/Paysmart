@@ -45,7 +45,7 @@ namespace Paysmart.Controllers
                 Tbl.Columns.Add("Code");
                 Tbl.Columns.Add("description");
                 DataRow dr = Tbl.NewRow();
-                dr[0] = "SCC001";
+                dr[0] = "ERR001";
                 dr[1] = ex.Message;
                 Tbl.Rows.Add(dr);
             }

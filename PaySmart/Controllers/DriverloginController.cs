@@ -53,7 +53,7 @@ namespace Paysmart.Controllers
                 dt.Columns.Add("Code");
                 dt.Columns.Add("description");
                 DataRow dr = dt.NewRow();
-                dr[0] = "SCC001";
+                dr[0] = "ERR001";
                 dr[1] = ex.Message;
                 dt.Rows.Add(dr);
             }
@@ -130,7 +130,7 @@ namespace Paysmart.Controllers
                 dt.Columns.Add("Code");
                 dt.Columns.Add("description");
                 DataRow dr = dt.NewRow();
-                dr[0] = "SCC001";
+                dr[0] = "ERR001";
                 dr[1] = ex.Message;
                 dt.Rows.Add(dr);
             }
@@ -193,7 +193,7 @@ namespace Paysmart.Controllers
                 dt.Columns.Add("Code");
                 dt.Columns.Add("description");
                 DataRow dr = dt.NewRow();
-                dr[0] = "SCC001";
+                dr[0] = "ERR001";
                 dr[1] = ex.Message;
                 dt.Rows.Add(dr);
             }
