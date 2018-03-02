@@ -391,6 +391,8 @@ namespace Paysmart.Models
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public int CurrentStateId { get; set; }
+        public string CountryId { get; set; }
+        public string VehicleGroup { get; set; }
 
 
     }
@@ -402,7 +404,7 @@ namespace Paysmart.Models
         public int CompanyId { get; set; }
         public int VID { get; set; }
         public string RegistrationNo { get; set; }       
-        public int VehicleTypeId { get; set; }
+        public string VehicleTypeId { get; set; }
         public string OwnerName { get; set; }
         public string ChasisNo { get; set; }
         public string Engineno { get; set; }
@@ -411,8 +413,8 @@ namespace Paysmart.Models
         public float latitude { get; set; }
         public float longitude { get; set; }
         public string PMobNo { get; set; }
-        public int VehicleModelId { get; set; }                
-        public int VehicleGroupId { get; set; }
+        public int VehicleModelId { get; set; }
+        public string VehicleGroupId { get; set; }
         public string Photo { get; set; }
         public int StatusId { get; set; }
         public int FleetOwnerCode { get; set; }
@@ -420,7 +422,7 @@ namespace Paysmart.Models
         public int IsVerified { get; set; }
         public int isDriverOwned { get; set; }
         public string VehicleCode { get; set; }
-        public int CountryId { get; set; }
+        public string CountryId { get; set; }
     }
 
     public class travels
@@ -721,6 +723,7 @@ namespace Paysmart.Models
         public string TransactionId { get; set; }
 
         public string TransactionMode { get; set; }
+        public string GatewayTransId { get; set; }
     }
 
     public class Taxi

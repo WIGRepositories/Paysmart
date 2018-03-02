@@ -297,7 +297,7 @@ namespace Paysmart.Controllers
 
         [HttpGet]
         [Route("api/Common/CurrentState")]
-        public DataTable CurrentState(int UserId, int UserTypeId)
+        public DataTable CurrentState(int DId)
         {
             DataTable dt = new DataTable();
             LogTraceWriter traceWriter = new LogTraceWriter();
@@ -307,16 +307,18 @@ namespace Paysmart.Controllers
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "CurrentState....");
                 StringBuilder str = new StringBuilder();
-                str.Append("@UserId" + UserId + ",");
-                str.Append("@UserTypeId" + UserTypeId + ",");
+                str.Append("@DId" + DId + ",");
+                //str.Append("@UserId" + UserId + ",");
+                //str.Append("@UserTypeId" + UserTypeId + ",");
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "CurrentState Input sent...." + str.ToString());
                 conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
                 SqlCommand cmd = new SqlCommand();
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.CommandText = "PSGetCurrentDriverStatus";
-                cmd.Parameters.Add("@UserId", SqlDbType.Int).Value = UserId;
-                cmd.Parameters.Add("@UserTypeId", SqlDbType.Int).Value = UserTypeId;
+                cmd.Parameters.Add("@DId", SqlDbType.Int).Value = DId;
+                //cmd.Parameters.Add("@UserId", SqlDbType.Int).Value = UserId;
+                //cmd.Parameters.Add("@UserTypeId", SqlDbType.Int).Value = UserTypeId;
                 cmd.Connection = conn;
                 DataSet ds = new DataSet();
                 SqlDataAdapter db = new SqlDataAdapter(cmd);

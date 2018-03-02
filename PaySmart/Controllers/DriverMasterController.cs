@@ -76,22 +76,22 @@ namespace Paysmart.Controllers
             SqlConnection conn = new SqlConnection();
             try
             {
-                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetMaster....");
-                StringBuilder str = new StringBuilder();
-                str.Append("@DId" + DId + ",");
+            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetMaster....");
+            StringBuilder str = new StringBuilder();
+            str.Append("@DId" + DId + ",");
 
-                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetMaster Input sent...." + str.ToString());
-                conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetMaster Input sent...." + str.ToString());
+            conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
-                SqlCommand cmd = new SqlCommand();
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.CommandText = "PSgetdrivermaster";
-                cmd.Parameters.Add("@DId", SqlDbType.Int).Value = DId;
-                cmd.Connection = conn;
-                DataSet ds = new DataSet();
-                SqlDataAdapter db = new SqlDataAdapter(cmd);
-                db.Fill(ds);
-                dt = ds.Tables[0];
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.CommandText = "PSgetdrivermaster";
+            cmd.Parameters.Add("@DId", SqlDbType.Int).Value = DId;
+            cmd.Connection = conn;
+            DataSet ds = new DataSet();
+            SqlDataAdapter db = new SqlDataAdapter(cmd);
+            db.Fill(ds);
+            dt = ds.Tables[0];
             }
             catch (Exception ex)
             {
@@ -153,7 +153,7 @@ namespace Paysmart.Controllers
                 dr[0] = "ERR001";
                 dr[1] = ex.Message;
                 dt.Rows.Add(dr);
-               
+
             }
             finally
             {
@@ -241,7 +241,7 @@ namespace Paysmart.Controllers
                 conn.ConnectionString = ConfigurationManager.ConnectionStrings["btposdb"].ToString();
                 SqlCommand cmd = new SqlCommand();
                 cmd.CommandType = CommandType.StoredProcedure;
-                cmd.CommandText = "HVInsUpddrivers";
+                cmd.CommandText = "HVInsUpddriver";
                 cmd.Connection = conn;
 
 
@@ -305,6 +305,14 @@ namespace Paysmart.Controllers
                 SqlParameter cs = new SqlParameter("@CurrentStateId", SqlDbType.Int);
                 cs.Value = d.CurrentStateId;
                 cmd.Parameters.Add(cs);
+
+                SqlParameter ctry = new SqlParameter("@Country", SqlDbType.VarChar,50);
+                ctry.Value = d.CountryId;
+                cmd.Parameters.Add(ctry);
+
+                SqlParameter vg = new SqlParameter("@VehicleGroupId", SqlDbType.VarChar, 50);
+                vg.Value = d.VehicleGroup;
+                cmd.Parameters.Add(vg);
 
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
                 da.Fill(dt);

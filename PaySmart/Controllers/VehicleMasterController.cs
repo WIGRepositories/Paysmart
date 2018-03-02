@@ -240,8 +240,10 @@ namespace Paysmart.Controllers
 
                 str.Append("RegistrationNo:" + v.RegistrationNo + ",");
                 str.Append("VehicleGroupId:" + v.VehicleGroupId + ",");
-                str.Append("CountryId:" + v.CountryId + ",");
+                str.Append("Country:" + v.CountryId + ",");
                 str.Append("FleetOwnerId:" + v.FleetOwnerCode + ",");
+                str.Append("VehicleType:" + v.VehicleTypeId + ",");
+                str.Append("VehicleCode:" + v.VehicleCode + ",");
 
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
 
@@ -284,7 +286,7 @@ namespace Paysmart.Controllers
                 oid.Value = v.FleetOwnerCode;
                 cmd.Parameters.Add(oid);
 
-                SqlParameter vt = new SqlParameter("@VehicleTypeId", SqlDbType.Int);
+                SqlParameter vt = new SqlParameter("@VehicleType", SqlDbType.VarChar,50);
                 vt.Value = v.VehicleTypeId;
                 cmd.Parameters.Add(vt);
 
@@ -292,7 +294,7 @@ namespace Paysmart.Controllers
                 vv.Value = v.VehicleModelId;
                 cmd.Parameters.Add(vv);
 
-                SqlParameter vg = new SqlParameter("@VehicleGroupId", SqlDbType.Int);
+                SqlParameter vg = new SqlParameter("@VehicleGroupId", SqlDbType.VarChar,50);
                 vg.Value = v.VehicleGroupId;
                 cmd.Parameters.Add(vg);
 
@@ -321,7 +323,7 @@ namespace Paysmart.Controllers
                 vcode.Value = v.VehicleCode;
                 cmd.Parameters.Add(vcode);
 
-                SqlParameter ctr = new SqlParameter("@CountryId", SqlDbType.Int);
+                SqlParameter ctr = new SqlParameter("@Country", SqlDbType.VarChar,50);
                 ctr.Value = v.CountryId;
                 cmd.Parameters.Add(ctr);
 

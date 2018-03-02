@@ -294,7 +294,7 @@ namespace Paysmart.Controllers
             }
             catch (Exception ex)
             {   
-                
+
                 traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "Register driver...." + ex.Message.ToString());
                 transaction.Rollback();
                 //throw InnerException;

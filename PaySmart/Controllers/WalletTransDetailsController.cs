@@ -104,9 +104,6 @@ namespace Paysmart.Controllers
             cm.Value = r.Amount;
             cmd.Parameters.Add(cm);
 
-            SqlParameter ce = new SqlParameter("@TransactionType", SqlDbType.VarChar, 50);
-            ce.Value = r.TransactionType;
-            cmd.Parameters.Add(ce);
 
             SqlParameter q1 = new SqlParameter("@Status", SqlDbType.Int);
             q1.Value = r.Status;
@@ -122,20 +119,44 @@ namespace Paysmart.Controllers
             d.Value = r.MobileNo;
             cmd.Parameters.Add(d);
 
-            SqlParameter td = new SqlParameter("@TransactionId", SqlDbType.VarChar,50);
+                SqlParameter td = new SqlParameter("@TransactionId", SqlDbType.VarChar, 50);
             td.Value = r.TransactionId;
             cmd.Parameters.Add(td);
 
-            SqlParameter tm = new SqlParameter("@TransactionMode", SqlDbType.VarChar,50);
+                SqlParameter tm = new SqlParameter("@TransactionMode", SqlDbType.VarChar, 50);
             tm.Value = r.TransactionMode;
             cmd.Parameters.Add(tm);
 
+                SqlParameter gti = new SqlParameter("@GatewayId", SqlDbType.VarChar);
+                gti.Value = r.GatewayTransId;
+                cmd.Parameters.Add(gti);
 
 
            
+
             SqlDataAdapter da = new SqlDataAdapter(cmd);
             da.Fill(dt);
             traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "savewalletTransdetails successful....");
+
+                Payengine.Controllers.Payengine e = new Payengine.Controllers.Payengine();
+                string transId = e.ProcessPayment();
+
+                if (dt.Rows.Count >= 0)
+                {
+
+
+                    //var GatewayTransId = dt.Rows[0]["GatewayTransId"].ToString();
+                    if (transId != "")
+                    {
+                        f.Value = "U";
+                        i.Value = dt.Rows[0]["Id"].ToString();
+                        var GateTransId = transId;
+
+                        gti.Value = transId;
+                        dt = new DataTable();
+                        da.Fill(dt);
+                    }
+                }
             }
              catch (Exception ex)
              {
