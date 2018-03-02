@@ -225,7 +225,7 @@ namespace Paysmart.Controllers
         {
 
             LogTraceWriter traceWriter = new LogTraceWriter();
-            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "PendingDocs....");
+            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "PendingDocs for user:{0}....",userid);
             DataSet ds = new DataSet();
 
             //connect to database
@@ -263,7 +263,7 @@ namespace Paysmart.Controllers
         {
 
             LogTraceWriter traceWriter = new LogTraceWriter();
-            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "PendingVehicleDocs....");
+            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "PendingVehicleDocs for vehicle : {0}....",VId);
             DataSet ds = new DataSet();
 
             //connect to database

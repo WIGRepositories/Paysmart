@@ -204,14 +204,17 @@ namespace Paysmart.Controllers
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "GetVehicleDetails...." + ex.Message.ToString());
                 //throw ex;
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.OK, ex.Message));
-                
-                //dt.Columns.Add("Code");
-                //dt.Columns.Add("description");
-                //DataRow dr = dt.NewRow();
-                //dr[0] = "ERR001";
-                //dr[1] = ex.Message;
-                //dt.Rows.Add(dr);
+                //throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.OK, ex.Message));
+
+                DataTable dt1 = new DataTable();
+                dt1.Columns.Add("Code");
+                dt1.Columns.Add("description");
+                DataRow dr = dt1.NewRow();
+                dr[0] = "ERR001";
+                dr[1] = ex.Message;
+                dt1.Rows.Add(dr);
+
+                dt.Tables.Add(dt1);
             }
             finally
             {
@@ -506,7 +509,13 @@ namespace Paysmart.Controllers
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "TrackVehicle...." + ex.Message.ToString());
                 //throw ex;
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+                //throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+                currTripList.Columns.Add("Code");
+                currTripList.Columns.Add("description");
+                DataRow dr = currTripList.NewRow();
+                dr[0] = "ERR001";
+                dr[1] = ex.Message;
+                currTripList.Rows.Add(dr);
             }
             finally
             {

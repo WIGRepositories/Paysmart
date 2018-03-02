@@ -317,7 +317,7 @@ namespace Paysmart.Controllers
                 }
                 catch (Exception ex)
                 {
-                    throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+                    throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.OK, ex.Message));
                 }
                 //Verify mobile otp
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "MOTPverifications successful....");
@@ -325,7 +325,7 @@ namespace Paysmart.Controllers
             catch (Exception ex)
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "MOTPverifications...." + ex.Message.ToString());
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.OK, ex.Message));
             }
             finally
             {
@@ -394,7 +394,7 @@ namespace Paysmart.Controllers
                 }
                 catch (Exception ex)
                 {
-                    throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+                    throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.OK, ex.Message));
                 }
                 //Verify mobile otp
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "EOTPVerification successful....");
@@ -402,7 +402,7 @@ namespace Paysmart.Controllers
             catch (Exception ex)
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "EOTPVerification...." + ex.Message.ToString());
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.OK, ex.Message));
             }
             finally
             {

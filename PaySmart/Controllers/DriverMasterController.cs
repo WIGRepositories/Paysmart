@@ -50,7 +50,13 @@ namespace Paysmart.Controllers
             catch (Exception ex)
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "Master...." + ex.Message.ToString());
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+                //throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.OK, ex.Message));
+                dt.Columns.Add("Code");
+                dt.Columns.Add("description");
+                DataRow dr = dt.NewRow();
+                dr[0] = "ERR001";
+                dr[1] = ex.Message;
+                dt.Rows.Add(dr);
             }
             finally
             {
@@ -68,24 +74,43 @@ namespace Paysmart.Controllers
             DataTable dt = new DataTable();
             LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
+            try
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetMaster....");
+                StringBuilder str = new StringBuilder();
+                str.Append("@DId" + DId + ",");
 
-            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetMaster....");
-            StringBuilder str = new StringBuilder();
-            str.Append("@DId" + DId + ",");
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetMaster Input sent...." + str.ToString());
+                conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
-            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetMaster Input sent...." + str.ToString());
-            conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = "PSgetdrivermaster";
+                cmd.Parameters.Add("@DId", SqlDbType.Int).Value = DId;
+                cmd.Connection = conn;
+                DataSet ds = new DataSet();
+                SqlDataAdapter db = new SqlDataAdapter(cmd);
+                db.Fill(ds);
+                dt = ds.Tables[0];
+            }
+            catch (Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "GetDriverDetails...." + ex.Message.ToString());
+                // throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.OK, ex.Message));
+                dt.Columns.Add("Code");
+                dt.Columns.Add("description");
+                DataRow dr = dt.NewRow();
+                dr[0] = "ERR001";
+                dr[1] = ex.Message;
+                dt.Rows.Add(dr);
 
-            SqlCommand cmd = new SqlCommand();
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.CommandText = "PSgetdrivermaster";
-            cmd.Parameters.Add("@DId", SqlDbType.Int).Value = DId;
-            cmd.Connection = conn;
-            DataSet ds = new DataSet();
-            SqlDataAdapter db = new SqlDataAdapter(cmd);
-            db.Fill(ds);
-            dt = ds.Tables[0];
-
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
+            }
             return dt;
 
         }
@@ -98,6 +123,8 @@ namespace Paysmart.Controllers
             DataTable dt = new DataTable();
             LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
+            try
+            {
             traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetDriverApproval....");
             StringBuilder str = new StringBuilder();
             str.Append("@MobileNumber" + MobileNo + ",");
@@ -115,7 +142,25 @@ namespace Paysmart.Controllers
             SqlDataAdapter db = new SqlDataAdapter(cmd);
             db.Fill(ds);
             dt = ds.Tables[0];
-
+             }
+            catch (Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "GetDriverDetails...." + ex.Message.ToString());
+               // throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.OK, ex.Message));
+                dt.Columns.Add("Code");
+                dt.Columns.Add("description");
+                DataRow dr = dt.NewRow();
+                dr[0] = "ERR001";
+                dr[1] = ex.Message;
+                dt.Rows.Add(dr);
+               
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
+            }
             return dt;
 
         }
@@ -129,6 +174,7 @@ namespace Paysmart.Controllers
             LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
             DataSet dt = new DataSet();
+            DataTable dt1 = new DataTable();
             try
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetDriverDetails....");
@@ -152,7 +198,16 @@ namespace Paysmart.Controllers
             catch (Exception ex)
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "GetDriverDetails...." + ex.Message.ToString());
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+                //throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.OK, ex.Message));
+
+
+                dt1.Columns.Add("Code");
+                dt1.Columns.Add("description");
+                DataRow dr = dt1.NewRow();
+                dr[0] = "ERR001";
+                dr[1] = ex.Message;
+                dt1.Rows.Add(dr);
+                dt.Tables.Add(dt1);
             }
             finally
             {
@@ -516,7 +571,13 @@ namespace Paysmart.Controllers
             catch (Exception ex)
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "GetBankingDetails...." + ex.Message.ToString());
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+                //throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+                dt.Columns.Add("Code");
+                dt.Columns.Add("description");
+                DataRow dr = dt.NewRow();
+                dr[0] = "ERR001";
+                dr[1] = ex.Message;
+                dt.Rows.Add(dr);
             }
             finally
             {
@@ -556,7 +617,13 @@ namespace Paysmart.Controllers
             catch (Exception ex)
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "GetQrCode...." + ex.Message.ToString());
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+                //throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+                dt.Columns.Add("Code");
+                dt.Columns.Add("description");
+                DataRow dr = dt.NewRow();
+                dr[0] = "ERR001";
+                dr[1] = ex.Message;
+                dt.Rows.Add(dr);
             }
             finally
             {
@@ -720,7 +787,7 @@ namespace Paysmart.Controllers
                     catch (Exception ex)
                     {
                         
-                        throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+                        throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.OK, ex.Message));
                     }
                 }
                 #endregion Mobile OTP

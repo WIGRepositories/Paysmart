@@ -123,7 +123,7 @@ namespace Paysmart.Controllers
                     catch (Exception ex)
                     {
 
-                        throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+                        throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.OK, ex.Message));
                     }
                 }
                 #endregion Mobile OTP

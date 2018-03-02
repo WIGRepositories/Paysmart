@@ -104,7 +104,7 @@ namespace Paysmart.Controllers
                 cmd.Parameters.Add(vg);
 
 
-                if (ocr.RegistrationNo != null)
+                if (ocr.RegistrationNo != null && ocr.RegistrationNo != string.Empty)
                 {                 
                     SqlParameter n = new SqlParameter("@RegistrationNo", SqlDbType.VarChar, 50);
                     n.Value = ocr.RegistrationNo;
@@ -378,7 +378,7 @@ namespace Paysmart.Controllers
                 }
                 traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "MOTPverifications...." + ex.Message.ToString());
                 //throw ex;
-               
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.OK, ex.Message));
             }
             //Verify mobile otp
 
@@ -446,7 +446,8 @@ namespace Paysmart.Controllers
             catch (Exception ex)
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "EOTPVerification....failed" + ex.Message.ToString());
-                throw ex;
+               // throw ex;
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.OK, ex.Message));
             }
             //Verify mobile otp
 
