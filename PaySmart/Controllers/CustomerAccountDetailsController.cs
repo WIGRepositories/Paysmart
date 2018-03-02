@@ -22,23 +22,37 @@ namespace Paysmart.Controllers
         public DataTable GetCustomerAccount(int userid)
         {
             DataTable Tbl = new DataTable();
-
-            LogTraceWriter traceWriter = new LogTraceWriter();
-            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "CustomerAccount credentials....");
             SqlConnection conn = new SqlConnection();
-            conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+            LogTraceWriter traceWriter = new LogTraceWriter();
+            try
+            {
+                
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "CustomerAccount credentials....");
 
-            SqlCommand cmd = new SqlCommand();
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.CommandText = "GetCustomerAccountDetails";
-            cmd.Connection = conn;
+                conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
-            cmd.Parameters.Add("@userid", SqlDbType.Int).Value = userid;
-            DataSet ds = new DataSet();
-            SqlDataAdapter db = new SqlDataAdapter(cmd);
-            db.Fill(ds);
-            Tbl = ds.Tables[0];
-            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "CustomerAccount Credentials completed.");
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = "GetCustomerAccountDetails";
+                cmd.Connection = conn;
+
+                cmd.Parameters.Add("@userid", SqlDbType.Int).Value = userid;
+                DataSet ds = new DataSet();
+                SqlDataAdapter db = new SqlDataAdapter(cmd);
+                db.Fill(ds);
+                Tbl = ds.Tables[0];
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "CustomerAccount Credentials completed.");
+            }
+            catch (Exception ex)
+            {
+                Tbl.Columns.Add("Code");
+                Tbl.Columns.Add("description");
+                DataRow dr = Tbl.NewRow();
+                dr[0] = "ERR001";
+                dr[1] = ex.Message;
+                Tbl.Rows.Add(dr);
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "CustomerAccount...." + ex.Message.ToString());
+            }
             // int found = 0;
             return Tbl;
 
@@ -48,8 +62,11 @@ namespace Paysmart.Controllers
         [Route("api/CustomerAccountDetails/CustomerAccount")]
         public DataTable CustomerAccount(CustomerAccounts v)
         {
+            DataTable dt = new DataTable();
             SqlConnection conn = new SqlConnection();
             LogTraceWriter traceWriter = new LogTraceWriter();
+            try
+            {
             traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "CustomerAccount....");
             StringBuilder str = new StringBuilder();
             str.Append("@UserId" + v.UserId + ",");
@@ -127,10 +144,21 @@ namespace Paysmart.Controllers
             ci.Value = v.CountryId;
             cmd.Parameters.Add(ci);
 
-            DataTable dt = new DataTable();
+           
             SqlDataAdapter da = new SqlDataAdapter(cmd);
             da.Fill(dt);
-
+            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "CustomerAccount completed.");
+            }
+            catch(Exception ex)
+            {
+                dt.Columns.Add("Code");
+                dt.Columns.Add("description");
+                DataRow dr = dt.NewRow();
+                dr[0] = "ERR001";
+                dr[1] = ex.Message;
+                dt.Rows.Add(dr);
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "CustomerAccount...." + ex.Message.ToString());
+            }
             return dt;
         }
 
@@ -139,22 +167,42 @@ namespace Paysmart.Controllers
         public DataTable GetPaymentModes()
         {
             DataTable Tbl = new DataTable();
-
-            LogTraceWriter traceWriter = new LogTraceWriter();
-            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetPaymentModes credentials....");
             SqlConnection conn = new SqlConnection();
-            conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+            LogTraceWriter traceWriter = new LogTraceWriter();
+            try
+            {
+                
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetPaymentModes credentials....");
+                
+                conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
-            SqlCommand cmd = new SqlCommand();
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.CommandText = "PSgetPaymentModes";
-            cmd.Connection = conn;
-            DataSet ds = new DataSet();
-            SqlDataAdapter db = new SqlDataAdapter(cmd);
-            db.Fill(ds);
-            Tbl = ds.Tables[0];
-            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetPaymentModes Credentials completed.");
-            // int found = 0;
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = "PSgetPaymentModes";
+                cmd.Connection = conn;
+                DataSet ds = new DataSet();
+                SqlDataAdapter db = new SqlDataAdapter(cmd);
+                db.Fill(ds);
+                Tbl = ds.Tables[0];
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetPaymentModes completed.");
+                // int found = 0;
+            }
+            catch(Exception ex)
+            {
+                Tbl.Columns.Add("Code");
+                Tbl.Columns.Add("description");
+                DataRow dr = Tbl.NewRow();
+                dr[0] = "ERR001";
+                dr[1] = ex.Message;
+                Tbl.Rows.Add(dr);
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "GetPaymentModes...." + ex.Message.ToString());
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
+            }
             return Tbl;
 
         }
@@ -162,7 +210,7 @@ namespace Paysmart.Controllers
 
         [HttpPost]
         [Route("api/CustomerAccountDetails/AccountVerification")]
-        public int AccountVerification(CustomerAccounts b)
+        public DataTable AccountVerification(CustomerAccounts b)
         {
 
             int status = 0;
@@ -201,33 +249,9 @@ namespace Paysmart.Controllers
                 e.Value = b.BVerificationCode;
                 cmd.Parameters.Add(e);
 
-                try
-                {
-                    conn.Open();
-                    object statusres = cmd.ExecuteScalar();
-                    conn.Close();
-                    if (statusres != null)
-                    {
-                        if (conn.State == ConnectionState.Open)
-                        {
-                            conn.Close();
-                        }
-                        return Convert.ToInt32(statusres);
-                    }
-                    traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "AccountVerification successful....");
-
-                }
-                catch (Exception ex)
-                {
-                    traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "AccountVerification...." + ex.Message.ToString());
-                    //throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
-                    dt.Columns.Add("Code");
-                    dt.Columns.Add("description");
-                    DataRow dr = dt.NewRow();
-                    dr[0] = "ERR001";
-                    dr[1] = ex.Message;
-                    dt.Rows.Add(dr);
-                }
+                SqlDataAdapter ds = new SqlDataAdapter(cmd);
+                ds.Fill(dt);
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "AccountVerification completed.");
                 //Verify mobile otp
             }
             catch (Exception ex)
@@ -248,7 +272,7 @@ namespace Paysmart.Controllers
                 SqlConnection.ClearPool(conn);
             }
 
-            return status;
+            return dt;
 
         }
 

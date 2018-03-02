@@ -72,6 +72,7 @@ namespace Paysmart.Models
         public string UserPhoto { get; set; }
 
         public decimal Amount { get; set; }
+        public int CountryId { get; set; }
         
        
     }
@@ -358,6 +359,7 @@ namespace Paysmart.Models
         public int DriverRated { get; set; }
         public string DriverComments { get; set; }
         public decimal distance { get; set; }
+        public int PaymentTypeId { get; set; }
     }
 
     public class driverdetails

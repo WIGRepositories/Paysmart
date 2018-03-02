@@ -17,10 +17,11 @@ namespace Paysmart.Controllers
     {
         [HttpPost]
         [Route("api/DriverForgotpassword/Forgotpassword")]
-        public int Forgotpassword(DriverAccount ocr)
+        public DataTable Forgotpassword(DriverAccount ocr)
         {
 
             int Status = 0;
+            DataTable dt = new DataTable();
             LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
          
@@ -49,12 +50,11 @@ namespace Paysmart.Controllers
             a.Value = ocr.Email;
             cmd.Parameters.Add(a);
 
-            conn.Open();
-            object Passwordotp = cmd.ExecuteScalar();
-            conn.Close();
+            SqlDataAdapter ds = new SqlDataAdapter(cmd);
+            ds.Fill(dt);
 
             #region password otp
-            string potp = Passwordotp.ToString();
+            string potp = dt.Rows[0]["Passwordotp"].ToString();
             if (potp != null)
             {
                 try
@@ -134,7 +134,13 @@ namespace Paysmart.Controllers
             catch (Exception ex)
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "Forgotpassword...." + ex.Message.ToString());
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.OK, ex.Message));
+                //throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.OK, ex.Message));
+                dt.Columns.Add("Code");
+                dt.Columns.Add("description");
+                DataRow dr = dt.NewRow();
+                dr[0] = "ERR001";
+                dr[1] = ex.Message;
+                dt.Rows.Add(dr);
             }
             finally
             {
@@ -142,7 +148,7 @@ namespace Paysmart.Controllers
                 conn.Dispose();
                 SqlConnection.ClearPool(conn);
             }
-            return Status;
+            return dt;
         }
     }
 }

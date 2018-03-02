@@ -105,7 +105,13 @@ namespace Paysmart.Controllers
             catch (Exception ex)
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "TroubleTicket...." + ex.Message.ToString());
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+                //throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+                dt.Columns.Add("Code");
+                dt.Columns.Add("description");
+                DataRow dr = dt.NewRow();
+                dr[0] = "ERR001";
+                dr[1] = ex.Message;
+                dt.Rows.Add(dr);
             }
             finally
             {
@@ -152,7 +158,13 @@ namespace Paysmart.Controllers
             catch (Exception ex)
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "GetTicketDetails...." + ex.Message.ToString());
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+                //throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+                Tbl.Columns.Add("Code");
+                Tbl.Columns.Add("description");
+                DataRow dr = Tbl.NewRow();
+                dr[0] = "ERR001";
+                dr[1] = ex.Message;
+                Tbl.Rows.Add(dr);
             }
             finally
             {
@@ -196,7 +208,13 @@ namespace Paysmart.Controllers
             catch (Exception ex)
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "GetTicketHistory...." + ex.Message.ToString());
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+                //throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+                Tbl.Columns.Add("Code");
+                Tbl.Columns.Add("description");
+                DataRow dr = Tbl.NewRow();
+                dr[0] = "ERR001";
+                dr[1] = ex.Message;
+                Tbl.Rows.Add(dr);
             }
             finally
             {
@@ -240,7 +258,13 @@ namespace Paysmart.Controllers
             catch (Exception ex)
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "GetFilecontent...." + ex.Message.ToString());
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+                //throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+                Tbl.Columns.Add("Code");
+                Tbl.Columns.Add("description");
+                DataRow dr = Tbl.NewRow();
+                dr[0] = "ERR001";
+                dr[1] = ex.Message;
+                Tbl.Rows.Add(dr);
             }
             finally
             {
@@ -285,7 +309,13 @@ namespace Paysmart.Controllers
             catch (Exception ex)
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "GetAllTickets...." + ex.Message.ToString());
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+                //throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+                Tbl.Columns.Add("Code");
+                Tbl.Columns.Add("description");
+                DataRow dr = Tbl.NewRow();
+                dr[0] = "ERR001";
+                dr[1] = ex.Message;
+                Tbl.Rows.Add(dr);
             }
             finally
             {
@@ -328,7 +358,13 @@ namespace Paysmart.Controllers
             catch (Exception ex)
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "GetAllUserTickets...." + ex.Message.ToString());
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+               // throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+                Tbl.Columns.Add("Code");
+                Tbl.Columns.Add("description");
+                DataRow dr = Tbl.NewRow();
+                dr[0] = "ERR001";
+                dr[1] = ex.Message;
+                Tbl.Rows.Add(dr);
             }
             finally
             {

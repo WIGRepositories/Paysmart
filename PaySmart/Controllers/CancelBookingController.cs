@@ -168,6 +168,7 @@ namespace Paysmart.Controllers
         public int BookingExpiry(VehicleBooking vb)
         {
             int status = 0;
+            DataTable dt = new DataTable();
             LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
           
@@ -217,7 +218,13 @@ namespace Paysmart.Controllers
                     conn.Close();
                 }
                 traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "BookingExpiry.... failed" + ex.Message.ToString());
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+                //throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+                dt.Columns.Add("Code");
+                dt.Columns.Add("description");
+                DataRow dr = dt.NewRow();
+                dr[0] = "ERR001";
+                dr[1] = ex.Message;
+                dt.Rows.Add(dr);
                 //return status;
             }
             finally

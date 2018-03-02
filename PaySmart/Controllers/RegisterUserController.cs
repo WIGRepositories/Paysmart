@@ -87,7 +87,15 @@ namespace Paysmart.Controllers
 
                 SqlParameter i = new SqlParameter("@AccountNumber", SqlDbType.VarChar, 50);
                 i.Value = ocr.AccountNo;
-                cmd.Parameters.Add(i);                
+                cmd.Parameters.Add(i);
+
+                SqlParameter ct = new SqlParameter("@CountryId", SqlDbType.Int);
+                ct.Value = ocr.CountryId;
+                cmd.Parameters.Add(ct);
+
+                SqlParameter pd = new SqlParameter("@UserPhoto", SqlDbType.VarChar, 50);
+                pd.Value = ocr.UserPhoto;
+                cmd.Parameters.Add(pd);  
 
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
                 da.Fill(dt);

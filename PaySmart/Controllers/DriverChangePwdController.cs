@@ -16,9 +16,10 @@ namespace Paysmart.Controllers
     {
         [HttpPost]
         [Route("api/DriverChangePwd/ChangePassword")]
-        public int ChangePassword(DriverAccount U)
+        public DataTable ChangePassword(DriverAccount U)
         {
             int status=0;
+            DataTable dt = new DataTable();
             LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
             
@@ -58,15 +59,20 @@ namespace Paysmart.Controllers
             m1.Value = U.NewPassword;
             cmd.Parameters.Add(m1);
 
-            conn.Open();
-             status = cmd.ExecuteNonQuery();
-            conn.Close();
+            SqlDataAdapter ds = new SqlDataAdapter(cmd);
+            ds.Fill(dt);
             traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "ChangePassword successful....");
             }
             catch (Exception ex)
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "ChangePassword...." + ex.Message.ToString());
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.OK, ex.Message));
+                //throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.OK, ex.Message));
+                dt.Columns.Add("Code");
+                dt.Columns.Add("description");
+                DataRow dr = dt.NewRow();
+                dr[0] = "ERR001";
+                dr[1] = ex.Message;
+                dt.Rows.Add(dr);
             }
             finally
             {
@@ -74,7 +80,7 @@ namespace Paysmart.Controllers
                 conn.Dispose();
                 SqlConnection.ClearPool(conn);
             }
-            return status;
+            return dt;
 
             //Verify Passwordotp
 

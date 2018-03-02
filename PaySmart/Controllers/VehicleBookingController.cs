@@ -186,6 +186,10 @@ namespace Paysmart.Controllers
                 ps.Value = b.PaymentStatus;
                 cmd.Parameters.Add(ps);
 
+                SqlParameter pty = new SqlParameter("@PaymentTypeId", SqlDbType.Int);
+                pty.Value = b.PaymentTypeId;
+                cmd.Parameters.Add(pty);
+
 
 
               
@@ -1100,10 +1104,10 @@ namespace Paysmart.Controllers
 
         [HttpPost]
         [Route("api/VehicleBooking/StartTrip")]
-        public int StartTrip(VehicleBooking b)
+        public DataTable StartTrip(VehicleBooking b)
         {
 
-            int status = 0;
+            DataTable dt = new DataTable();
              LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
             StringBuilder str = new StringBuilder();
@@ -1115,65 +1119,47 @@ namespace Paysmart.Controllers
                 str.Append("BNo:" + b.BNo + ",");
                 str.Append("DriverPhoneNo:" + b.DriverPhoneNo + ",");
                 str.Append("BookingOTP:" + b.BVerificationCode + ",");
-               
+
 
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
 
-            conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+                conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
-            SqlCommand cmd = new SqlCommand();
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.CommandText = "PSStartTrip";
-            cmd.Connection = conn;
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = "PSStartTrip";
+                cmd.Connection = conn;
 
 
-            SqlParameter q1 = new SqlParameter("@BNo", SqlDbType.VarChar, 20);
-            q1.Value = b.BNo;
-            cmd.Parameters.Add(q1);
+                SqlParameter q1 = new SqlParameter("@BNo", SqlDbType.VarChar, 20);
+                q1.Value = b.BNo;
+                cmd.Parameters.Add(q1);
 
-            SqlParameter d1 = new SqlParameter("@DriverPhoneNo", SqlDbType.VarChar, 20);
-            d1.Value = b.DriverPhoneNo;
-            cmd.Parameters.Add(d1);
+                SqlParameter d1 = new SqlParameter("@DriverPhoneNo", SqlDbType.VarChar, 20);
+                d1.Value = b.DriverPhoneNo;
+                cmd.Parameters.Add(d1);
 
-            SqlParameter e = new SqlParameter("@BookingOTP", SqlDbType.VarChar, 5);
-            e.Value = b.BVerificationCode;
-            cmd.Parameters.Add(e);
+                SqlParameter e = new SqlParameter("@BookingOTP", SqlDbType.VarChar, 5);
+                e.Value = b.BVerificationCode;
+                cmd.Parameters.Add(e);
 
-            try
-            {
-                conn.Open();
-                object statusres = cmd.ExecuteScalar();
-                conn.Close();
-                if (statusres != null)
-                {
-                    if (conn.State == ConnectionState.Open)
-                    {
-                        conn.Close();
-                    }
-                    return Convert.ToInt32(statusres);
-                }
+                SqlDataAdapter ds = new SqlDataAdapter(cmd);
+                ds.Fill(dt);
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "StartTrip successful....");
             }
+                
             catch (Exception ex)
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "StartTrip...." + ex.Message.ToString());
                 //throw ex;
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
-            }
-            //Verify mobile otp
-            }
-            catch (Exception ex)
-            {
-                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "StartTrip...." + ex.Message.ToString());
-                //throw ex;
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
-                //dt.Columns.Add("Code");
-                //dt.Columns.Add("description");
-                //DataRow dr = dt.NewRow();
-                //dr[0] = "ERR001";
-                //dr[1] = ex.Message;
-                //dt.Rows.Add(dr);
-                 
+                //throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+                dt.Columns.Add("Code");
+                dt.Columns.Add("description");
+                DataRow dr = dt.NewRow();
+                dr[0] = "ERR001";
+                dr[1] = ex.Message;
+                dt.Rows.Add(dr);
+
             }
             finally
             {
@@ -1182,16 +1168,16 @@ namespace Paysmart.Controllers
                 SqlConnection.ClearPool(conn);
             }
 
-            return status;
+            return dt;
 
         }
 
         [HttpPost]
         [Route("api/VehicleBooking/EndTrip")]
-        public int EndTrip(VehicleBooking b)
+        public DataTable EndTrip(VehicleBooking b)
         {
 
-            int status = 0;
+            DataTable dt = new DataTable();
             LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
             StringBuilder str = new StringBuilder();
@@ -1222,38 +1208,22 @@ namespace Paysmart.Controllers
             d1.Value = b.DriverPhoneNo;
             cmd.Parameters.Add(d1);
 
+            SqlDataAdapter ds = new SqlDataAdapter(cmd);
+            ds.Fill(dt);
 
-            try
-            {
-                conn.Open();
-                object statusres = cmd.ExecuteScalar();
-                conn.Close();
-                if (statusres != null)
-                {
-                    if (conn.State == ConnectionState.Open)
-                    {
-                        conn.Close();
-                    }
-                    return Convert.ToInt32(statusres);
-                }
-                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "EndTrip successful....");
+            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "EndTrip successful....");
             }
             catch (Exception ex)
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "EndTrip...." + ex.Message.ToString());
                 //throw ex;
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
-            }
-            //Verify mobile otp
-
-            
-
-            }
-            catch (Exception ex)
-            {
-                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "EndTrip...." + ex.Message.ToString());
-                //throw ex;
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+                //throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+                dt.Columns.Add("Code");
+                dt.Columns.Add("description");
+                DataRow dr = dt.NewRow();
+                dr[0] = "ERR001";
+                dr[1] = ex.Message;
+                dt.Rows.Add(dr);
             }
             finally
             {
@@ -1261,7 +1231,7 @@ namespace Paysmart.Controllers
                 conn.Dispose();
                 SqlConnection.ClearPool(conn);
             }
-            return status;
+            return dt;
 
         }
 
@@ -1318,7 +1288,7 @@ namespace Paysmart.Controllers
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "ProcessPayment...." + ex.Message.ToString());
                 //throw ex;
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.OK, ex.Message));
             }
             //Verify mobile otp
             }
@@ -1326,7 +1296,7 @@ namespace Paysmart.Controllers
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "ProcessPayment...." + ex.Message.ToString());
                 //throw ex;
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.OK, ex.Message));
             }
             finally
             {

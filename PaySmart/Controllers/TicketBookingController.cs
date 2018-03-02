@@ -175,7 +175,8 @@ namespace Paysmart.Controllers
        [Route("api/TicketBooking/SaveBookingDetails")]
        public int SaveBookingDetails(BookingDetails B)
        {
-           //DataTable Tbl = new DataTable();
+           int status = 0;
+           DataTable Tbl = new DataTable();
            LogTraceWriter traceWriter = new LogTraceWriter();
            SqlConnection conn = new SqlConnection();
            conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
@@ -434,7 +435,7 @@ namespace Paysmart.Controllers
 
                string mailContent = System.IO.File.ReadAllText(root);
 
-               int status = 0;
+               
                try
                {
                    MailMessage mail = new MailMessage();
@@ -493,6 +494,12 @@ namespace Paysmart.Controllers
                {
                    //throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
                    status = 0;
+                   Tbl.Columns.Add("Code");
+                   Tbl.Columns.Add("description");
+                   DataRow dr = Tbl.NewRow();
+                   dr[0] = "ERR001";
+                   dr[1] = ex.Message;
+                   Tbl.Rows.Add(dr);
                    
                }
 
@@ -539,7 +546,13 @@ namespace Paysmart.Controllers
                catch (Exception ex)
                {
 
-                   throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+                   //throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.OK, ex.Message));
+                   Tbl.Columns.Add("Code");
+                   Tbl.Columns.Add("description");
+                   DataRow dr = Tbl.NewRow();
+                   dr[0] = "ERR001";
+                   dr[1] = ex.Message;
+                   Tbl.Rows.Add(dr);
                }
 
                #endregion Save ticket
@@ -689,13 +702,23 @@ namespace Paysmart.Controllers
            {
                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "SaveBookingDetails...." + ex.Message.ToString());
                transaction.Rollback();
-               string str = ex.Message;
-               return -1;
+               Tbl.Columns.Add("Code");
+               Tbl.Columns.Add("description");
+               DataRow dr = Tbl.NewRow();
+               dr[0] = "ERR001";
+               dr[1] = ex.Message;
+               Tbl.Rows.Add(dr);
 
            }
            catch (WebException ex)
            {
                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "SaveBookingDetails...." + ex.Message.ToString());
+               Tbl.Columns.Add("Code");
+               Tbl.Columns.Add("description");
+               DataRow dr = Tbl.NewRow();
+               dr[0] = "ERR001";
+               dr[1] = ex.Message;
+               Tbl.Rows.Add(dr);
                return -1;
            }
            catch (Exception ex)
@@ -706,7 +729,12 @@ namespace Paysmart.Controllers
                {
                    conn.Close();
                }
-               string str = ex.Message;
+               Tbl.Columns.Add("Code");
+               Tbl.Columns.Add("description");
+               DataRow dr = Tbl.NewRow();
+               dr[0] = "ERR001";
+               dr[1] = ex.Message;
+               Tbl.Rows.Add(dr);
                return -1;
 
            }
@@ -715,6 +743,7 @@ namespace Paysmart.Controllers
                conn.Close();
                conn.Dispose();
            }
+           return status;
        }
 
        [HttpGet]

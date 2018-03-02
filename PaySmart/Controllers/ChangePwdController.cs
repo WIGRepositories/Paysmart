@@ -17,7 +17,7 @@ namespace Paysmart.Controllers
 
         [HttpPost]
         [Route("api/ChangePwd/change")]
-        public int change(UserAccount U)
+        public DataTable change(UserAccount U)
         {
             int status = 0;
             LogTraceWriter traceWriter = new LogTraceWriter();
@@ -27,6 +27,16 @@ namespace Paysmart.Controllers
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "change....");
 
+                StringBuilder str = new StringBuilder();
+                str.Append("@Mobilenumber" + U.Mobilenumber + ",");
+                str.Append("@Email" + U.Email + ",");
+                str.Append("@Password" + U.Password + ",");
+                str.Append("@NewPassword" + U.NewPassword + ",");
+
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "change Input sent...." + str.ToString());
+
+                
             conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
             SqlCommand cmd = new SqlCommand();
@@ -52,20 +62,10 @@ namespace Paysmart.Controllers
             m1.Value = U.NewPassword;
             cmd.Parameters.Add(m1);
 
-            conn.Open();
-             status = cmd.ExecuteNonQuery();
-
-            conn.Close();
+            SqlDataAdapter ds = new SqlDataAdapter(cmd);
+            ds.Fill(dt);
             traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "change successful....");
-            StringBuilder str = new StringBuilder();
-            str.Append("@Mobilenumber" + U.Mobilenumber + ",");
-            str.Append("@Email" + U.Email + ",");
-            str.Append("@Password" + U.Password + ",");
-            str.Append("@NewPassword" + U.NewPassword + ",");
-
-
-            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "change Input sent...." + str.ToString());
-
+           
             if (dt.Rows.Count > 0)
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "change Output...." + dt.Rows[0].ToString());
             else
@@ -73,8 +73,15 @@ namespace Paysmart.Controllers
             }
             catch (Exception ex)
             {
+                
+                //throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.OK, ex.Message));
+                dt.Columns.Add("Code");
+                dt.Columns.Add("description");
+                DataRow dr = dt.NewRow();
+                dr[0] = "ERR001";
+                dr[1] = ex.Message;
+                dt.Rows.Add(dr);
                 traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "change...." + ex.Message.ToString());
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.OK, ex.Message));
             }
             finally
             {
@@ -82,7 +89,7 @@ namespace Paysmart.Controllers
                 conn.Dispose();
                 SqlConnection.ClearPool(conn);
             }
-            return status;
+            return dt;
 
             //Verify Passwordotp
 
