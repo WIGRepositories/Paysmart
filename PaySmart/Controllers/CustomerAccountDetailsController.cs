@@ -289,6 +289,7 @@ namespace Paysmart.Controllers
                 SqlConnection conn = new SqlConnection();
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "MakePayment....");
                 StringBuilder str = new StringBuilder();
+                str.Append("@flag" + t.flag + ",");
                 str.Append("@BNo" + t.BNo + ",");
                 str.Append("@Amount" + t.Amount + ",");
                 str.Append("@GatewayTransId" + t.GatewayTransId + ",");
