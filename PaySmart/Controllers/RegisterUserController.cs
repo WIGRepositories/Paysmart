@@ -93,6 +93,13 @@ namespace Paysmart.Controllers
                 ct.Value = ocr.CountryId;
                 cmd.Parameters.Add(ct);
 
+                SqlParameter sti = new SqlParameter("@CurrentStateId", SqlDbType.Int);
+                sti.Value = ocr.CurrentStateId;
+                cmd.Parameters.Add(sti);
+                SqlParameter pay = new SqlParameter("@paymentmodeid", SqlDbType.Int);
+                pay.Value = ocr.paymentmodeid;
+                cmd.Parameters.Add(pay);
+
                 SqlParameter pd = new SqlParameter("@UserPhoto", SqlDbType.VarChar, 50);
                 pd.Value = ocr.UserPhoto;
                 cmd.Parameters.Add(pd);  
@@ -274,21 +281,21 @@ namespace Paysmart.Controllers
 
         [HttpPost]
         [Route("api/UserAccount/MOTPverifications")]
-        public int MOTPverifications(UserAccount ocr)
+        public DataTable MOTPverifications(UserAccount ocr)
         {
 
             int status = 0;
-
+            DataTable dt = new DataTable();
             LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
             StringBuilder str = new StringBuilder();
             try
             {
-            
+
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "MOTPverifications....");
                 str.Append("Mobilenumber:" + ocr.Mobilenumber + ",");
                 str.Append("Mobileotp:" + ocr.Email + ",");
-                
+
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
 
 
@@ -305,35 +312,42 @@ namespace Paysmart.Controllers
                 q1.Value = ocr.Mobilenumber;
                 cmd.Parameters.Add(q1);
 
+                SqlParameter uu = new SqlParameter("@UserId", SqlDbType.VarChar, 20);
+                uu.Value = ocr.userId;
+                cmd.Parameters.Add(uu);
+
                 SqlParameter e = new SqlParameter("@Mobileotp", SqlDbType.VarChar, 10);
                 e.Value = ocr.MVerificationCode;
                 cmd.Parameters.Add(e);
 
-                try
-                {
-                    conn.Open();
-                    object statusres = cmd.ExecuteScalar();
-                    conn.Close();
-                    if (statusres != null)
-                    {
-                        if (conn.State == ConnectionState.Open)
-                        {
-                            conn.Close();
-                        }
-                        return Convert.ToInt32(statusres);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.OK, ex.Message));
-                }
+                //try
+                //{
+                //    conn.Open();
+                //    object statusres = cmd.ExecuteScalar();
+                //    conn.Close();
+                //    if (statusres != null)
+                //    {
+                //        if (conn.State == ConnectionState.Open)
+                //        {
+                //            conn.Close();
+                //        }
+                //        return Convert.ToInt32(statusres);
+                //    }
+                //}
+                //catch (Exception ex)
+                //{
+                //    throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.OK, ex.Message));
+                //}
                 //Verify mobile otp
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "MOTPverifications successful....");
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(dt);
             }
             catch (Exception ex)
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "MOTPverifications...." + ex.Message.ToString());
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.OK, ex.Message));
+                //throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.OK, ex.Message));
+                throw ex;
             }
             finally
             {
@@ -341,20 +355,21 @@ namespace Paysmart.Controllers
                 conn.Dispose();
                 SqlConnection.ClearPool(conn);
             }
-            return status;
+            return dt;
 
         }
 
 
         [HttpPost]
         [Route("api/UserAccount/EOTPVerification")]
-        public int EOTPVerification(UserAccount ocr)
+        public DataTable EOTPVerification(UserAccount ocr)
         {
-            int status = 0;
-
+            //int status = 0;
+            DataTable tbl = new DataTable();
             LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
             StringBuilder str = new StringBuilder();
+            DataSet ds = new DataSet();
             try
             {
 
@@ -374,8 +389,8 @@ namespace Paysmart.Controllers
                 cmd.Connection = conn;
 
 
-                SqlParameter m = new SqlParameter("@Mobileno", SqlDbType.VarChar, 20);
-                m.Value = ocr.Mobilenumber;
+                SqlParameter m = new SqlParameter("@UserId", SqlDbType.Int);
+                m.Value = ocr.userId;
                 cmd.Parameters.Add(m);
 
                 SqlParameter q1 = new SqlParameter("@Email", SqlDbType.VarChar, 50);
@@ -386,31 +401,39 @@ namespace Paysmart.Controllers
                 e.Value = ocr.EVerificationCode;
                 cmd.Parameters.Add(e);
 
-                try
-                {
-                    conn.Open();
-                    object statusres = cmd.ExecuteScalar();
-                    conn.Close();
-                    if (statusres != null)
-                    {
-                        if (conn.State == ConnectionState.Open)
-                        {
-                            conn.Close();
-                        }
-                        return Convert.ToInt32(statusres);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.OK, ex.Message));
-                }
+                //try
+                //{
+                //    conn.Open();
+                //    object statusres = cmd.ExecuteScalar();
+                //    conn.Close();
+                //    if (statusres != null)
+                //    {
+                //        if (conn.State == ConnectionState.Open)
+                //        {
+                //            conn.Close();
+                //        }
+                //        //return Convert.ToInt32(statusres);
+                //    }
+                //}
+                //catch (Exception ex)
+                //{
+                //    throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.OK, ex.Message));
+                //}
                 //Verify mobile otp
+
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "EOTPVerification successful....");
+                //statustbl = GetStatusTbl("200", "Success");
+                //ds.Tables.Add(statustbl);
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(tbl);
+
+
             }
             catch (Exception ex)
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "EOTPVerification...." + ex.Message.ToString());
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.OK, ex.Message));
+                //throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.OK, ex.Message));
+                throw ex;
             }
             finally
             {
@@ -418,8 +441,21 @@ namespace Paysmart.Controllers
                 conn.Dispose();
                 SqlConnection.ClearPool(conn);
             }
-            return status;
+            return tbl;
+
+            //return status;
             //Verify Emailotp
+        }
+        private DataTable GetStatusTbl(string status, string mssg) {
+            DataTable tbl = new DataTable();
+            tbl.Columns.Add("Code");
+            tbl.Columns.Add("description");
+
+            DataRow dr = tbl.NewRow();
+            dr[0] = status;
+            dr[1] = mssg;
+            tbl.Rows.Add(dr);
+            return tbl;
         }
 
         [HttpPost]

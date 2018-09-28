@@ -29,7 +29,7 @@ namespace Paysmart.Controllers
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "ValidateCredentials....");
                 str.Append("Mobilenumber:" + u.Mobilenumber + ",");
                 str.Append("Password:" + u.Password + ",");
-                
+
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
                 //connetionString="Data Source=ServerName;Initial Catalog=DatabaseName;User ID=UserName;Password=Password"
                 conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
@@ -50,8 +50,17 @@ namespace Paysmart.Controllers
                 lPassword.Value = u.Password;
                 lPassword.Direction = ParameterDirection.Input;
                 cmd.Parameters.Add(lPassword);
+                //System.Threading.Thread.Sleep(10000);              
+
+                SqlParameter cnty = new SqlParameter("@CountryId", SqlDbType.Int);
+                cnty.Value = u.CountryId;
+                cnty.Direction = ParameterDirection.Input;
+                cmd.Parameters.Add(cnty);
                 //System.Threading.Thread.Sleep(10000);
+
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
+
+
                 da.Fill(Tbl);
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "ValidateCredentials successful....");
 

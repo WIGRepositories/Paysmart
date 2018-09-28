@@ -40,7 +40,8 @@ namespace Paysmart.Models
     {
 
         public string flag { get; set; }
-        public int id { get; set; }  
+        public int id { get; set; }
+        public int userId { get; set; }
         public string Username { get; set; }
 
         public string Email { get; set; }
@@ -73,7 +74,8 @@ namespace Paysmart.Models
 
         public decimal Amount { get; set; }
         public int CountryId { get; set; }
-        
+        public int CurrentStateId { get; set; }
+        public int paymentmodeid { get; set; }
        
     }
 
@@ -122,6 +124,7 @@ namespace Paysmart.Models
     {
         public string Mobilenumber { get; set; }
         public string Password { get; set; }
+        public int CountryId { get; set; }
 
     }
     public class DriverLogin
