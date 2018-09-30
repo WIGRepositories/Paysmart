@@ -28,8 +28,7 @@ namespace Paysmart.Controllers
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "change....");
 
                 StringBuilder str = new StringBuilder();
-                str.Append("@Mobilenumber" + U.Mobilenumber + ",");
-                str.Append("@Email" + U.Email + ",");
+                str.Append("@UserAccountNo" + U.UserAccountNo + ",");             
                 str.Append("@Password" + U.Password + ",");
                 str.Append("@NewPassword" + U.NewPassword + ",");
 
@@ -45,13 +44,13 @@ namespace Paysmart.Controllers
 
             cmd.Connection = conn;
 
-            SqlParameter b1 = new SqlParameter("@Mobilenumber", SqlDbType.VarChar, 20);
-            b1.Value = U.Mobilenumber;
+            SqlParameter b1 = new SqlParameter("@UserAccountNo", SqlDbType.VarChar, 15);
+            b1.Value = U.UserAccountNo;
             cmd.Parameters.Add(b1);
 
-            SqlParameter e = new SqlParameter("@Email", SqlDbType.VarChar, 50);
-            e.Value = U.Email;
-            cmd.Parameters.Add(e);
+            //SqlParameter e = new SqlParameter("@Email", SqlDbType.VarChar, 50);
+            //e.Value = U.Email;
+            //cmd.Parameters.Add(e);
 
 
             SqlParameter m = new SqlParameter("@Password", SqlDbType.VarChar, 50);

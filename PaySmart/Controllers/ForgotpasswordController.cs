@@ -19,7 +19,6 @@ namespace Paysmart.Controllers
         [Route("api/UserAccount/Forgotpassword")]
         public DataTable  Forgotpassword(UserAccount ocr)
         {
-
             int Status = 0;
             DataTable dt = new DataTable();
             LogTraceWriter traceWriter = new LogTraceWriter();
@@ -29,8 +28,8 @@ namespace Paysmart.Controllers
             try
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Forgotpassword....");
-                str.Append("Mobilenumber:" + ocr.Mobilenumber + ",");
-                str.Append("Email:" + ocr.Email + ",");
+                str.Append("UserAccountNo:" + ocr.UserAccountNo + ",");
+               // str.Append("Email:" + ocr.Email + ",");
                 
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
 
@@ -42,19 +41,20 @@ namespace Paysmart.Controllers
 
                 cmd.Connection = conn;
 
-                SqlParameter c = new SqlParameter("@Mobilenumber", SqlDbType.VarChar, 20);
-                c.Value = ocr.Mobilenumber;
+                SqlParameter c = new SqlParameter("@UserAccountNo", SqlDbType.VarChar, 20);
+                c.Value = ocr.UserAccountNo;
                 cmd.Parameters.Add(c);
 
-                SqlParameter a = new SqlParameter("@Email", SqlDbType.VarChar, 50);
-                a.Value = ocr.Email;
-                cmd.Parameters.Add(a);
+                //SqlParameter a = new SqlParameter("@Email", SqlDbType.VarChar, 50);
+                //a.Value = ocr.Email;
+                //cmd.Parameters.Add(a);
 
                 SqlDataAdapter ds = new SqlDataAdapter(cmd);
                 ds.Fill(dt);
 
                 #region password otp
                 string potp = dt.Rows[0]["passwordotp"].ToString();
+                string emailAddrss = dt.Rows[0]["emailAddr"].ToString();
                 if (potp != null)
                 {
                     try
@@ -70,7 +70,7 @@ namespace Paysmart.Controllers
                         SmtpClient SmtpServer = new SmtpClient(emailserver);
 
                         mail.From = new MailAddress(fromaddress);
-                        mail.To.Add(ocr.Email);
+                        mail.To.Add(emailAddrss);
                         mail.Subject = "User registration - Password OTP";
                         mail.IsBodyHtml = true;
 
