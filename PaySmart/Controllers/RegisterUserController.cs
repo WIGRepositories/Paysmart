@@ -305,11 +305,11 @@ namespace Paysmart.Controllers
             StringBuilder str = new StringBuilder();
             try
             {
-            
+
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "MOTPverifications....");
                 str.Append("Mobilenumber:" + ocr.Mobilenumber + ",");
                 str.Append("Mobileotp:" + ocr.Email + ",");
-                
+
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
 
 

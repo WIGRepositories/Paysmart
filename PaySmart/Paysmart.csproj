@@ -86,6 +86,8 @@
     <Content Include="css\pagenewtheme.css" />
     <Content Include="css\parentcss.css" />
     <Content Include="css\themeredcss.css" />
+    <Content Include="DBScripts\DBScripts_SProcs.sql" />
+    <Content Include="DBScripts\DBScripts_Tables.sql" />
     <Content Include="DBScripts\SProcs.sql" />
     <Content Include="DBScripts\Stops.sql" />
     <Content Include="DBScripts\Tables.sql" />

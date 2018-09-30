@@ -49,6 +49,11 @@ namespace Paysmart.Controllers
                 //a.Value = ocr.Email;
                 //cmd.Parameters.Add(a);
 
+
+                SqlParameter cnty = new SqlParameter("@CountryId", SqlDbType.Int);
+                cnty.Value = ocr.CountryId;
+                cmd.Parameters.Add(cnty);
+
                 SqlDataAdapter ds = new SqlDataAdapter(cmd);
                 ds.Fill(dt);
 
