@@ -350,6 +350,10 @@ namespace Paysmart.Controllers
                 ai.Value = t.AppUserId;
                 cmd.Parameters.Add(ai);
 
+                SqlParameter disc = new SqlParameter("@CouponCode", SqlDbType.VarChar, 20);
+                disc.Value = t.CouponCode;
+                cmd.Parameters.Add(disc);
+
 
 
                 SqlDataAdapter da = new SqlDataAdapter(cmd);

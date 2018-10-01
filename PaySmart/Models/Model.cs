@@ -326,8 +326,11 @@ namespace Paysmart.Models
     {
         public string flag { get; set; }
         public int Id { get; set; }
+        public int UserId { get; set; }
         public int CompanyId { get; set; }
         public int BNo { get; set; }
+        public int withluggage { get; set; }
+        public int luggageweight { get; set; }
         public string BookingType { get; set; }
 
         public string ReqVehicle { get; set; }
@@ -378,6 +381,8 @@ namespace Paysmart.Models
         public string BookingId { get; set; }
         public DateTime? BookedDate { get; set; }
         public DateTime? BookedTime { get; set; }
+        public DateTime? TravelDate { get; set; }
+        public DateTime? TravelTime { get; set; }
         public DateTime? DepartueDate { get; set; }
         public DateTime? DepartureTime { get; set; }
         public float SrcLatitude { get; set; }
@@ -402,6 +407,9 @@ namespace Paysmart.Models
         public string OTPVerification { get; set; }
         public decimal Amount { get; set; }
         public string PaymentStatus { get; set; }
+        public int PaymentModeId { get; set; }
+        public string CouponCode { get; set; }
+        public string EstPrice { get; set; }
         public string BookingOTP { get; set; }
         public int UpdatedBy { get; set; }
         public int UpdatedUserId { get; set; }
@@ -994,7 +1002,8 @@ namespace Paysmart.Models
         public int PaymentModeId { get; set; }
         public string Comments { get; set; }
         public int CustAccountId { get; set; }
-        public int AppUserId { get; set; }        
+        public int AppUserId { get; set; }
+        public string CouponCode { get; set; }
     }
     public class Transmaster
     {
