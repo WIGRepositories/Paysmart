@@ -83,6 +83,7 @@ namespace Paysmart.Models
 
     public class BusinessAppUser
     {
+        public int Id { get; set; }
         public string flag { get; set; }
         public int id { get; set; }
         public int userId { get; set; }
@@ -123,6 +124,7 @@ namespace Paysmart.Models
         public int Active { get; set; }
         public string CCode { get; set; }
         public string UserAccountNo { get; set; }
+        public int UserTypeId { get; set; }
 
     }
 
@@ -166,6 +168,8 @@ namespace Paysmart.Models
         public int CountryId { get; set; }
         public int VehicleGroupId { get; set; }
         public int VehicleTypeId { get; set; }
+        public int BusinessAppUserId { get; set; }
+        public string UserAccountNo { get; set; }
     }
     public class UserLogin
     {
@@ -930,6 +934,7 @@ namespace Paysmart.Models
         public int includeActiveCountry { get; set; }
         public int includeFleetOwner { get; set; }
         public int includeUserType { get; set; }
+        public int includeBusinessAppUserTypes { get; set; }
     }
    
     public class SOSMessage
