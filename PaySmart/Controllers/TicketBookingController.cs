@@ -74,6 +74,7 @@ namespace Paysmart.Controllers
             }
             return Tbl;
         }
+
        [HttpGet]
        [Route("api/TicketBooking/GetAvailableSeats")]
         public DataTable GetAvailableSeats()

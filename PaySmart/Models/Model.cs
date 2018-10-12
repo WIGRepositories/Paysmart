@@ -1032,6 +1032,168 @@ namespace Paysmart.Models
         public string TransCode { get; set; }
         public string Mobileno { get; set; }
     }
+    public class FleetOwnerRequest
+    {
+        //user details
+
+        public string FirstName { get; set; }
+        public string MiddleName { get; set; }
+        public string LastName { get; set; }
+        public string PhoneNo { get; set; }
+        public string AltPhoneNo { get; set; }
+        public string EmailAddress { get; set; }
+        public string Address { get; set; }
+        public int Gender { set; get; }
+
+        public string userPhoto { get; set; }
+
+        //Company details
+        public string CompanyName { get; set; }
+        public string CmpEmailAddress { get; set; }
+        public string CmpTitle { get; set; }
+        public string CmpCaption { get; set; }
+        public string FleetSize { set; get; }
+        public int StaffSize { get; set; }
+        public string Country { get; set; }
+        public string Code { get; set; }
+        public string CmpFax { get; set; }
+        public string CmpAddress { get; set; }
+        public string CmpAltAddress { get; set; }
+        public string state { get; set; }
+        public string ZipCode { get; set; }
+        public string CmpPhoneNo { set; get; }
+        public string CmpAltPhoneNo { set; get; }
+        public string CurrentSystemInUse { set; get; }
+        public string howdidyouhearaboutus { get; set; }
+        public string SendNewProductsEmails { set; get; }
+        public int Agreetotermsandconditions { get; set; }
+
+
+        public string CmpLogo { get; set; }
+
+        public string insupdflag { get; set; }
+    }
+    public class LicenseTypes
+    {
+        public int Id { set; get; }
+        public string LicenseType { set; get; }
+        public string LicenseCode { set; get; }
+        public int LicenseCategoryId { set; get; }
+        public int Active { set; get; }
+        public string Desc { set; get; }
+        public string LicenseCategory { set; get; }
+        public DateTime? fromDate { get; set; }
+        public DateTime? toDate { get; set; }
+        public int LicenseId { get; set; }
+        public int LicensePricingId { get; set; }
+        public String RenewalFreqType { get; set; }
+        public int RenewalFreqTypeId { get; set; }
+        public int RenewalFreqUnit { get; set; }
+        public string RenewalFreq { get; set; }
+        public decimal UnitPrice { get; set; }
+        public DateTime? Pfromdate { get; set; }
+        public DateTime? Ptodate { get; set; }
+
+        public int PActive { get; set; }
+        public string insupddelflag { get; set; }
+
+        //license pos      
+        public int LPOSId { get; set; }
+        public int BTPOSTypeId { get; set; }
+        public int NoOfUnits { get; set; }
+        public string POSType { get; set; }
+        public String POSLabel { get; set; }
+        public String POSLabelClass { get; set; }
+        public DateTime? POSfromdate { get; set; }
+        public DateTime? POStodate { get; set; }
+        public int POSActive { get; set; }
+
+    }
+    public class LicensePricing
+    {
+        public int LicenseId { get; set; }
+        public String RenewalFreqType { get; set; }
+        public int RenewalFreqTypeId { get; set; }
+        public int RenewalFreqUnit { get; set; }
+        public string RenewalFreq { get; set; }
+        public decimal UnitPrice { get; set; }
+        public DateTime? fromdate { get; set; }
+        public DateTime? todate { get; set; }
+        public int Id { get; set; }
+
+        public int categoryid { get; set; }
+        public int Active { get; set; }
+        public string insupddelflag { get; set; }
+    }
+    public class ULLicense
+    {
+        public int Id { set; get; }
+        public int ULId { set; get; }
+        public string TransId { set; get; }
+        public DateTime? CreatedOn { set; get; }
+        public decimal Amount { set; get; }
+        public decimal UnitPrice { set; get; }
+        public decimal Units { set; get; }
+        public int StatusId { set; get; }
+        public int LicensePymtTransId { set; get; }
+        public int IsRenewal { set; get; }
+        public string insupddelflag { set; get; }
+    }
+    public class ULPTrasaction
+    {
+        public int Id { get; set; }
+        public string TransId { set; get; }
+        public string GatewayTransId { set; get; }
+        public DateTime? TransDate { set; get; }
+        public int ULPymtId { set; get; }
+        public string Desc { set; get; }
+        public Decimal Tax { set; get; }
+        public Decimal Discount { set; get; }
+        public int PymtTypeId { set; get; }
+        public string Amount { set; get; }
+        public int StatusId { set; get; }
+        //public string LicensePymtTransId { set; get; }
+        public string insupddelflag { set; get; }
+
+    }
+    public class UserLicenseDetails
+    {
+        public List<ULLicense> checkSchedule { get; set; }
+        public int Id { set; get; }
+        public int UserId { set; get; }
+        public int FOId { set; get; }
+        public string FOCode { set; get; }
+        public int LicenseTypeId { set; get; }
+        public DateTime? StartDate { set; get; }
+        public DateTime? ExpiryOn { set; get; }
+        public int GracePeriod { set; get; }
+        public DateTime? ActualExpiry { set; get; }
+        public DateTime? LastUpdatedOn { set; get; }
+        public int Active { set; get; }
+        public int RenewFreqTypeId { set; get; }
+        public int StatusId { set; get; }
+
+        public string insupddelflag { set; get; }
+
+    }
+    public class ULConfirmDetails
+    {
+        public int Id { set; get; }
+        public int ULId { set; get; }
+        public int ULPymtId { set; get; }
+        public int foId { set; get; }
+        public int userId { set; get; }
+        public string TransId { set; get; }
+        public string GatewayTransId { set; get; }
+        public int itemId { set; get; }
+        public string address { set; get; }
+        public decimal Amount { set; get; }
+        public decimal Units { set; get; }
+        public decimal POSUnits { set; get; }
+        public int IsRenewal { set; get; }
+        public string insupddelflag { set; get; }
+    }
+
 }
 
 
