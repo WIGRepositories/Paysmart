@@ -103,6 +103,13 @@ namespace Paysmart.Controllers
                 vg.Value = ocr.VehicleGroupId;
                 cmd.Parameters.Add(vg);
 
+                SqlParameter bpa = new SqlParameter("@BusinessAppUserId", SqlDbType.Int);
+                bpa.Value = ocr.BusinessAppUserId;
+                cmd.Parameters.Add(bpa);
+
+                SqlParameter Uac = new SqlParameter("@UserAccountNo", SqlDbType.VarChar,50);
+                Uac.Value = ocr.UserAccountNo;
+                cmd.Parameters.Add(Uac);
 
                 if (ocr.RegistrationNo != null && ocr.RegistrationNo != string.Empty)
                 {                 
@@ -377,8 +384,8 @@ namespace Paysmart.Controllers
                     conn.Close();
                 }
                 traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "MOTPverifications...." + ex.Message.ToString());
-                //throw ex;
-                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.OK, ex.Message));
+                throw ex;
+               // throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.OK, ex.Message));
             }
             //Verify mobile otp
 

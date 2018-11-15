@@ -204,6 +204,12 @@ namespace Paysmart.Controllers
                 vdid4.Value = vc.includeUserType;
                 cmd.Parameters.Add(vdid4);
 
+                SqlParameter bapp = new SqlParameter();
+                bapp.ParameterName = "@includeBusinessAppUserTypes";
+                bapp.SqlDbType = SqlDbType.Int;
+                bapp.Value = vc.includeBusinessAppUserTypes;
+                cmd.Parameters.Add(bapp);
+
 
                 SqlDataAdapter db = new SqlDataAdapter(cmd);
                 db.Fill(ds);
