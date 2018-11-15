@@ -79,6 +79,8 @@ namespace Paysmart.Models
         public string CCode { get; set; }
         public string UserAccountNo { get; set; }
 
+        public int change { get; set; }
+
     }
 
     public class BusinessAppUser
@@ -123,6 +125,9 @@ namespace Paysmart.Models
         public int Active { get; set; }
         public string CCode { get; set; }
         public string UserAccountNo { get; set; }
+        public int usertypeid { get; set; }
+
+        public string Address { get; set; }
 
     }
 
@@ -171,7 +176,9 @@ namespace Paysmart.Models
     {
         public string UserAccountNo { get; set; }
         public string Password { get; set; }
+        public int usertypeid { get; set; }
         public int CountryId { get; set; }
+        
 
     }
     public class DriverLogin

@@ -781,7 +781,7 @@ namespace Paysmart.Controllers
                 str.Append("lat:" + vb.SrcLatitude + ",");
                 str.Append("lng:" + vb.SrcLongitude + ",");
                 str.Append("vehicleGroupId:" + vb.VehicleGroupId + ",");
-                str.Append("vehicleTypeId:" + vb.VehicleTypeId + ",");
+                //str.Append("vehicleTypeId:" + vb.VehicleTypeId + ",");
 
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
 
@@ -795,7 +795,7 @@ namespace Paysmart.Controllers
                 cmd.Parameters.Add("@lat", SqlDbType.Float).Value = vb.SrcLatitude;
                 cmd.Parameters.Add("@lng", SqlDbType.Float).Value = vb.SrcLongitude;
                 cmd.Parameters.Add("@vehicleGroupId", SqlDbType.Int).Value = vb.VehicleGroupId;
-                cmd.Parameters.Add("@vehicleTypeId", SqlDbType.Int).Value = vb.VehicleTypeId;
+                //cmd.Parameters.Add("@vehicleTypeId", SqlDbType.Int).Value = vb.VehicleTypeId;
 
                 cmd.Connection = conn;
 

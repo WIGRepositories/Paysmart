@@ -107,7 +107,6 @@ namespace Paysmart.Controllers
                 ccode.Value = ocr.CCode;
                 cmd.Parameters.Add(ccode);
 
-
                 SqlParameter uaccno = new SqlParameter("@UserAccountNo", SqlDbType.VarChar, 15);
                 uaccno.Value = ocr.UserAccountNo;
                 cmd.Parameters.Add(uaccno);
@@ -116,6 +115,18 @@ namespace Paysmart.Controllers
                 active.Value = ocr.Active;
                 cmd.Parameters.Add(active);
 
+                SqlParameter utd = new SqlParameter("@usertypeid", SqlDbType.Int);
+                utd.Value = ocr.usertypeid;
+                cmd.Parameters.Add(utd);
+
+                SqlParameter gdd = new SqlParameter("@Gender", SqlDbType.Int);
+                gdd.Value = ocr.Gender;
+                cmd.Parameters.Add(gdd);
+
+                SqlParameter add = new SqlParameter("@Address", SqlDbType.VarChar,50);
+                add.Value = ocr.Address;
+                cmd.Parameters.Add(add);
+              
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
                 da.Fill(dt);
                 //[Mobileotp] ,[Emailotp]
@@ -785,8 +796,8 @@ namespace Paysmart.Controllers
                 cmd.Parameters.Add(lPassword);
                 //System.Threading.Thread.Sleep(10000);              
 
-                SqlParameter cnty = new SqlParameter("@CountryId", SqlDbType.Int);
-                cnty.Value = u.CountryId;
+                SqlParameter cnty = new SqlParameter("@usertypeid", SqlDbType.Int);
+                cnty.Value = u.usertypeid; 
                 cnty.Direction = ParameterDirection.Input;
                 cmd.Parameters.Add(cnty);
                 //System.Threading.Thread.Sleep(10000);
@@ -817,6 +828,187 @@ namespace Paysmart.Controllers
             }
             return Tbl;
 
+        }
+
+        [HttpPost]
+        [Route("api/BusinessAppUser/Passwordverification")]
+        public DataTable Passwordverification(UserAccount ocr)
+        {
+            LogTraceWriter traceWriter = new LogTraceWriter();
+            SqlConnection conn = new SqlConnection();
+            StringBuilder str = new StringBuilder();
+            DataTable dt = new DataTable();
+            try
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Passwordverification....");
+
+                str.Append("Password:" + ocr.Password + ",");
+                str.Append("Passwordotp:" + ocr.Passwordotp + ",");
+                str.Append("Email:" + ocr.Email + ",");
+                str.Append("mobileno:" + ocr.Mobilenumber + ",");
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
+
+                conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = " PSBusersPasswordverification";
+
+                cmd.Connection = conn;
+
+                SqlParameter e = new SqlParameter("@Passwordotp", SqlDbType.VarChar, 50);
+                e.Value = ocr.Passwordotp;
+                cmd.Parameters.Add(e);
+
+
+                SqlParameter et = new SqlParameter("@Email", SqlDbType.VarChar, 50);
+                et.Value = ocr.Email;
+                cmd.Parameters.Add(et);
+
+             
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(dt);
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Passwordverification successful....");
+            }
+            catch (Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "Passwordverification....failed" + ex.Message.ToString());
+                //throw ex;
+                dt.Columns.Add("Code");
+                dt.Columns.Add("description");
+                DataRow dr = dt.NewRow();
+                dr[0] = "ERR001";
+                dr[1] = ex.Message;
+                dt.Rows.Add(dr);
+            }
+            return (dt);
+
+            //Verify Passwordotp
+
+        }
+
+
+        [HttpGet]
+        [Route("api/BusinessAppUser/GetBusinessappusersusertypeid")]
+        public DataTable Businessappusertypeid(string acct, int uit)
+        {
+            DataTable dt = new DataTable();
+            LogTraceWriter traceWriter = new LogTraceWriter();
+            SqlConnection conn = new SqlConnection();
+            StringBuilder str = new StringBuilder();
+            try
+            {
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Get list....");
+
+                str.Append("UserAccountNo:" + acct + ",");
+                str.Append("usertypeid:" + uit + ",");
+             
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
+
+                conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = "GetBusinessAppusersusertype"; 
+
+                cmd.Connection = conn;
+                
+                SqlParameter uaccno = new SqlParameter("@UserAccountNo", SqlDbType.VarChar, 15);
+                uaccno.Value = acct;
+                cmd.Parameters.Add(uaccno);
+
+                SqlParameter utd = new SqlParameter("@UserTypeId", SqlDbType.Int);
+                utd.Value = uit;
+                cmd.Parameters.Add(utd);
+                //DataSet ds = new DataSet();
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(dt);
+                //dt = ds.Tables[0];
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "successful Get List");
+            }
+            catch (Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "Get List...." + ex.Message.ToString());
+                //throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+                dt.Columns.Add("Code");
+                dt.Columns.Add("description");
+                DataRow dr = dt.NewRow();
+                dr[0] = "ERR001";
+                dr[1] = ex.Message;
+                dt.Rows.Add(dr);
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
+            }
+            return dt;
+        }
+
+
+        [HttpGet]
+        [Route("api/BusinessAppUser/GetBusinessappusersuser")]
+        public DataTable GetBusinessappusersuser(string acct, int uit)
+        {
+            DataTable dt = new DataTable();
+            LogTraceWriter traceWriter = new LogTraceWriter();
+            SqlConnection conn = new SqlConnection();
+            StringBuilder str = new StringBuilder();
+            try
+            {
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Get Business App User....");
+
+                str.Append("UserAccountNo:" + acct + ",");
+                str.Append("usertypeid:" + uit + ",");
+
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
+
+                conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = "GetBusinessAppusers";
+
+                cmd.Connection = conn;
+
+                SqlParameter uaccno = new SqlParameter("@UserAccountNo", SqlDbType.VarChar, 15);
+                uaccno.Value = acct;
+                cmd.Parameters.Add(uaccno);
+
+                SqlParameter utd = new SqlParameter("@UserTypeId", SqlDbType.Int);
+                utd.Value = uit;
+                cmd.Parameters.Add(utd);
+                //DataSet ds = new DataSet();
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(dt);
+                //dt = ds.Tables[0];
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "successful Get Business App User");
+            }
+            catch (Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "Get Business App User...." + ex.Message.ToString());
+                //throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+                dt.Columns.Add("Code");
+                dt.Columns.Add("description");
+                DataRow dr = dt.NewRow();
+                dr[0] = "ERR001";
+                dr[1] = ex.Message;
+                dt.Rows.Add(dr);
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
+            }
+            return dt;
         }
     }
 }

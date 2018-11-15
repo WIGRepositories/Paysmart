@@ -282,11 +282,12 @@ namespace Paysmart.Controllers
         {
 
             DataTable dt = new DataTable();
+            SqlConnection conn = new SqlConnection();
             LogTraceWriter traceWriter = new LogTraceWriter();
             SqlCommand cmd = new SqlCommand();
-           
+            try
             {
-                SqlConnection conn = new SqlConnection();
+               
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "MakePayment....");
                 StringBuilder str = new StringBuilder();
                 str.Append("@flag" + t.flag + ",");
@@ -295,7 +296,7 @@ namespace Paysmart.Controllers
                 str.Append("@GatewayTransId" + t.GatewayTransId + ",");
                 str.Append("@TransDate" + t.TransDate + ",");
                 str.Append("@AppUserId" + t.AppUserId + ",");
-            
+
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "MakePayment Input sent...." + str.ToString());
 
                 if (dt.Rows.Count > 0)
@@ -332,7 +333,7 @@ namespace Paysmart.Controllers
                 SqlParameter gti = new SqlParameter("@GatewayTransId", SqlDbType.VarChar);
                 gti.Value = t.GatewayTransId;
                 cmd.Parameters.Add(gti);
-               
+
 
                 SqlParameter pmi = new SqlParameter("@PaymentModeId", SqlDbType.Int);
                 pmi.Value = t.PaymentModeId;
@@ -357,23 +358,28 @@ namespace Paysmart.Controllers
 
 
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
-                da.Fill(dt);
-
-                //return 1;
+                da.Fill(dt);          
 
 
-                Payengine.Controllers.Payengine e = new Payengine.Controllers.Payengine();
+            //return 1;
+
+
+            Payengine.Controllers.Payengine e = new Payengine.Controllers.Payengine();
                 string transId = e.ProcessPayment();
 
                 if (dt.Rows.Count >= 0)
                 {
-                    
-                    
+
+
                     //var GatewayTransId = dt.Rows[0]["GatewayTransId"].ToString();
                     if (transId != "")
                     {
+
+                        cmd.CommandText = "InsupdTripPayments";
                         f.Value = "U";
                         s.Value = dt.Rows[0]["Id"].ToString();
+                        BNo.Value = dt.Rows[0]["BNo"].ToString();
+
                         var GateTransId = transId;
 
                         gti.Value = transId;
@@ -392,7 +398,24 @@ namespace Paysmart.Controllers
                 //5) let the customer know the status
 
             }
+            catch (Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "MakePayment...." + ex.Message.ToString());
+                //throw ex;
+                dt.Columns.Add("Code");
+                dt.Columns.Add("description");
+                DataRow dr = dt.NewRow();
+                dr[0] = "ERR001";
+                dr[1] = ex.Message;
+                dt.Rows.Add(dr);
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
 
+            }
 
             return dt;
         }

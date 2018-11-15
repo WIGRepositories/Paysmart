@@ -18,7 +18,7 @@ namespace Paysmart.Controllers
     {
         [HttpGet]
         [Route("api/DriverMaster/Master")]
-        public DataTable Master(int DId)
+        public DataTable Master(int ctryId)
         {
             DataTable dt = new DataTable();
             LogTraceWriter traceWriter = new LogTraceWriter();
@@ -28,7 +28,7 @@ namespace Paysmart.Controllers
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Master....");
                 StringBuilder str = new StringBuilder();
-                str.Append("@DId" + DId + ",");
+                str.Append("@ctryId" + ctryId + ",");
 
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Master Input sent...." + str.ToString());
 
@@ -37,7 +37,7 @@ namespace Paysmart.Controllers
                 SqlCommand cmd = new SqlCommand();
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.CommandText = "HVgetdrivermaster";
-                cmd.Parameters.Add("@DId", SqlDbType.Int).Value = DId;
+                cmd.Parameters.Add("@ctryId", SqlDbType.Int).Value = ctryId;
                 cmd.Connection = conn;
                 DataSet ds = new DataSet();
                 SqlDataAdapter db = new SqlDataAdapter(cmd);

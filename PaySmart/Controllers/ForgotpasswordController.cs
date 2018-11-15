@@ -16,7 +16,7 @@ namespace Paysmart.Controllers
     {
 
         [HttpPost]
-        [Route("api/UserAccount/Forgotpassword")]
+        [Route("api/Forgotpassword/Forgotpassword")]
         public DataTable  Forgotpassword(UserAccount ocr)
         {
             int Status = 0;
@@ -50,16 +50,16 @@ namespace Paysmart.Controllers
                 //cmd.Parameters.Add(a);
 
 
-                SqlParameter cnty = new SqlParameter("@CountryId", SqlDbType.Int);
-                cnty.Value = ocr.CountryId;
-                cmd.Parameters.Add(cnty);
+                //SqlParameter cnty = new SqlParameter("@CountryId", SqlDbType.Int);
+                //cnty.Value = ocr.CountryId;
+                //cmd.Parameters.Add(cnty);
 
                 SqlDataAdapter ds = new SqlDataAdapter(cmd);
                 ds.Fill(dt);
 
                 #region password otp
                 string potp = dt.Rows[0]["passwordotp"].ToString();
-                string emailAddrss = dt.Rows[0]["emailAddr"].ToString();
+                string emailAddrss = dt.Rows[0]["Email"].ToString();
                 if (potp != null)
                 {
                     try
