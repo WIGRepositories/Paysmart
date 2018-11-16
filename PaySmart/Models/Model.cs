@@ -129,6 +129,8 @@ namespace Paysmart.Models
         public int usertypeid { get; set; }
 
         public string Address { get; set; }
+        public int change { get; set; }
+        public int type { get; set; }
 
     }
 
@@ -493,6 +495,8 @@ namespace Paysmart.Models
         public int isDriverOwned { get; set; }
         public string VehicleCode { get; set; }
         public string CountryId { get; set; }
+        public int change { get; set; }
+        public int type { get; set; }
     }
 
     public class travels

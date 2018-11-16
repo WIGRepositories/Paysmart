@@ -327,6 +327,11 @@ namespace Paysmart.Controllers
                 ctr.Value = v.CountryId;
                 cmd.Parameters.Add(ctr);
 
+                BusinessAppUserController obj = new BusinessAppUserController();
+                obj.SendNotificationToAdmin(v.RegistrationNo, v.change, v.type);
+
+                
+
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
                 da.Fill(dt);
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Vehicles successful....");
