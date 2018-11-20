@@ -8,6 +8,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Mail;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Web.Http;
 using System.Web.Http.Tracing;
 
@@ -126,7 +127,9 @@ namespace Paysmart.Controllers
                 SqlParameter add = new SqlParameter("@Address", SqlDbType.VarChar,50);
                 add.Value = ocr.Address;
                 cmd.Parameters.Add(add);
-              
+
+                SendNotificationToAdmin(ocr.UserAccountNo,ocr.change,ocr.type);
+
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
                 da.Fill(dt);
                 //[Mobileotp] ,[Emailotp]
@@ -362,6 +365,8 @@ namespace Paysmart.Controllers
                 //    throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.OK, ex.Message));
                 //}
                 //Verify mobile otp
+                SendNotificationToAdmin(ocr.Mobilenumber, ocr.change, ocr.type);
+
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "MOTPverifications successful....");
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
                 da.Fill(dt);
@@ -382,6 +387,131 @@ namespace Paysmart.Controllers
 
         }
 
+        //[HttpGet]
+        //[Route("api/BusinessAppUser/SendNotificationToAdmin")]
+        //public int SendNotificationToAdmin(string accountnumber, int change,int type)
+        public int SendNotificationToAdmin(string accountnumber, int change,int type)
+        {
+            DataTable dt = new DataTable();
+            SqlConnection conn = new SqlConnection();
+            string accountType = "";
+
+            switch (change) {
+                case 109:
+                    accountType = "Driver";
+                    break;
+                case 110:
+                    accountType = "Fleet Owner";
+                    break;
+                case 149:
+                    accountType = "Ticket Agent";
+                    break;
+                case 150:
+                    accountType = "Brand Ambassador";
+                    break;
+                case 151:
+                    accountType = "Business Owner";
+                    break;                
+                case 2:
+                    accountType = "Vehicle";
+                    break;
+            }
+
+            conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+
+            SqlCommand cmd = new SqlCommand();
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.CommandText = "GetConfigurationData";
+            cmd.Connection = conn;
+
+            SqlParameter gsaa = new SqlParameter();
+            gsaa.ParameterName = "@includeEmailType";
+            gsaa.SqlDbType = SqlDbType.Int;
+            gsaa.Value = type;
+            cmd.Parameters.Add(gsaa);
+            //call the types sp by passing a type group id
+            //get the list of email addresses
+            SqlDataAdapter db = new SqlDataAdapter(cmd);
+            db.Fill(dt);
+
+
+            #region Mobile OTP
+            string email = "";          
+            for (int i = 0; i < dt.Rows.Count; i++)
+            {
+                email += dt.Rows[i]["Name"].ToString()+",";
+            }
+            string emaillist=Regex.Replace(email, @"(,)\z", "");
+            try
+                {
+                    MailMessage mail = new MailMessage();
+                    string emailserver = System.Configuration.ConfigurationManager.AppSettings["emailserver"].ToString();
+
+                    string username = System.Configuration.ConfigurationManager.AppSettings["username"].ToString();
+                    string pwd = System.Configuration.ConfigurationManager.AppSettings["password"].ToString();
+                    string fromaddress = System.Configuration.ConfigurationManager.AppSettings["fromaddress"].ToString();
+                    string port = System.Configuration.ConfigurationManager.AppSettings["port"].ToString();
+
+                    SmtpClient SmtpServer = new SmtpClient(emailserver);
+
+                    mail.From = new MailAddress(fromaddress);
+                mail.To.Add(emaillist);
+                    mail.Subject = "" + accountType + @" registration Notification - next action awaited.";
+                    mail.IsBodyHtml = true;
+
+
+
+                    string verifcodeMail = @"<table>
+                                                        <tr>
+                                                            <td>
+                                                                <h2>"+ accountType + @" registration Notification - next action awaited.</h2>
+                                                                <table width=\""760\"" align=\""center\"">
+                                                                    <tbody style='background-color:#F0F8FF;'>
+                                                                        <tr>
+                                                                            <td style=\""font-family:'Zurich BT',Arial,Helvetica,sans-serif;font-size:15px;text-align:left;line-height:normal;background-color:#F0F8FF;\"" >
+<div style='padding:10px;border:#0000FF solid 2px;'>    <br /><br />
+                                                                             
+                                                       A new " + accountType + @" is registred successfully. Please verify and approve as needed.
+                                                      
+
+                                                                                <br/>
+                                                                                <br/>             
+                                                                       
+                                                                                Warm regards,<br>
+                                                                                PAYSMART Administrator<br/><br />
+</div>
+                                                                            </td>
+                                                                        </tr>
+
+                                                                    </tbody>
+                                                                </table>
+                                                            </td>
+                                                        </tr>
+
+                                                    </table>";
+
+
+                    mail.Body = verifcodeMail;
+                    //SmtpServer.Port = 465;
+                    //SmtpServer.Port = 587;
+                    SmtpServer.Port = Convert.ToInt32(port);
+                    SmtpServer.UseDefaultCredentials = false;
+
+                    SmtpServer.Credentials = new System.Net.NetworkCredential(username, pwd);
+                    SmtpServer.EnableSsl = true;
+                    //SmtpServer.TargetName = "STARTTLS/smtp.gmail.com";
+                    SmtpServer.Send(mail);
+
+                }
+                catch (Exception ex)
+                {
+                    //throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+                }
+           
+            #endregion Mobile OTP
+
+            return 1;
+        }
 
         [HttpPost]
         [Route("api/BusinessAppUser/BusinessAppUserEOTPVerification")]
@@ -443,7 +573,7 @@ namespace Paysmart.Controllers
                 //    throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.OK, ex.Message));
                 //}
                 //Verify mobile otp
-
+                SendNotificationToAdmin(ocr.Mobilenumber, ocr.change, ocr.type);
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "EOTPVerification successful....");
                 //statustbl = GetStatusTbl("200", "Success");
                 //ds.Tables.Add(statustbl);
