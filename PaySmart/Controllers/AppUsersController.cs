@@ -9,7 +9,8 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Tracing;
-using System.Text; 
+using System.Text;
+using Paysmart.Helpers;
 
 namespace Paysmart.Controllers
 {
@@ -19,6 +20,7 @@ namespace Paysmart.Controllers
         [Route("api/AppUsers/AppUserDetails")]
         public DataTable GetUserById(int id)
         {
+
             DataTable dt = new DataTable();
             DataSet ds = new DataSet();
             LogTraceWriter traceWriter = new LogTraceWriter();
@@ -60,6 +62,9 @@ namespace Paysmart.Controllers
                 dr[0] = "ERR001";
                 dr[1] = ex.Message;
                 dt.Rows.Add(dr);
+
+                //throw new Exception("dddd");
+                //throw new ApiException((int)HttpStatusCode.BadRequest, "bad requsetst", HttpStatusCode.ExpectationFailed, "Bad Request...");
             }
             finally
             {
