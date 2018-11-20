@@ -1,5 +1,4 @@
-﻿using Paysmart.ActionFilters;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
@@ -22,10 +21,7 @@ namespace Paysmart
                 defaults: new { id = RouteParameter.Optional }
             );
 
-            //  config.Services.Replace(typeof(ITraceWriter), new LogTraceWriter());
-
-            config.Filters.Add(new LoggingFilterAttribute());
-            config.Filters.Add(new GlobalExceptionAttribute());
+            config.Services.Replace(typeof(ITraceWriter), new LogTraceWriter());
         }
     }
 }
