@@ -125,29 +125,28 @@ namespace Paysmart.Controllers
 
         [HttpGet]
         [Route("api/VehicleMaster/GetVehcileList")]
-        public DataTable GetVehcileList()
+        public DataTable GetVehcileList(int ctryId, int fid, int vgId)
         {
             DataTable dt = new DataTable();
-
-            SqlConnection conn = new SqlConnection();
             LogTraceWriter traceWriter = new LogTraceWriter();
-
+            SqlConnection conn = new SqlConnection();
             try
-            {
+            { 
 
-            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetVehcileList....");
+
             conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.CommandText = "PSGetVehicleList";
             cmd.Connection = conn;
-
+            cmd.Parameters.Add("@ctryId", SqlDbType.Int).Value = ctryId;
+            cmd.Parameters.Add("@fleetId", SqlDbType.Int).Value = fid;
+            cmd.Parameters.Add("@vgId", SqlDbType.Int).Value = vgId;
             SqlDataAdapter db = new SqlDataAdapter(cmd);
             db.Fill(dt);
-
             traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetVehcileList successful....");
-            }
+        }
           catch (Exception ex)
           {
               traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "GetVehcileList...." + ex.Message.ToString());
@@ -156,7 +155,7 @@ namespace Paysmart.Controllers
               dt.Columns.Add("Code");
               dt.Columns.Add("description");
               DataRow dr = dt.NewRow();
-              dr[0] = "ERR001";
+        dr[0] = "ERR001";
               dr[1] = ex.Message;
               dt.Rows.Add(dr);
           }

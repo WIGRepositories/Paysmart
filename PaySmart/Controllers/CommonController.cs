@@ -407,6 +407,58 @@ namespace Paysmart.Controllers
 
         }
 
+        [HttpGet]
+        [Route("api/Common/GetCountry")]
+        public DataTable GetCountry(int active)
+        {
+            DataTable Tbl = new DataTable();
+            SqlConnection conn = new SqlConnection();
+            LogTraceWriter traceWriter = new LogTraceWriter();
+            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetCountry ...");
+
+            try
+            {
+
+                //connect to database
+               
+                //connetionString="Data Source=ServerName;Initial Catalog=DatabaseName;User ID=UserName;Password=Password"
+                conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = "GetCountry";
+                cmd.Connection = conn;
+                SqlParameter a = new SqlParameter("@active", SqlDbType.Int);
+                a.Value = active;
+                cmd.Parameters.Add(a);
+                DataSet ds = new DataSet();
+                SqlDataAdapter db = new SqlDataAdapter(cmd);
+                db.Fill(ds);
+                Tbl = ds.Tables[0];
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetCountry completed.");
+            }
+            catch (Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetCountry completed." + ex.Message.ToString());
+                //throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+                Tbl.Columns.Add("Code");
+                Tbl.Columns.Add("description");
+                DataRow dr = Tbl.NewRow();
+                dr[0] = "ERR001";
+                dr[1] = ex.Message;
+                Tbl.Rows.Add(dr);
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
+            }
+            // int found = 0;
+            return Tbl;
+        }
+
 
     }
 }

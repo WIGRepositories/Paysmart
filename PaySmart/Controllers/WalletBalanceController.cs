@@ -113,38 +113,45 @@ namespace Paysmart.Controllers
                 SqlParameter em = new SqlParameter("@Amount", SqlDbType.Decimal);
                 em.Value = A.Amount;
                 cmd.Parameters.Add(em);
-
+            
 
                 SqlParameter St = new SqlParameter("@StatusId", SqlDbType.Int);
                 St.Value = A.Status;
                 cmd.Parameters.Add(St);
-          
-           
-            SqlDataAdapter da = new SqlDataAdapter(cmd);
+
+                Payengine.Controllers.Payengine e = new Payengine.Controllers.Payengine();
+                string transId = e.ProcessPayment();
+
+                SqlParameter St1 = new SqlParameter("@GatewayTransId", SqlDbType.VarChar);
+                St1.Value = transId;
+                cmd.Parameters.Add(St1);
+
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
             da.Fill(dt);
 
-            #region Email OTP
-            string eotp = dt.Rows[0]["Amount"].ToString();
-            if (eotp != null)
-            {
-                try
+                #region Email OTP
+
+                string eotp = dt.Rows[0]["Amount"].ToString();
+                if (eotp != null)
                 {
-                    MailMessage mail = new MailMessage();
-                    string emailserver = System.Configuration.ConfigurationManager.AppSettings["emailserver"].ToString();
+                    try
+                    {
+                        MailMessage mail = new MailMessage();
+                        string emailserver = System.Configuration.ConfigurationManager.AppSettings["emailserver"].ToString();
 
-                    string username = System.Configuration.ConfigurationManager.AppSettings["username"].ToString();
-                    string pwd = System.Configuration.ConfigurationManager.AppSettings["password"].ToString();
-                    string fromaddress = System.Configuration.ConfigurationManager.AppSettings["fromaddress"].ToString();
-                    string port = System.Configuration.ConfigurationManager.AppSettings["port"].ToString();
+                        string username = System.Configuration.ConfigurationManager.AppSettings["username"].ToString();
+                        string pwd = System.Configuration.ConfigurationManager.AppSettings["password"].ToString();
+                        string fromaddress = System.Configuration.ConfigurationManager.AppSettings["fromaddress"].ToString();
+                        string port = System.Configuration.ConfigurationManager.AppSettings["port"].ToString();
 
-                    SmtpClient SmtpServer = new SmtpClient(emailserver);
+                        SmtpClient SmtpServer = new SmtpClient(emailserver);
 
-                    mail.From = new MailAddress(fromaddress);
-                    mail.To.Add(fromaddress);
-                    mail.Subject = "Balance";
-                    mail.IsBodyHtml = true;
+                        mail.From = new MailAddress(fromaddress);
+                        mail.To.Add(fromaddress);
+                        mail.Subject = "Balance";
+                        mail.IsBodyHtml = true;
 
-                    string verifcodeMail = @"<table>
+                        string verifcodeMail = @"<table>
                                                         <tr>
                                                             <td>
                                                                 <h2>Thank you for registering with PaySmart APP</h2>
@@ -175,32 +182,32 @@ namespace Paysmart.Controllers
                                                     </table>";
 
 
-                    mail.Body = verifcodeMail;
-                    //SmtpServer.Port = 465;
-                    //SmtpServer.Port = 587;
-                    SmtpServer.Port = Convert.ToInt32(port);
-                    SmtpServer.UseDefaultCredentials = false;
+                        mail.Body = verifcodeMail;
+                        //SmtpServer.Port = 465;
+                        //SmtpServer.Port = 587;
+                        SmtpServer.Port = Convert.ToInt32(port);
+                        SmtpServer.UseDefaultCredentials = false;
 
-                    SmtpServer.Credentials = new System.Net.NetworkCredential(username, pwd);
-                    SmtpServer.EnableSsl = true;
-                    //SmtpServer.TargetName = "STARTTLS/smtp.gmail.com";
-                    SmtpServer.Send(mail);
+                        SmtpServer.Credentials = new System.Net.NetworkCredential(username, pwd);
+                        SmtpServer.EnableSsl = true;
+                        //SmtpServer.TargetName = "STARTTLS/smtp.gmail.com";
+                        SmtpServer.Send(mail);
 
+                    }
+                    catch (Exception ex)
+                    {
+                        //throw ex;
+                        //throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+                        dt.Columns.Add("Code");
+                        dt.Columns.Add("description");
+                        DataRow dr = dt.NewRow();
+                        dr[0] = "ERR001";
+                        dr[1] = ex.Message;
+                        dt.Rows.Add(dr);
+                    }
                 }
-                catch (Exception ex)
-                {
-                    //throw ex;
-                    //throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
-                    dt.Columns.Add("Code");
-                    dt.Columns.Add("description");
-                    DataRow dr = dt.NewRow();
-                    dr[0] = "ERR001";
-                    dr[1] = ex.Message;
-                    dt.Rows.Add(dr);
-                }
-            }
-            #endregion Email OTP
-            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "WalletBalance successful....");
+                #endregion Email OTP
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "WalletBalance successful....");
             }
             catch (Exception ex)
             {
