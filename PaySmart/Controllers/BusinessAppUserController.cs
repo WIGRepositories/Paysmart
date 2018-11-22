@@ -319,7 +319,7 @@ namespace Paysmart.Controllers
             {
 
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "MOTPverifications....");
-                str.Append("Mobilenumber:" + ocr.Mobilenumber + ",");
+                str.Append("Mobilenumber:" + ocr.UserAccountNo + ",");
                 str.Append("Mobileotp:" + ocr.Email + ",");
 
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
@@ -334,8 +334,8 @@ namespace Paysmart.Controllers
                 cmd.Connection = conn;
 
 
-                SqlParameter q1 = new SqlParameter("@Mobilenumber", SqlDbType.VarChar, 20);
-                q1.Value = ocr.Mobilenumber;
+                SqlParameter q1 = new SqlParameter("@UserAccountNo", SqlDbType.VarChar, 20);
+                q1.Value = ocr.UserAccountNo;
                 cmd.Parameters.Add(q1);
 
                 SqlParameter uu = new SqlParameter("@UserId", SqlDbType.VarChar, 20);
@@ -1125,6 +1125,70 @@ namespace Paysmart.Controllers
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "Get Business App User...." + ex.Message.ToString());
                 //throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+                dt.Columns.Add("Code");
+                dt.Columns.Add("description");
+                DataRow dr = dt.NewRow();
+                dr[0] = "ERR001";
+                dr[1] = ex.Message;
+                dt.Rows.Add(dr);
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
+            }
+            return dt;
+        }
+
+        [HttpPost]
+        [Route("api/BusinessAppUser/BusinessAppUserResendOTP")]
+        public DataTable ResendOtp(BusinessAppUser ocr)
+        {
+            int Status = 0;
+            DataTable dt = new DataTable();
+            LogTraceWriter traceWriter = new LogTraceWriter();
+            SqlConnection conn = new SqlConnection();
+            StringBuilder str = new StringBuilder();
+
+            try
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "ResendOTP....");
+                str.Append("UserAccountNo:" + ocr.UserAccountNo + ",");
+                // str.Append("Email:" + ocr.Email + ",");
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
+
+                conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = "PSInsUpdDelBusinessUserResendOTP";
+
+                cmd.Connection = conn;
+
+                SqlParameter c = new SqlParameter("@UserAccountNo", SqlDbType.VarChar, 20);
+                c.Value = ocr.UserAccountNo;
+                cmd.Parameters.Add(c);
+
+                SqlParameter chag = new SqlParameter("@change", SqlDbType.Int);
+                chag.Value = ocr.change;
+                cmd.Parameters.Add(chag);
+
+                SqlDataAdapter ds = new SqlDataAdapter(cmd);
+                ds.Fill(dt);
+                
+                string eotp = dt.Rows[0]["Emailotp"].ToString();
+                string motp = dt.Rows[0]["passwordotp"].ToString();
+                string emailAddrss = dt.Rows[0]["Email"].ToString();
+                
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "ResendOTP successful....");
+
+            }
+            catch (Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "ResendOTP...." + ex.Message.ToString());
+                // throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.OK, ex.Message));
                 dt.Columns.Add("Code");
                 dt.Columns.Add("description");
                 DataRow dr = dt.NewRow();
