@@ -32,7 +32,7 @@ namespace Paysmart.Controllers
                 conn.ConnectionString = ConfigurationManager.ConnectionStrings["btposdb"].ToString();
                 SqlCommand cmd = new SqlCommand();
                 cmd.CommandType = CommandType.StoredProcedure;
-                cmd.CommandText = "HVGetTripsHistory";
+                cmd.CommandText = "HVTripsList";
                 cmd.Connection = conn;
                 cmd.Parameters.Add("@PhoneNo", SqlDbType.VarChar, 20).Value = DriverNo;
                 cmd.Parameters.Add("@status", SqlDbType.Int).Value = status;
