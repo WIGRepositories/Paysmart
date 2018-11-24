@@ -118,6 +118,59 @@ namespace Paysmart.Controllers
             return dt;
         }
 
+        [Route("api/AppUsers/AppUserDetailsUseracountno")]
+        public DataTable GetUserById1(string UserAccountNo)
+        {
+            DataTable dt = new DataTable();
+            DataSet ds = new DataSet();
+            LogTraceWriter traceWriter = new LogTraceWriter();
+            SqlConnection conn = new SqlConnection(); try
+            {
+                conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+                SqlCommand cmd = new SqlCommand();
+
+                SqlParameter UId = new SqlParameter("@UserAccountNo", SqlDbType.VarChar,20);
+                UId.Value = UserAccountNo;
+                cmd.Parameters.Add(UId);
+
+                cmd.Connection = conn;
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = "PSGetAppUserdetails";
+                SqlDataAdapter sda = new SqlDataAdapter(cmd);
+                sda.Fill(ds);
+                dt = ds.Tables[0];
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "AppUserDetails successful....");
+                StringBuilder str = new StringBuilder();
+                str.Append("@id:" + UserAccountNo + ",");
+
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "AppUserDetails Input sent...." + str.ToString());
+
+                if (dt.Rows.Count > 0)
+                    traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "AppUserDetails Output...." + dt.Rows[0].ToString());
+                else
+                    traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "AppUserDetails Output....App User ");
+            }
+            catch (Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "AppUserDetails failed...." + ex.Message.ToString());
+                //throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+                dt.Columns.Add("Code");
+                dt.Columns.Add("description");
+                DataRow dr = dt.NewRow();
+                dr[0] = "ERR001";
+                dr[1] = ex.Message;
+                dt.Rows.Add(dr);
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
+            }
+            return dt;
+        }
         [HttpPost]
         [Route("api/UserAccount/UpdateAppUser")]
         public DataTable RegisterUser(UserAccount ocr)
