@@ -19,6 +19,105 @@ namespace Paysmart.Controllers
     public class PaymentController : ApiController
     {
 
+
+        [HttpPost]
+        [Route("api/Payment/SaveCardsGroup")]
+        public DataTable SaveCardsGroup(CardsGroup cg)
+        {
+            LogTraceWriter traceWriter = new LogTraceWriter();
+            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "SaveVehicleGroups credentials....");
+            DataTable dt = new DataTable();
+            SqlConnection conn = new SqlConnection();
+
+            try
+            {
+                conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = "InsUpdCardsGroup";
+                cmd.Connection = conn;
+
+                    conn.Open();
+                
+                    SqlParameter cgCardNumber = new SqlParameter("@CardNumber", SqlDbType.VarChar);
+                    cgCardNumber.Value = cg.CardNumber;
+                    cmd.Parameters.Add(cgCardNumber);
+
+                    SqlParameter cgCardModel = new SqlParameter();
+                    cgCardModel.ParameterName = "@CardModel";
+                    cgCardModel.SqlDbType = SqlDbType.VarChar;
+                    cgCardModel.Value = cg.CardModel;
+                    cmd.Parameters.Add(cgCardModel);
+
+                    SqlParameter cgCardType = new SqlParameter();
+                    cgCardType.ParameterName = "@CardType";
+                    cgCardType.SqlDbType = SqlDbType.VarChar;
+                    cgCardType.Value = cg.CardType;
+                    cmd.Parameters.Add(cgCardType);
+
+                    SqlParameter cgCardCategory = new SqlParameter();
+                    cgCardCategory.ParameterName = "@CardCategory";
+                    cgCardCategory.SqlDbType = SqlDbType.VarChar;
+                    cgCardCategory.Value = cg.CardCategory;
+                    cmd.Parameters.Add(cgCardCategory);
+
+                    SqlParameter cgStatusId = new SqlParameter();
+                    cgStatusId.ParameterName = "@StatusId";
+                    cgStatusId.SqlDbType = SqlDbType.VarChar;
+                    cgStatusId.Value = cg.Status;
+                    cmd.Parameters.Add(cgStatusId);
+
+                    SqlParameter cgUserId = new SqlParameter();
+                    cgUserId.ParameterName = "@UserId";
+                    cgUserId.SqlDbType = SqlDbType.Int;
+                    cgUserId.Value = cg.UserId;
+                    cmd.Parameters.Add(cgUserId);
+
+                    SqlParameter cgCustomer = new SqlParameter();
+                    cgCustomer.ParameterName = "@Customer";
+                    cgCustomer.SqlDbType = SqlDbType.VarChar;
+                    cgCustomer.Value = cg.Customer;
+                    cmd.Parameters.Add(cgCustomer);
+
+                    SqlParameter cgEffectiveFrom = new SqlParameter();
+                    cgEffectiveFrom.ParameterName = "@EffectiveFrom";
+                    cgEffectiveFrom.SqlDbType = SqlDbType.DateTime;
+                    cgEffectiveFrom.Value = cg.EffectiveFrom;
+                    cmd.Parameters.Add(cgEffectiveFrom);
+
+                    SqlParameter cgEffectiveTo = new SqlParameter();
+                    cgEffectiveTo.ParameterName = "@EffectiveTo";
+                    cgEffectiveTo.SqlDbType = SqlDbType.DateTime;
+                    cgEffectiveTo.Value = cg.EffectiveTo;
+                    cmd.Parameters.Add(cgEffectiveTo);
+
+                    SqlParameter insupdflag1 = new SqlParameter("@insupdflag", SqlDbType.VarChar, 1);
+                    insupdflag1.Value = cg.insupdflag;
+                    cmd.Parameters.Add(insupdflag1);
+
+                    SqlDataAdapter db = new SqlDataAdapter(cmd);
+                    db.Fill(dt);
+
+                conn.Close();
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "SaveCardGroups Credentials completed.");
+               
+            }
+            catch (Exception ex)
+            {
+                if (conn != null && conn.State == ConnectionState.Open)
+                {
+                    conn.Close();
+                }
+
+                string str = ex.Message;
+                traceWriter.Trace(Request, "1", TraceLevel.Info, "{0}", "Error in SaveCardsGroups:" + ex.Message);
+                ///return Request.CreateErrorResponse(HttpStatusCode.NotFound, ex);
+              
+            }
+            return dt;
+        }
+
         [HttpGet]
         [Route("api/Payment/Getpayment")]
         public DataTable Getpayment()

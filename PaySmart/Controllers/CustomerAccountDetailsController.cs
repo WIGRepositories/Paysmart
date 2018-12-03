@@ -16,7 +16,7 @@ namespace Paysmart.Controllers
 {
     public class CustomerAccountDetailsController : ApiController
     {
-
+       
         [HttpGet]
         [Route("api/CustomerAccountDetails/GetCustomerAccount")]
         public DataTable GetCustomerAccount(int userid)
