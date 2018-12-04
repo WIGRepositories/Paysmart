@@ -16,6 +16,8 @@ namespace Paysmart.Controllers
 {
     public class BusinessAppUserController : ApiController
     {
+
+
         [HttpPost]
         [Route("api/BusinessAppUser/RegisterBusinessAppUser")]
         public DataTable RegisterBusinessAppUser(BusinessAppUser ocr)
