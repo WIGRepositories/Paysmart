@@ -1287,6 +1287,7 @@ namespace Paysmart.Models
         public DateTime? EffectiveFrom { get; set; }
         public DateTime? EffectiveTo { get; set; }
         public string insupdflag { get; set; }
+       
     }
 }
 

@@ -126,6 +126,12 @@ namespace Paysmart.Controllers
                 cgUserId.Value = cg.UserId;
                 cmd.Parameters.Add(cgUserId);
 
+                SqlParameter id1 = new SqlParameter();
+                id1.ParameterName = "@Id";
+                id1.SqlDbType = SqlDbType.Int;
+                id1.Value = cg.Id;
+                cmd.Parameters.Add(id1);
+
                 SqlParameter cgCustomer = new SqlParameter();
                 cgCustomer.ParameterName = "@Customer";
                 cgCustomer.SqlDbType = SqlDbType.VarChar;
