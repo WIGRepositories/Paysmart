@@ -11,12 +11,218 @@ using System.Web.Http;
 using System.Web.Http.Tracing;
 using System.Text;
 using System.Net.Mail;
+using System.Configuration;
 
 namespace Paysmart.Controllers
 {
     public class AppUsersController : ApiController
     {
+        [HttpGet]
+        [Route("api/AppUsers/CustomersCardsList")]
+        public DataTable GetCardlistById(int UserId)
+        {
+            DataTable dt = new DataTable();
+            DataSet ds = new DataSet();
+            LogTraceWriter traceWriter = new LogTraceWriter();
+            SqlConnection conn = new SqlConnection(); try
+            {
+                conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+                SqlCommand cmd = new SqlCommand();
 
+                SqlParameter UId = new SqlParameter("@UserId", SqlDbType.Int);
+                UId.Value = UserId;
+                cmd.Parameters.Add(UId);
+
+                cmd.Connection = conn;
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = "GetAppUserCardList";
+                SqlDataAdapter sda = new SqlDataAdapter(cmd);
+                sda.Fill(ds);
+                dt = ds.Tables[0];
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "AppUserDetails successful....");
+                StringBuilder str = new StringBuilder();
+                str.Append("@UserId:" + UserId + ",");
+
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "AppUserDetails Input sent...." + str.ToString());
+
+                if (dt.Rows.Count > 0)
+                    traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "AppUserDetails Output...." + dt.Rows[0].ToString());
+                else
+                    traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "AppUserDetails Output....App User ");
+            }
+            catch (Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "AppUserDetails failed...." + ex.Message.ToString());
+                //throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+                dt.Columns.Add("Code");
+                dt.Columns.Add("description");
+                DataRow dr = dt.NewRow();
+                dr[0] = "ERR001";
+                dr[1] = ex.Message;
+                dt.Rows.Add(dr);
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
+            }
+            return dt;
+        }
+
+        [HttpPost]
+        [Route("api/AppUsers/SaveCards")]
+        public DataTable SaveCardsGroup(CardsGroup cg)
+        {
+            LogTraceWriter traceWriter = new LogTraceWriter();
+            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "SaveVehicleGroups credentials....");
+            DataTable dt = new DataTable();
+            SqlConnection conn = new SqlConnection();
+
+            try
+            {
+                conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = "InsUpdAppuserCard";
+                cmd.Connection = conn;
+
+                conn.Open();
+
+                SqlParameter cgCardNumber = new SqlParameter("@CardNumber", SqlDbType.VarChar);
+                cgCardNumber.Value = cg.CardNumber;
+                cmd.Parameters.Add(cgCardNumber);
+
+                SqlParameter cgCardModel = new SqlParameter();
+                cgCardModel.ParameterName = "@CardModel";
+                cgCardModel.SqlDbType = SqlDbType.VarChar;
+                cgCardModel.Value = cg.CardModel;
+                cmd.Parameters.Add(cgCardModel);
+
+                SqlParameter cgCardType = new SqlParameter();
+                cgCardType.ParameterName = "@CardType";
+                cgCardType.SqlDbType = SqlDbType.VarChar;
+                cgCardType.Value = cg.CardType;
+                cmd.Parameters.Add(cgCardType);
+
+                SqlParameter cgCardCategory = new SqlParameter();
+                cgCardCategory.ParameterName = "@CardCategory";
+                cgCardCategory.SqlDbType = SqlDbType.VarChar;
+                cgCardCategory.Value = cg.CardCategory;
+                cmd.Parameters.Add(cgCardCategory);
+
+                SqlParameter cgStatusId = new SqlParameter();
+                cgStatusId.ParameterName = "@StatusId";
+                cgStatusId.SqlDbType = SqlDbType.VarChar;
+                cgStatusId.Value = cg.Status;
+                cmd.Parameters.Add(cgStatusId);
+
+                SqlParameter cgUserId = new SqlParameter();
+                cgUserId.ParameterName = "@UserId";
+                cgUserId.SqlDbType = SqlDbType.Int;
+                cgUserId.Value = cg.UserId;
+                cmd.Parameters.Add(cgUserId);
+
+                SqlParameter id1 = new SqlParameter();
+                id1.ParameterName = "@Id";
+                id1.SqlDbType = SqlDbType.Int;
+                id1.Value = cg.Id;
+                cmd.Parameters.Add(id1);
+
+                SqlParameter cgCustomer = new SqlParameter();
+                cgCustomer.ParameterName = "@Customer";
+                cgCustomer.SqlDbType = SqlDbType.VarChar;
+                cgCustomer.Value = cg.Customer;
+                cmd.Parameters.Add(cgCustomer);
+
+                SqlParameter cgEffectiveFrom = new SqlParameter();
+                cgEffectiveFrom.ParameterName = "@EffectiveFrom";
+                cgEffectiveFrom.SqlDbType = SqlDbType.DateTime;
+                cgEffectiveFrom.Value = cg.EffectiveFrom;
+                cmd.Parameters.Add(cgEffectiveFrom);
+
+                SqlParameter cgEffectiveTo = new SqlParameter();
+                cgEffectiveTo.ParameterName = "@EffectiveTo";
+                cgEffectiveTo.SqlDbType = SqlDbType.DateTime;
+                cgEffectiveTo.Value = cg.EffectiveTo;
+                cmd.Parameters.Add(cgEffectiveTo);
+
+                SqlParameter insupdflag1 = new SqlParameter("@insupdflag", SqlDbType.VarChar, 1);
+                insupdflag1.Value = cg.insupdflag;
+                cmd.Parameters.Add(insupdflag1);
+
+                SqlDataAdapter db = new SqlDataAdapter(cmd);
+                db.Fill(dt);
+
+                conn.Close();
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "SaveCardGroups Credentials completed.");
+
+            }
+            catch (Exception ex)
+            {
+                if (conn != null && conn.State == ConnectionState.Open)
+                {
+                    conn.Close();
+                }
+
+                string str = ex.Message;
+                traceWriter.Trace(Request, "1", TraceLevel.Info, "{0}", "Error in SaveCardsGroups:" + ex.Message);
+                ///return Request.CreateErrorResponse(HttpStatusCode.NotFound, ex);
+
+            }
+            return dt;
+        }
+
+        [HttpGet]
+        [Route("api/Driverlogin/GetCustomertrips")]
+        public DataTable Getdrivertrips(string custNo, int status)
+        {
+            DataTable dt = new DataTable();
+            LogTraceWriter traceWriter = new LogTraceWriter();
+            SqlConnection conn = new SqlConnection();
+
+            try
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Getdrivertrips....");
+                StringBuilder str = new StringBuilder();
+                str.Append("@PhoneNo" + custNo + ",");
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Getdrivertrips Input sent...." + str.ToString());
+                conn.ConnectionString = ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = "PSCustomerTripsList";
+                cmd.Connection = conn;
+                cmd.Parameters.Add("@PhoneNo", SqlDbType.VarChar, 20).Value = custNo;
+                cmd.Parameters.Add("@status", SqlDbType.Int).Value = status;
+                SqlDataAdapter db = new SqlDataAdapter(cmd);
+                db.Fill(dt);
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Getdrivertrips successful....");
+
+            }
+            catch (Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "Getdrivertrips...." + ex.Message.ToString());
+                //throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+                dt.Columns.Add("Code");
+                dt.Columns.Add("description");
+                DataRow dr = dt.NewRow();
+                dr[0] = "ERR001";
+                dr[1] = ex.Message;
+                dt.Rows.Add(dr);
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
+            }
+            return dt;
+
+        }
         [Route("api/AppUsers/AppUserDetails")]
         public DataTable GetUserById(int id)
         {
@@ -71,6 +277,59 @@ namespace Paysmart.Controllers
             return dt;
         }
 
+        [Route("api/AppUsers/AppUserDetailsUseracountno")]
+        public DataTable GetUserById1(string UserAccountNo)
+        {
+            DataTable dt = new DataTable();
+            DataSet ds = new DataSet();
+            LogTraceWriter traceWriter = new LogTraceWriter();
+            SqlConnection conn = new SqlConnection(); try
+            {
+                conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+                SqlCommand cmd = new SqlCommand();
+
+                SqlParameter UId = new SqlParameter("@UserAccountNo", SqlDbType.VarChar,20);
+                UId.Value = UserAccountNo;
+                cmd.Parameters.Add(UId);
+
+                cmd.Connection = conn;
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = "PSGetAppUserdetails";
+                SqlDataAdapter sda = new SqlDataAdapter(cmd);
+                sda.Fill(ds);
+                dt = ds.Tables[0];
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "AppUserDetails successful....");
+                StringBuilder str = new StringBuilder();
+                str.Append("@id:" + UserAccountNo + ",");
+
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "AppUserDetails Input sent...." + str.ToString());
+
+                if (dt.Rows.Count > 0)
+                    traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "AppUserDetails Output...." + dt.Rows[0].ToString());
+                else
+                    traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "AppUserDetails Output....App User ");
+            }
+            catch (Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "AppUserDetails failed...." + ex.Message.ToString());
+                //throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+                dt.Columns.Add("Code");
+                dt.Columns.Add("description");
+                DataRow dr = dt.NewRow();
+                dr[0] = "ERR001";
+                dr[1] = ex.Message;
+                dt.Rows.Add(dr);
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
+            }
+            return dt;
+        }
         [HttpPost]
         [Route("api/UserAccount/UpdateAppUser")]
         public DataTable RegisterUser(UserAccount ocr)

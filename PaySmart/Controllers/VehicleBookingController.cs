@@ -122,9 +122,9 @@ namespace Paysmart.Controllers
                 p.Value = b.PackageId;
                 cmd.Parameters.Add(p);
 
-                //SqlParameter pa = new SqlParameter("@Pricing", SqlDbType.Decimal);
-                //pa.Value = b.Pricing;
-                //cmd.Parameters.Add(pa);
+                SqlParameter pa = new SqlParameter("@Pricing", SqlDbType.Decimal);
+                pa.Value = b.Pricing;
+                cmd.Parameters.Add(pa);
 
                 //SqlParameter di = new SqlParameter("@DriverId", SqlDbType.Int);
                 //di.Value = b.DriverId;
