@@ -85,9 +85,9 @@ namespace Paysmart.Models
 
     public class BusinessAppUser
     {
-        public int Id { get; set; }
+        //public int Id { get; set; }
         public string flag { get; set; }
-        public int id { get; set; }
+        //public int id { get; set; }
         public int userId { get; set; }
         public string Username { get; set; }
 

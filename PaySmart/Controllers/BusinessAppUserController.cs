@@ -31,7 +31,7 @@ namespace Paysmart.Controllers
 
                 str.Append("Mobilenumber:" + ocr.Mobilenumber + ",");
                 str.Append("Email:" + ocr.Email + ",");
-                str.Append("Username:" + ocr.Username + ",");
+                //str.Append("UserPhoto:" + ocr.UserPhoto + ",");
 
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
 
@@ -96,7 +96,7 @@ namespace Paysmart.Controllers
                 cts.Value = ocr.CurrentStateId;
                 cmd.Parameters.Add(cts);
 
-                SqlParameter pd = new SqlParameter("@UserPhoto", SqlDbType.VarChar, 50);
+                SqlParameter pd = new SqlParameter("@UserPhoto", SqlDbType.VarChar,-1);
                 pd.Value = ocr.UserPhoto;
                 cmd.Parameters.Add(pd);
 
@@ -128,7 +128,9 @@ namespace Paysmart.Controllers
                 add.Value = ocr.Address;
                 cmd.Parameters.Add(add);
 
+                if (ocr.flag != 'U'.ToString()) { 
                 SendNotificationToAdmin(ocr.UserAccountNo,ocr.change,ocr.type);
+                }
 
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
                 da.Fill(dt);
