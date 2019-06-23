@@ -8,7 +8,7 @@ using System.Net.Http;
 using System.Web.Http;
 using Paysmart.Models;
 using System.Web.Http.Tracing;
-using Paysmart.Models;
+using System.Text;
 
 namespace Paysmart.Controllers
 {
@@ -20,36 +20,73 @@ namespace Paysmart.Controllers
         {
             DataTable Tbl = new DataTable();
 
-           
-
-
-            //connect to database
+            LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
-            //connetionString="Data Source=ServerName;Initial Catalog=DatabaseName;User ID=UserName;Password=Password"
-            conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+            StringBuilder str = new StringBuilder();
 
-            SqlCommand cmd = new SqlCommand();
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.CommandText = "PSValidatecred";
+            try
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "ValidateCredentials....");
+                str.Append("UserAccountNo:" + u.UserAccountNo + ",");
+                str.Append("Password:" + u.Password + ",");                
 
-            cmd.Connection = conn;
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
+                //connetionString="Data Source=ServerName;Initial Catalog=DatabaseName;User ID=UserName;Password=Password"
+                conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
-            SqlParameter lUserName = new SqlParameter("@Mobilenumber", SqlDbType.VarChar, 20);
-            lUserName.Value = u.Mobilenumber;
-            lUserName.Direction = ParameterDirection.Input;
-            cmd.Parameters.Add(lUserName);
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = "PSValidatecred";
+
+                cmd.Connection = conn;
+
+                //SqlParameter lUserName = new SqlParameter("@Mobilenumber", SqlDbType.VarChar, 20);
+                //lUserName.Value = u.Mobilenumber;
+                //lUserName.Direction = ParameterDirection.Input;
+                //cmd.Parameters.Add(lUserName);
+
+                SqlParameter lUserName = new SqlParameter("@UserAccountNo", SqlDbType.VarChar, 20);
+                lUserName.Value = u.UserAccountNo;
+                lUserName.Direction = ParameterDirection.Input;
+                cmd.Parameters.Add(lUserName);
 
 
-            SqlParameter lPassword = new SqlParameter("@Password", SqlDbType.VarChar, 50);
-            lPassword.Value = u.Password;
-            lPassword.Direction = ParameterDirection.Input;
-            cmd.Parameters.Add(lPassword);
-            //System.Threading.Thread.Sleep(10000);
-            SqlDataAdapter da = new SqlDataAdapter(cmd);
-            da.Fill(Tbl);
+                SqlParameter lPassword = new SqlParameter("@Password", SqlDbType.VarChar, 50);
+                lPassword.Value = u.Password;
+                lPassword.Direction = ParameterDirection.Input;
+                cmd.Parameters.Add(lPassword);
+                //System.Threading.Thread.Sleep(10000);              
+
+                SqlParameter cnty = new SqlParameter("@CountryId", SqlDbType.Int);
+                cnty.Value = u.CountryId;
+                cnty.Direction = ParameterDirection.Input;
+                cmd.Parameters.Add(cnty);
+                //System.Threading.Thread.Sleep(10000);
+
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
 
 
+                da.Fill(Tbl);
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "ValidateCredentials successful....");
 
+            }
+            catch (Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "ValidateCredentials...." + ex.Message.ToString());
+                //throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+                Tbl.Columns.Add("Code");
+                Tbl.Columns.Add("description");
+                DataRow dr = Tbl.NewRow();
+                dr[0] = "ERR001";
+                dr[1] = ex.Message;
+                Tbl.Rows.Add(dr);
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
+            }
             return Tbl;
 
         }
@@ -103,7 +140,7 @@ namespace Paysmart.Controllers
         //        }
         //        traceWriter.Trace(Request, "1", TraceLevel.Info, "{0}", "Error during retrive password:." + ex.Message);
         //        // return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex);
-        //        throw ex;
+        //        throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
         //    }
 
         //}

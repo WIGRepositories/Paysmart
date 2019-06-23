@@ -20,6 +20,7 @@
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
     <TargetFrameworkProfile />
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -30,6 +31,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -42,14 +44,16 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Device" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
@@ -62,12 +66,12 @@
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Helpers, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Web.Http, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.3\lib\net45\System.Web.Http.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System.Web.Http.WebHost, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.3\lib\net45\System.Web.Http.WebHost.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
@@ -82,38 +86,77 @@
     <Content Include="css\pagenewtheme.css" />
     <Content Include="css\parentcss.css" />
     <Content Include="css\themeredcss.css" />
+    <Content Include="DBScripts\DBScripts_SProcs.sql" />
+    <Content Include="DBScripts\DBScripts_Tables.sql" />
     <Content Include="DBScripts\SProcs.sql" />
+    <Content Include="DBScripts\Stops.sql" />
     <Content Include="DBScripts\Tables.sql" />
     <Content Include="Global.asax" />
     <Content Include="js\button.js" />
     <Content Include="UI\Email.html" />
+    <Content Include="UI\EmailTemplates\1.txt" />
+    <Content Include="UI\EmailTemplates\TicketFormat.html" />
     <Content Include="UI\images\phone.jpg" />
     <Content Include="UI\js\angular.js" />
+    <Content Include="UI\js\LogViewer.js" />
     <Content Include="UI\js\Registration.js" />
     <Content Include="UI\js\UserInfo.js" />
+    <Content Include="UI\LogViewer.html" />
     <Content Include="UI\Registration.html" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\allocatedriverController.cs" />
+    <Compile Include="Controllers\AppUsersController.cs" />
     <Compile Include="Controllers\AvailableSeatsController.cs" />
+    <Compile Include="Controllers\BusinessAppUserController.cs" />
+    <Compile Include="Controllers\CommonController.cs" />
+    <Compile Include="Controllers\CustomerAccountDetailsController.cs" />
+    <Compile Include="Controllers\FleetOwnerLicenseController.cs" />
+    <Compile Include="Controllers\LicenseController.cs" />
+    <Compile Include="Controllers\LicensePricingController.cs" />
+    <Compile Include="Controllers\MeteredTaxiController.cs" />
+    <Compile Include="Controllers\SOSMessageController.cs" />
+    <Compile Include="Controllers\SOSNumberController.cs" />
+    <Compile Include="Controllers\TransactionController.cs" />
+    <Compile Include="Controllers\UserLicensePymtTransactionsController.cs" />
+    <Compile Include="Controllers\UserLicensesController.cs" />
+    <Compile Include="Controllers\VehicleBookingController.cs" />
+    <Compile Include="Controllers\DriverProfileController.cs" />
+    <Compile Include="Controllers\TaxiPriceController.cs" />
+    <Compile Include="Controllers\TaxiSrcDestController.cs" />
+    <Compile Include="Controllers\WalletBalanceController.cs" />
     <Compile Include="Controllers\BookAVehicleController.cs" />
+    <Compile Include="Controllers\BookedHistoryController.cs" />
     <Compile Include="Controllers\BookingHistoryController.cs" />
     <Compile Include="Controllers\CancelBookingController.cs" />
+    <Compile Include="Controllers\CancellationController.cs" />
     <Compile Include="Controllers\ChangePwdController.cs" />
+    <Compile Include="Controllers\CurrentLocationDetailsController.cs" />
+    <Compile Include="Controllers\CustomerTripController.cs" />
+    <Compile Include="Controllers\DriverChangePwdController.cs" />
+    <Compile Include="Controllers\DriverForgotpasswordController.cs" />
+    <Compile Include="Controllers\DriverloginController.cs" />
     <Compile Include="Controllers\DriverMasterController.cs" />
+    <Compile Include="Controllers\DriverTripController.cs" />
     <Compile Include="Controllers\Email.cs" />
     <Compile Include="Controllers\EOTPverficationController.cs" />
     <Compile Include="Controllers\FaqsController.cs" />
     <Compile Include="Controllers\ForgotpasswordController.cs" />
+    <Compile Include="Controllers\HourBasedPricingController.cs" />
     <Compile Include="Controllers\MVerificationController.cs" />
-    <Compile Include="Controllers\nearestvehiclesController.cs" />
     <Compile Include="Controllers\PasswordverificationController.cs" />
+    <Compile Include="Controllers\PaymentDetailsController.cs" />
     <Compile Include="Controllers\prebookController.cs" />
     <Compile Include="Controllers\prebookingdetailsController.cs" />
     <Compile Include="Controllers\pricedetailsController.cs" />
+    <Compile Include="Controllers\RateTheTripController.cs" />
+    <Compile Include="Controllers\RegisterDriverController.cs" />
     <Compile Include="Controllers\ResetPwdController.cs" />
+    <Compile Include="Controllers\SendBookingRequestToDriver.cs" />
     <Compile Include="Controllers\TicketBookingController.cs" />
     <Compile Include="Controllers\loginController.cs">
       <SubType>Code</SubType>
@@ -125,12 +168,18 @@
     <Compile Include="Controllers\StopsController.cs" />
     <Compile Include="Controllers\TicketController.cs" />
     <Compile Include="Controllers\travelstartController.cs" />
+    <Compile Include="Controllers\UpdateBookingRequestController.cs" />
+    <Compile Include="Controllers\UpdatePaymentController.cs" />
     <Compile Include="Controllers\UsercardsController.cs" />
     <Compile Include="Controllers\UserInfoController.cs" />
     <Compile Include="Controllers\UserlocationController.cs" />
     <Compile Include="Controllers\UserpreferencesController.cs" />
+    <Compile Include="Controllers\VehicleDistPricingController.cs" />
+    <Compile Include="Controllers\VehicleloginController.cs" />
+    <Compile Include="Controllers\VehicleLogoutController.cs" />
     <Compile Include="Controllers\VehicleMasterController.cs" />
     <Compile Include="Controllers\vehicletypesController.cs" />
+    <Compile Include="Controllers\WalletTransDetailsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -150,6 +199,24 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Messages.Core\Messages.Core.csproj">
+      <Project>{8f9026ec-0a9c-4c6b-b73c-7ec77b83ea7c}</Project>
+      <Name>Messages.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Messages.Licensing\Messages.Licensing.csproj">
+      <Project>{363851ec-dacd-47bb-ab2e-79cb7e74e0c3}</Project>
+      <Name>Messages.Licensing</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Messages.Postbridge\Messages.Postbridge.csproj">
+      <Project>{769665ba-888e-4c5f-85d9-01980f8d5f55}</Project>
+      <Name>Messages.Postbridge</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Payengine\Payengine.csproj">
+      <Project>{f0d4c2f0-fb0e-4584-a67d-153906c70028}</Project>
+      <Name>Payengine</Name>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
@@ -161,7 +228,7 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>True</UseIIS>
+          <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>2341</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>

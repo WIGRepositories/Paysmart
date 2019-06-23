@@ -1,0 +1,22 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+</head>
+<body ng-app="myApp" ng-controller="myCtrl">
+    <div style="height:500px" ng-init="GetFileContent();">
+        <h4> current time is : {{currTime}}</h4>
+        <button ng-click="GetFileContent();">Refresh</button>
+        <!--<ng-include src=test></ng-include>-->
+        <!--<div> <pre ng-include src=test></pre> 
+            <pre ng-include> {{test}}</pre>
+        </div>-->
+      
+
+        <pre ng-include src=test></pre>
+
+    </div>
+    <script src="js/angular.js"></script>
+    <script src="js/LogViewer.js"></script>
+</body>
+</html>

@@ -7,6 +7,8 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using Paysmart.Models;
+using System.Web.Http.Tracing;
+using System.Text;
 
 namespace Paysmart.Controllers
 {
@@ -17,59 +19,79 @@ namespace Paysmart.Controllers
         [Route("api/Passenger/PsngrDetails")]
         public DataTable PsngrDetails(passenger y)
         {
-            SqlConnection conn = new SqlConnection();
-
-            conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
-
-            SqlCommand cmd = new SqlCommand();
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.CommandText = "PSsp_InsPassengerDetails";
-
-            cmd.Connection = conn;
-
-          
-
-            SqlParameter q = new SqlParameter("@Fname", SqlDbType.VarChar, 30);
-            q.Value = y.Fname;
-            cmd.Parameters.Add(q);
-
-            SqlParameter q1 = new SqlParameter("@Lname", SqlDbType.VarChar, 30);
-            q1.Value = y.Lname;
-            cmd.Parameters.Add(q1);
-
-            SqlParameter e = new SqlParameter("@Age", SqlDbType.Int);
-            e.Value = y.Age;
-            cmd.Parameters.Add(e);
-
-            SqlParameter c = new SqlParameter("@Sex", SqlDbType.Int);
-            c.Value = y.Sex;
-            cmd.Parameters.Add(c);
-
-            SqlParameter b = new SqlParameter("@datetime", SqlDbType.VarChar,30);
-            b.Value = y.datetime;
-            cmd.Parameters.Add(b);
-
-            SqlParameter p = new SqlParameter("@Pnr_Id", SqlDbType.Int);
-            p.Value = y.Pnr_Id;
-            cmd.Parameters.Add(p);
-
-            SqlParameter m = new SqlParameter("@Pnr_No", SqlDbType.VarChar, 20);
-            m.Value = y.Pnr_No;
-            cmd.Parameters.Add(m);
-
-            SqlParameter t = new SqlParameter("@Identityproof", SqlDbType.VarChar,30);
-            t.Value = y.Identityproof;
-            cmd.Parameters.Add(t);
-
-
-
-
-
-
             DataTable dt = new DataTable();
-            SqlDataAdapter da = new SqlDataAdapter(cmd);
-            da.Fill(dt);
+            LogTraceWriter traceWriter = new LogTraceWriter();
+            SqlConnection conn = new SqlConnection();
+            StringBuilder str = new StringBuilder();
 
+            try
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "PsngrDetails....");
+
+                str.Append("Fname:" + y.Fname + ",");
+                str.Append("Pnr_No:" + y.Pnr_No + ",");
+                str.Append("Identityproof:" + y.Identityproof + ",");
+                str.Append("Sex:" + y.Sex + ",");
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
+
+                conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = "PSsp_InsPassengerDetails";
+
+                cmd.Connection = conn;
+
+
+
+                SqlParameter q = new SqlParameter("@Fname", SqlDbType.VarChar, 30);
+                q.Value = y.Fname;
+                cmd.Parameters.Add(q);
+
+                SqlParameter q1 = new SqlParameter("@Lname", SqlDbType.VarChar, 30);
+                q1.Value = y.Lname;
+                cmd.Parameters.Add(q1);
+
+                SqlParameter e = new SqlParameter("@Age", SqlDbType.Int);
+                e.Value = y.Age;
+                cmd.Parameters.Add(e);
+
+                SqlParameter c = new SqlParameter("@Sex", SqlDbType.Int);
+                c.Value = y.Sex;
+                cmd.Parameters.Add(c);
+
+                SqlParameter b = new SqlParameter("@datetime", SqlDbType.VarChar, 30);
+                b.Value = y.datetime;
+                cmd.Parameters.Add(b);
+
+                SqlParameter p = new SqlParameter("@Pnr_Id", SqlDbType.Int);
+                p.Value = y.Pnr_Id;
+                cmd.Parameters.Add(p);
+
+                SqlParameter m = new SqlParameter("@Pnr_No", SqlDbType.VarChar, 20);
+                m.Value = y.Pnr_No;
+                cmd.Parameters.Add(m);
+
+                SqlParameter t = new SqlParameter("@Identityproof", SqlDbType.VarChar, 30);
+                t.Value = y.Identityproof;
+                cmd.Parameters.Add(t);
+
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(dt);
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "PsngrDetails successful....");
+
+            }
+            catch (Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "PsngrDetails...." + ex.Message.ToString());
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
+            }
             return (dt);
 
             //Verify Passwordotp

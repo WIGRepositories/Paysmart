@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Mail;
 using System.Web.Http;
+using System.Web.Http.Tracing;
 
 namespace Paysmart.Controllers
 {
@@ -13,8 +14,12 @@ namespace Paysmart.Controllers
 
         public void sendMail()
         {
+            
+            LogTraceWriter traceWriter = new LogTraceWriter();
+            
             try
             {
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "sendMail....");
                 MailMessage mail = new MailMessage();
                 string emailserver = System.Configuration.ConfigurationManager.AppSettings["emailserver"].ToString();
                 string username = System.Configuration.ConfigurationManager.AppSettings["username"].ToString();
@@ -38,14 +43,16 @@ namespace Paysmart.Controllers
                 SmtpServer.EnableSsl = true;
                 //SmtpServer.TargetName = "STARTTLS/smtp.gmail.com";
                 SmtpServer.Send(mail);
-
-
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "sendMail successful....");
 
             }
             catch (Exception ex)
             {
-                throw ex;
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "sendMail...." + ex.Message.ToString());
+               throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.OK, ex.Message));
+                
             }
+           
         }
     }
 }

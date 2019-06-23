@@ -8,6 +8,9 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using Paysmart.Models;
+using System.Web.Http.Tracing;
+using System.Net.Mail;
+using System.Text;
 namespace Paysmart.Controllers
 {
     public class VehicleMasterController : ApiController
@@ -17,173 +20,653 @@ namespace Paysmart.Controllers
         [Route("api/VehicleMaster/GetVehcileMaster")]
         public DataTable GetVehcileMaster(int VID)
         {
-            DataTable dt = new DataTable();
-
+            LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
+            StringBuilder str = new StringBuilder();
+            DataTable dt = new DataTable();
+            try
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetVehcileMaster....");
+                str.Append("VID:" + VID + ",");
+                
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
+
+
+                conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = "PSgetvehilcetypes";
+                cmd.Parameters.Add("@VID", SqlDbType.Int).Value = VID;
+                cmd.Connection = conn;
+                DataSet ds = new DataSet();
+                SqlDataAdapter db = new SqlDataAdapter(cmd);
+                db.Fill(ds);
+                dt = ds.Tables[0];
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetVehcileMaster successful....");
+            }
+            catch (Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "GetVehcileMaster...." + ex.Message.ToString());
+                //throw ex;
+                //throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+                dt.Columns.Add("Code");
+                dt.Columns.Add("description");
+                DataRow dr = dt.NewRow();
+                dr[0] = "ERR001";
+                dr[1] = ex.Message;
+                dt.Rows.Add(dr);
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
+            }
+            return dt;
+
+        }
+
+        [HttpGet]
+        [Route("api/VehicleMaster/GetVehicleApproval")]
+        public DataTable GetVehicleApproval(String RegNo)
+        {
+            DataTable dt = new DataTable();
+            LogTraceWriter traceWriter = new LogTraceWriter();
+            SqlConnection conn = new SqlConnection();
+            StringBuilder str = new StringBuilder();
+
+          try
+            {
+            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetVehicleApproval....");
+            str.Append("RegistrationNo:" + RegNo + ",");
+           
+
+            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
 
             conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = CommandType.StoredProcedure;
-            cmd.CommandText = "PSgetvehilcetypes";
-            cmd.Parameters.Add("@VID", SqlDbType.Int).Value = VID;
+            cmd.CommandText = "PSGetVehicleApproval";
+
+            cmd.Parameters.Add("@RegistrationNo", SqlDbType.VarChar).Value = RegNo;
             cmd.Connection = conn;
             DataSet ds = new DataSet();
             SqlDataAdapter db = new SqlDataAdapter(cmd);
             db.Fill(ds);
             dt = ds.Tables[0];
 
+            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetVehicleApproval successful....");
+            }
+          catch (Exception ex)
+          {
+              traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "GetVehicleApproval...." + ex.Message.ToString());
+              //throw ex;
+              //throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+              dt.Columns.Add("Code");
+              dt.Columns.Add("description");
+              DataRow dr = dt.NewRow();
+              dr[0] = "ERR001";
+              dr[1] = ex.Message;
+              dt.Rows.Add(dr);
+          }
+          finally
+          {
+              conn.Close();
+              conn.Dispose();
+              SqlConnection.ClearPool(conn);
+          }
+
             return dt;
 
         }
-        [HttpPost]
-        [Route("api/VehicleMaster/Vehicles")]
 
-        public DataTable Vehicles(vehicledetails v)
+
+        [HttpGet]
+        [Route("api/VehicleMaster/GetVehcileList")]
+        public DataTable GetVehcileList(int ctryId, int fid, int vgId)
         {
+            DataTable dt = new DataTable();
+            LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
+            try
+            { 
 
-            conn.ConnectionString = ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+
+            conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = CommandType.StoredProcedure;
-            cmd.CommandText = "HVVehicles";
+            cmd.CommandText = "PSGetVehicleList";
             cmd.Connection = conn;
-
-            SqlParameter s = new SqlParameter("@SrNo", SqlDbType.Int);
-            s.Value = v.SrNo;
-            cmd.Parameters.Add(s);
-
-
-            SqlParameter i = new SqlParameter("@VID", SqlDbType.Int);
-            i.Value = v.VID;
-            cmd.Parameters.Add(i);
-
-            SqlParameter n = new SqlParameter("@RegistrationNo", SqlDbType.VarChar, 50);
-            n.Value = v.RegistrationNo;
-            cmd.Parameters.Add(n);
-
-            SqlParameter r = new SqlParameter("@Type", SqlDbType.VarChar, 50);
-            r.Value = v.Type;
-            cmd.Parameters.Add(r);
-
-
-
-            SqlParameter a = new SqlParameter("@OwnerName", SqlDbType.VarChar, 50);
-            a.Value = v.OwnerName;
-            cmd.Parameters.Add(a);
-
-            SqlParameter sn = new SqlParameter("@ChasisNo", SqlDbType.VarChar, 50);
-            sn.Value = v.ChasisNo;
-            cmd.Parameters.Add(sn);
-
-            SqlParameter f = new SqlParameter("@Engineno", SqlDbType.VarChar, 50);
-            f.Value = v.Engineno;
-            cmd.Parameters.Add(f);
-
-            SqlParameter g = new SqlParameter("@WirelessFleetNo", SqlDbType.VarChar, 50);
-            g.Value = v.WirelessFleetNo;
-            cmd.Parameters.Add(g);
-
-            SqlParameter h = new SqlParameter("@AllotmentType", SqlDbType.VarChar, 50);
-            h.Value = v.AllotmentType;
-            cmd.Parameters.Add(h);
-
-            SqlParameter j = new SqlParameter("@RoadNo", SqlDbType.VarChar,50);
-            j.Value = v.RoadNo;
-            cmd.Parameters.Add(j);
-
-            SqlParameter k = new SqlParameter("@RoadTaxDate", System.Data.SqlDbType.Date);
-            k.Value = v.RoadTaxDate;
-            cmd.Parameters.Add(k);
-
-            SqlParameter y = new SqlParameter("@InsuranceNo", SqlDbType.VarChar,50);
-            y.Value = v.InsuranceNo;
-            cmd.Parameters.Add(y);
-
-            SqlParameter r1 = new SqlParameter("@InsDate", System.Data.SqlDbType.Date);
-            r1.Value = v.InsDate;
-            cmd.Parameters.Add(r1);
-
-            SqlParameter t = new SqlParameter("@PolutionNo", SqlDbType.VarChar, 50);
-            t.Value = v.PolutionNo;
-            cmd.Parameters.Add(t);
-
-            SqlParameter u = new SqlParameter("@PolExpDate", System.Data.SqlDbType.Date);
-            u.Value = v.PolExpDate;
-            cmd.Parameters.Add(u);
-
-            SqlParameter o = new SqlParameter("@RCBookNo", SqlDbType.VarChar, 50);
-            o.Value = v.RCBookNo;
-            cmd.Parameters.Add(o);
-
-            SqlParameter p = new SqlParameter("@RCExpDate", System.Data.SqlDbType.Date);
-            p.Value = v.RCExpDate;
-            cmd.Parameters.Add(p);
-
-            SqlParameter jw = new SqlParameter("@CompanyVechile", SqlDbType.Int);
-            jw.Value = v.CompanyVechile;
-            cmd.Parameters.Add(jw);
-
-            SqlParameter wj = new SqlParameter("@OwnerPhoneNo", SqlDbType.VarChar, 50);
-            wj.Value = v.OwnerPhoneNo;
-            cmd.Parameters.Add(wj);
-
-            SqlParameter wh = new SqlParameter("@HomeLandmark", SqlDbType.VarChar, 50);
-            wh.Value = v.HomeLandmark;
-            cmd.Parameters.Add(wh);
-
-            SqlParameter wg = new SqlParameter("@ModelYear", System.Data.SqlDbType.Date);
-            wg.Value = v.ModelYear;
-            cmd.Parameters.Add(wg);
-
-            SqlParameter wf = new SqlParameter("@DayOnly", SqlDbType.VarChar, 50);
-            wf.Value = v.DayOnly;
-            cmd.Parameters.Add(wf);
-
-            SqlParameter wd = new SqlParameter("@DayNight", SqlDbType.VarChar, 50);
-            wd.Value = v.DayNight;
-            cmd.Parameters.Add(wd);
-
-            SqlParameter wa = new SqlParameter("@InsProvider", SqlDbType.VarChar, 50);
-            wa.Value = v.InsProvider;
-            cmd.Parameters.Add(wa);
-
-            SqlParameter ca = new SqlParameter("@VechMobileNo", SqlDbType.VarChar, 50);
-            ca.Value = v.VechMobileNo;
-            cmd.Parameters.Add(ca);
-
-            SqlParameter ws = new SqlParameter("@EntryDate", System.Data.SqlDbType.Date);
-            ws.Value = v.EntryDate;
-            cmd.Parameters.Add(ws);
-
-            SqlParameter wsd = new SqlParameter("@NewEntry", SqlDbType.VarChar, 50);
-            wsd.Value = v.NewEntry;
-            cmd.Parameters.Add(wsd);
-
-            SqlParameter ww = new SqlParameter("@AirPortCab", SqlDbType.VarChar, 50);
-            ww.Value = v.AirPortCab;
-            cmd.Parameters.Add(ww);
-
-            SqlParameter wq = new SqlParameter("@deletedVech", SqlDbType.VarChar, 50);
-            wq.Value = v.deletedVech;
-            cmd.Parameters.Add(wq);
-
-            SqlParameter wm = new SqlParameter("@Carrier", SqlDbType.VarChar, 50);
-            wm.Value = v.Carrier;
-            cmd.Parameters.Add(wm);
-
-            SqlParameter mw = new SqlParameter("@PayGroup", SqlDbType.VarChar, 50);
-            mw.Value = v.PayGroup;
-            cmd.Parameters.Add(mw);
-
-
-          
-
-            DataTable dt = new DataTable();
-            SqlDataAdapter da = new SqlDataAdapter(cmd);
-            da.Fill(dt);
-
+            cmd.Parameters.Add("@ctryId", SqlDbType.Int).Value = ctryId;
+            cmd.Parameters.Add("@fleetId", SqlDbType.Int).Value = fid;
+            cmd.Parameters.Add("@vgId", SqlDbType.Int).Value = vgId;
+            SqlDataAdapter db = new SqlDataAdapter(cmd);
+            db.Fill(dt);
+            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetVehcileList successful....");
+        }
+          catch (Exception ex)
+          {
+              traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "GetVehcileList...." + ex.Message.ToString());
+              //throw ex;
+              //throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+              dt.Columns.Add("Code");
+              dt.Columns.Add("description");
+              DataRow dr = dt.NewRow();
+        dr[0] = "ERR001";
+              dr[1] = ex.Message;
+              dt.Rows.Add(dr);
+          }
+          finally
+          {
+              conn.Close();
+              conn.Dispose();
+              SqlConnection.ClearPool(conn);
+          }
             return dt;
         }
+
+        [HttpGet]
+        [Route("api/VehicleMaster/GetVehicleDetails")]
+        public DataSet GetVehicleDetails(int VID)
+        {
+            LogTraceWriter traceWriter = new LogTraceWriter();
+            SqlConnection conn = new SqlConnection();
+            StringBuilder str = new StringBuilder();
+            DataSet dt = new DataSet();
+            try
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetVehicleDetails....");
+
+                str.Append("VID:" + VID + ",");
+
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
+
+
+                conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = "PSgetvehicleDetails";
+                cmd.Parameters.Add("@VID", SqlDbType.Int).Value = VID;
+                cmd.Connection = conn;
+                
+                SqlDataAdapter db = new SqlDataAdapter(cmd);
+                db.Fill(dt);
+               
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetVehicleDetails successful....");
+            }
+            catch (Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "GetVehicleDetails...." + ex.Message.ToString());
+                //throw ex;
+                //throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.OK, ex.Message));
+
+                DataTable dt1 = new DataTable();
+                dt1.Columns.Add("Code");
+                dt1.Columns.Add("description");
+                DataRow dr = dt1.NewRow();
+                dr[0] = "ERR001";
+                dr[1] = ex.Message;
+                dt1.Rows.Add(dr);
+
+                dt.Tables.Add(dt1);
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
+            }
+            return dt;
+
+        }
+
+        [HttpPost]
+        [Route("api/VehicleMaster/VehicleCreation")]
+        public DataTable VehicleCreation(vehicledetails v)
+        {
+            LogTraceWriter traceWriter = new LogTraceWriter();
+            SqlConnection conn = new SqlConnection();
+            StringBuilder str = new StringBuilder();
+            DataTable dt = new DataTable();
+            try
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Vehicles....");
+
+                str.Append("RegistrationNo:" + v.RegistrationNo + ",");
+                str.Append("VehicleGroupId:" + v.VehicleGroupId + ",");
+                str.Append("Country:" + v.CountryId + ",");
+                str.Append("FleetOwnerId:" + v.FleetOwnerCode + ",");
+                str.Append("VehicleType:" + v.VehicleTypeId + ",");
+                str.Append("VehicleCode:" + v.VehicleCode + ",");
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
+
+                conn.ConnectionString = ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = "HVInsUpdVehicles";
+                cmd.Connection = conn;
+
+
+                SqlParameter se = new SqlParameter("@flag", SqlDbType.VarChar);
+                se.Value = v.flag;
+                cmd.Parameters.Add(se);
+
+                SqlParameter s = new SqlParameter("@Id", SqlDbType.Int);
+                s.Value = v.Id;
+                cmd.Parameters.Add(s);
+
+                SqlParameter i = new SqlParameter("@VID", SqlDbType.Int);
+                i.Value = v.VID;
+                cmd.Parameters.Add(i);
+
+                SqlParameter cd = new SqlParameter("@CompanyId", SqlDbType.Int);
+                cd.Value = v.CompanyId;
+                cmd.Parameters.Add(cd);
+
+                SqlParameter n = new SqlParameter("@RegistrationNo", SqlDbType.VarChar, 50);
+                n.Value = v.RegistrationNo;
+                cmd.Parameters.Add(n);
+
+                SqlParameter cn = new SqlParameter("@ChasisNo", SqlDbType.VarChar, 50);
+                cn.Value = v.ChasisNo;
+                cmd.Parameters.Add(cn);
+
+                SqlParameter en = new SqlParameter("@Engineno", SqlDbType.VarChar, 50);
+                en.Value = v.Engineno;
+                cmd.Parameters.Add(en);
+
+                SqlParameter oid = new SqlParameter("@FleetOwnerId", SqlDbType.Int);
+                oid.Value = v.FleetOwnerCode;
+                cmd.Parameters.Add(oid);
+
+                SqlParameter vt = new SqlParameter("@VehicleType", SqlDbType.VarChar,50);
+                vt.Value = v.VehicleTypeId;
+                cmd.Parameters.Add(vt);
+
+                SqlParameter vv = new SqlParameter("@VehicleModelId", SqlDbType.Int);
+                vv.Value = v.VehicleModelId;
+                cmd.Parameters.Add(vv);
+
+                SqlParameter vg = new SqlParameter("@VehicleGroupId", SqlDbType.VarChar,50);
+                vg.Value = v.VehicleGroupId;
+                cmd.Parameters.Add(vg);
+
+                SqlParameter wg = new SqlParameter("@ModelYear", SqlDbType.VarChar, 5);
+                wg.Value = v.ModelYear;
+                cmd.Parameters.Add(wg);
+
+                SqlParameter ac = new SqlParameter("@HasAC", SqlDbType.Int);
+                ac.Value = v.HasAC;
+                cmd.Parameters.Add(ac);
+
+                SqlParameter sid = new SqlParameter("@StatusId", SqlDbType.Int);
+                sid.Value = v.StatusId;
+                cmd.Parameters.Add(sid);
+
+                SqlParameter isv = new SqlParameter("@IsVerified", SqlDbType.Int);
+                isv.Value = v.IsVerified;
+                cmd.Parameters.Add(isv);
+
+                SqlParameter isDriverOwned = new SqlParameter("@isDriverOwned", SqlDbType.Int);
+                isDriverOwned.Value = v.isDriverOwned;
+                cmd.Parameters.Add(isDriverOwned);
+
+
+                SqlParameter vcode = new SqlParameter("@VehicleCode ", SqlDbType.VarChar, 10);
+                vcode.Value = v.VehicleCode;
+                cmd.Parameters.Add(vcode);
+
+                SqlParameter ctr = new SqlParameter("@Country", SqlDbType.VarChar,50);
+                ctr.Value = v.CountryId;
+                cmd.Parameters.Add(ctr);
+
+                BusinessAppUserController obj = new BusinessAppUserController();
+                obj.SendNotificationToAdmin(v.RegistrationNo, v.change, v.type);
+
+                
+
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(dt);
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Vehicles successful....");
+            }
+            catch (Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "Vehicles...." + ex.Message.ToString());
+                //throw ex;
+                //throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+                dt.Columns.Add("Code");
+                dt.Columns.Add("description");
+                DataRow dr = dt.NewRow();
+                dr[0] = "ERR001";
+                dr[1] = ex.Message;
+                dt.Rows.Add(dr);
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
+            }
+            return dt;
+        }
+
+
+        [HttpPost]
+        [Route("api/VehicleMaster/SaveVehicleDoc")]
+        public int SaveVehicleDoc(VehicleDocuments vd)
+        {
+            //connect to database
+            LogTraceWriter traceWriter = new LogTraceWriter();
+            SqlConnection conn = new SqlConnection();
+            DataTable dt = new DataTable();
+            StringBuilder str = new StringBuilder();
+            int status = 1;
+            try
+            {
+
+                //connetionString="Data Source=ServerName;Initial Catalog=DatabaseName;User ID=UserName;Password=Password"
+                conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = "PSInsUpdDelVehicleDocs";
+                cmd.Connection = conn;
+
+                SqlParameter did = new SqlParameter("@Id", SqlDbType.Int);
+                did.Value = vd.Id;
+                cmd.Parameters.Add(did);
+
+                SqlParameter vId = new SqlParameter("@VehicleId", SqlDbType.Int);
+                vId.Value = vd.VehicleId;
+                cmd.Parameters.Add(vId);
+
+                SqlParameter Gid = new SqlParameter("@FileName", SqlDbType.VarChar, 100);
+                Gid.Value = vd.FileName;
+                cmd.Parameters.Add(Gid);
+
+                SqlParameter type = new SqlParameter("@DocTypeId", SqlDbType.Int);
+                type.Value = vd.DocTypeId;
+                cmd.Parameters.Add(type);
+
+                SqlParameter exp = new SqlParameter("@ExpiryDate", SqlDbType.Date);
+                exp.Value = vd.ExpiryDate;
+                cmd.Parameters.Add(exp);
+
+                SqlParameter update = new SqlParameter("@UpdatedById", SqlDbType.Int);
+                update.Value = vd.UpdatedById;
+                cmd.Parameters.Add(update);
+
+                SqlParameter due = new SqlParameter("@DueDate", SqlDbType.Date);
+                due.Value = vd.DueDate;
+                cmd.Parameters.Add(due);
+
+                SqlParameter cont = new SqlParameter("@FileContent", SqlDbType.VarChar);
+                cont.Value = vd.FileContent;
+                cmd.Parameters.Add(cont);
+
+                SqlParameter flag = new SqlParameter("@change", SqlDbType.VarChar);
+                flag.Value = vd.change;
+                cmd.Parameters.Add(flag);
+
+                SqlParameter luid = new SqlParameter("@loggedinUserId", SqlDbType.Int);
+                luid.Value = vd.loggedinUserId;
+                cmd.Parameters.Add(luid);
+
+
+                SqlParameter doc = new SqlParameter("@DocumentNo", SqlDbType.VarChar, 50);
+                doc.Value = vd.DocumentNo;
+                cmd.Parameters.Add(doc);
+
+                SqlParameter doc2 = new SqlParameter("@DocumentNo2", SqlDbType.VarChar, 50);
+                doc2.Value = vd.DocumentNo2;
+                cmd.Parameters.Add(doc2);
+
+                SqlParameter ver = new SqlParameter("@IsVerified", SqlDbType.Int);
+                ver.Value = vd.isVerified;
+                cmd.Parameters.Add(ver);
+
+                str.Append("DocTypeId:" + vd.DocTypeId + ",");
+                str.Append("Id:" + vd.Id + ",");
+                str.Append("VehicleId:" + vd.VehicleId + ",");
+                str.Append("change:" + vd.change);
+                str.Append("filename:" + vd.FileName);
+                str.Append(Environment.NewLine);
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "SaveVehicleDoc Input sent...." + str.ToString());
+
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(dt);
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "SaveVehicleDoc successful....");
+            }
+            catch(Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "SaveVehicleDoc....failed" + ex.Message.ToString());
+                //throw ex;
+                //throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+                dt.Columns.Add("Code");
+                dt.Columns.Add("description");
+                DataRow dr = dt.NewRow();
+                dr[0] = "ERR001";
+                dr[1] = ex.Message;
+                dt.Rows.Add(dr);
+            }
+            return status;
+        }
+
+        [HttpPost]
+        [Route("api/VehicleMaster/TrackVehicle")]
+
+        public DataTable TrackVehicle(vehicledetails l)
+        {
+           // int Status = 1;
+            LogTraceWriter traceWriter = new LogTraceWriter();
+            SqlConnection conn = new SqlConnection();
+            DataTable currTripList = new DataTable();
+            StringBuilder str = new StringBuilder();
+            try
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "TrackVehicle....");
+
+                str.Append("Mobilenumber:" + l.PMobNo + ",");
+                str.Append("Latitude:" + l.latitude + ",");
+                str.Append("Longitude:" + l.longitude + ",");
+                
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
+                conn.ConnectionString = ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = "PSTrackVehicleHistory";
+
+                cmd.Connection = conn;
+               
+
+                SqlParameter MobileNumber = new SqlParameter("@Mobilenumber", SqlDbType.VarChar, 50);
+                MobileNumber.Value = l.PMobNo;
+                cmd.Parameters.Add(MobileNumber);
+
+                SqlParameter Lat = new SqlParameter("@Latitude", SqlDbType.Float);
+                Lat.Value = l.latitude;
+                cmd.Parameters.Add(Lat);
+
+                SqlParameter Lng = new SqlParameter("@Longitude", SqlDbType.Float);
+                Lng.Value = l.longitude;
+                cmd.Parameters.Add(Lng);
+
+                SqlDataAdapter db = new SqlDataAdapter(cmd);
+                db.Fill(currTripList);
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "TrackVehicle successful....");                
+                
+
+                if (currTripList.Rows.Count > 0)
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "TrackVehicle Output...." + currTripList.Rows[0]["BNo"].ToString());
+                else
+                    traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "TrackVehicle Output....No bookings found");
+
+            }
+            catch (Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "TrackVehicle...." + ex.Message.ToString());
+                //throw ex;
+                //throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+                currTripList.Columns.Add("Code");
+                currTripList.Columns.Add("description");
+                DataRow dr = currTripList.NewRow();
+                dr[0] = "ERR001";
+                dr[1] = ex.Message;
+                currTripList.Rows.Add(dr);
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
+            }
+
+            return currTripList;
+        }
+
+        [HttpPost]
+        [Route("api/VehicleMaster/SaveVehicleApprovals")]
+        public DataTable SaveVehicleApprovals(Approvals a)
+        {
+            //connect to database
+            SqlConnection conn = new SqlConnection();
+            DataTable dt = new DataTable();
+            StringBuilder str = new StringBuilder();
+            LogTraceWriter traceWriter = new LogTraceWriter();
+            try
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "SaveVehicleApprovals....");
+                str.Append("RegistrationNo:" + a.RegistrationNo + ",");
+                str.Append("IsApproved:" + a.IsApproved + ",");
+                
+
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
+                //connetionString="Data Source=ServerName;Initial Catalog=DatabaseName;User ID=UserName;Password=Password"
+                conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = "PSinsupdVehicleApprovals";
+                cmd.Connection = conn;
+
+
+                SqlParameter LocationId = new SqlParameter("@Change", SqlDbType.VarChar);
+                LocationId.Value = a.change;
+                cmd.Parameters.Add(LocationId);
+
+                SqlParameter parentid = new SqlParameter("@IsApproved", SqlDbType.Int);
+                parentid.Value = a.IsApproved;
+                cmd.Parameters.Add(parentid);
+
+                SqlParameter flag = new SqlParameter("@RegistrationNo", SqlDbType.VarChar);
+                flag.Value = a.RegistrationNo;
+                cmd.Parameters.Add(flag);
+
+
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(dt);
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "SaveVehicleApprovals successful....");
+
+                #region Mobile OTP
+                string eotp = dt.Rows[0]["VehicleCode"].ToString();
+                if (eotp != null)
+                {
+                    try
+                    {
+                        MailMessage mail = new MailMessage();
+                        string emailserver = System.Configuration.ConfigurationManager.AppSettings["emailserver"].ToString();
+
+                        string username = System.Configuration.ConfigurationManager.AppSettings["username"].ToString();
+                        string pwd = System.Configuration.ConfigurationManager.AppSettings["password"].ToString();
+                        string fromaddress = System.Configuration.ConfigurationManager.AppSettings["fromaddress"].ToString();
+                        string port = System.Configuration.ConfigurationManager.AppSettings["port"].ToString();
+
+                        SmtpClient SmtpServer = new SmtpClient(emailserver);
+
+                        mail.From = new MailAddress(fromaddress);
+                        mail.To.Add(a.Email);
+                        mail.Subject = "Vehicle Registration - Email OTP";
+                        mail.IsBodyHtml = true;
+
+                        string verifcodeMail = @"<table>
+                                                        <tr>
+                                                            <td>
+                                                                <h2>Thank you for registering with PaySmart APP</h2>
+                                                                <table width=\""760\"" align=\""center\"">
+                                                                    <tbody style='background-color:#F0F8FF;'>
+                                                                        <tr>
+                                                                            <td style=\""font-family:'Zurich BT',Arial,Helvetica,sans-serif;font-size:15px;text-align:left;line-height:normal;background-color:#F0F8FF;\"" >
+<div style='padding:10px;border:#0000FF solid 2px;'>    <br /><br />
+                                                                             
+                                                       Your Vehicle is Approved:<h3>" + eotp + @" </h3>
+
+                                                        If you didn't make this request, <a href='http://154.120.237.198:52800'>click here</a> to cancel.
+
+                                                                                <br/>
+                                                                                <br/>             
+                                                                       
+                                                                                Warm regards,<br>
+                                                                                PAYSMART Customer Service Team<br/><br />
+</div>
+                                                                            </td>
+                                                                        </tr>
+
+                                                                    </tbody>
+                                                                </table>
+                                                            </td>
+                                                        </tr>
+
+                                                    </table>";
+
+
+                        mail.Body = verifcodeMail;
+                        //SmtpServer.Port = 465;
+                        //SmtpServer.Port = 587;
+                        SmtpServer.Port = Convert.ToInt32(port);
+                        SmtpServer.UseDefaultCredentials = false;
+
+                        SmtpServer.Credentials = new System.Net.NetworkCredential(username, pwd);
+                        SmtpServer.EnableSsl = true;
+                        //SmtpServer.TargetName = "STARTTLS/smtp.gmail.com";
+                        SmtpServer.Send(mail);
+
+                    }
+                    catch (Exception ex)
+                    {
+                        //throw ex;
+                        throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+                    }
+                }
+                #endregion Mobile OTP
+            }
+            catch (Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "SaveVehicleApprovals...." + ex.Message.ToString());
+                if (conn != null && conn.State == ConnectionState.Open)
+                {
+                    conn.Close();
+                }
+                //throw ex;
+                //throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+                dt.Columns.Add("Code");
+                dt.Columns.Add("description");
+                DataRow dr = dt.NewRow();
+                dr[0] = "ERR001";
+                dr[1] = ex.Message;
+                dt.Rows.Add(dr);
+            }
+            return dt;
+        }
+
     }
 }

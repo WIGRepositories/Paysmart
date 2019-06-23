@@ -16,7 +16,12 @@ namespace HireAVehicle.Controllers
         [Route("api/Customer/CustomerDetails")]
         public DataTable CustomerDetails(Customer y)
         {
+            LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
+            DataTable dt = new DataTable();
+            try
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "change....");
 
             conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
 
@@ -25,8 +30,6 @@ namespace HireAVehicle.Controllers
             cmd.CommandText = "HVsp_InsCustomerDetails";
 
             cmd.Connection = conn;
-
-
 
             SqlParameter q = new SqlParameter("@Fname", SqlDbType.VarChar, 30);
             q.Value = y.Fname;
@@ -60,15 +63,21 @@ namespace HireAVehicle.Controllers
             t.Value = y.Identityproof;
             cmd.Parameters.Add(t);
 
-
-
-
-
-
-            DataTable dt = new DataTable();
             SqlDataAdapter da = new SqlDataAdapter(cmd);
             da.Fill(dt);
-
+            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "change successful....");
+            }
+            catch (Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "change...." + ex.Message.ToString());
+                throw ex;
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
+            }
             return (dt);
 
             //Verify Passwordotp

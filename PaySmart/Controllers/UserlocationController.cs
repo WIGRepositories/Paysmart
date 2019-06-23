@@ -8,6 +8,8 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using Paysmart.Models;
+using System.Web.Http.Tracing;
+using System.Text;
 
 namespace Paysmart.Controllers
 {
@@ -17,9 +19,22 @@ namespace Paysmart.Controllers
         [HttpPost]
         [Route("api/UserLocation/location")]
 
-        public DataTable location(UserLocation l)
+        public DataTable location(VehicleBooking l)
         {
+             LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
+
+            StringBuilder str = new StringBuilder();
+            DataTable dt = new DataTable();
+            try
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "location....");
+
+                str.Append("Latitude:" + l.lat + ",");
+                str.Append("Longitude:" + l.lng + ",");
+                str.Append("PhoneNo:" + l.PhoneNo + ",");
+               
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
 
             conn.ConnectionString = ConfigurationManager.ConnectionStrings["btposdb"].ToString();
             SqlCommand cmd = new SqlCommand();
@@ -42,11 +57,28 @@ namespace Paysmart.Controllers
             mn.Value = l.PhoneNo;
             cmd.Parameters.Add(mn);
 
-
-            DataTable dt = new DataTable();
             SqlDataAdapter da = new SqlDataAdapter(cmd);
             da.Fill(dt);
-            
+            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "location successful....");
+            }
+            catch (Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "location...." + ex.Message.ToString());
+                //throw ex;
+                //throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+                dt.Columns.Add("Code");
+                dt.Columns.Add("description");
+                DataRow dr = dt.NewRow();
+                dr[0] = "ERR001";
+                dr[1] = ex.Message;
+                dt.Rows.Add(dr);
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
+            }
             return dt;
         }
     }
