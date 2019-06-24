@@ -285,7 +285,7 @@ namespace Paysmart.Controllers
                 oid.Value = v.FleetOwnerCode;
                 cmd.Parameters.Add(oid);
 
-                SqlParameter vt = new SqlParameter("@VehicleType", SqlDbType.VarChar,50);
+                SqlParameter vt = new SqlParameter("@VehicleType", SqlDbType.Int);
                 vt.Value = v.VehicleTypeId;
                 cmd.Parameters.Add(vt);
 
@@ -293,7 +293,7 @@ namespace Paysmart.Controllers
                 vv.Value = v.VehicleModelId;
                 cmd.Parameters.Add(vv);
 
-                SqlParameter vg = new SqlParameter("@VehicleGroupId", SqlDbType.VarChar,50);
+                SqlParameter vg = new SqlParameter("@VehicleGroupId", SqlDbType.Int);
                 vg.Value = v.VehicleGroupId;
                 cmd.Parameters.Add(vg);
 
@@ -322,7 +322,7 @@ namespace Paysmart.Controllers
                 vcode.Value = v.VehicleCode;
                 cmd.Parameters.Add(vcode);
 
-                SqlParameter ctr = new SqlParameter("@Country", SqlDbType.VarChar,50);
+                SqlParameter ctr = new SqlParameter("@Country", SqlDbType.Int);
                 ctr.Value = v.CountryId;
                 cmd.Parameters.Add(ctr);
 

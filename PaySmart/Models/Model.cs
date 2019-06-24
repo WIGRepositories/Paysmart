@@ -476,7 +476,7 @@ namespace Paysmart.Models
         public int CompanyId { get; set; }
         public int VID { get; set; }
         public string RegistrationNo { get; set; }       
-        public string VehicleTypeId { get; set; }
+        public int VehicleTypeId { get; set; }
         public string OwnerName { get; set; }
         public string ChasisNo { get; set; }
         public string Engineno { get; set; }
@@ -486,7 +486,7 @@ namespace Paysmart.Models
         public float longitude { get; set; }
         public string PMobNo { get; set; }
         public int VehicleModelId { get; set; }
-        public string VehicleGroupId { get; set; }
+        public int VehicleGroupId { get; set; }
         public string Photo { get; set; }
         public int StatusId { get; set; }
         public int FleetOwnerCode { get; set; }
@@ -494,7 +494,7 @@ namespace Paysmart.Models
         public int IsVerified { get; set; }
         public int isDriverOwned { get; set; }
         public string VehicleCode { get; set; }
-        public string CountryId { get; set; }
+        public int CountryId { get; set; }
         public int change { get; set; }
         public int type { get; set; }
     }
