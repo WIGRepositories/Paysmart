@@ -130,6 +130,10 @@ namespace Paysmart.Controllers
                 add.Value = ocr.Address;
                 cmd.Parameters.Add(add);
 
+                SqlParameter owner = new SqlParameter("@OwnerId", SqlDbType.Int);
+                owner.Value = ocr.ownerId;
+                cmd.Parameters.Add(owner);
+
                 if (ocr.flag != 'U'.ToString()) { 
                 SendNotificationToAdmin(ocr.UserAccountNo,ocr.change,ocr.type);
                 }

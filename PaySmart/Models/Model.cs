@@ -131,6 +131,7 @@ namespace Paysmart.Models
         public string Address { get; set; }
         public int change { get; set; }
         public int type { get; set; }
+        public int ownerId { get; set; }
 
     }
 
@@ -377,7 +378,7 @@ namespace Paysmart.Models
         public int VehicleGroupId { get; set; }
         public int VehicleTypeId { get; set; }
         public float Rating { get; set; }
-        public string RatedBy { get; set; }
+        public int RatedBy { get; set; }
         public string Comments { get; set; }
         public string PMobNo { get; set; }
         public float latitude { get; set; }
@@ -552,6 +553,7 @@ namespace Paysmart.Models
         public int VehicleModelId { get; set; }
         public int ServiceTypeId { get; set; }
         public int VehicleGroupId { get; set; }
+        public int fleetId { get; set; }
     }
     public class cancel
     {

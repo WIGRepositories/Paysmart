@@ -200,6 +200,11 @@ namespace Paysmart.Controllers
                 dg.Value = A.VehicleGroupId;
                 cmd.Parameters.Add(dg);
 
+
+                SqlParameter fleet = new SqlParameter("@fleetId", SqlDbType.Int);
+                fleet.Value = A.fleetId;
+                cmd.Parameters.Add(fleet);
+
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
                 da.Fill(dt);
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Getallocatedriver successful....");
