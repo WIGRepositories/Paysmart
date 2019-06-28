@@ -76,7 +76,7 @@ namespace Paysmart.Controllers
 
                         mail.From = new MailAddress(fromaddress);
                         mail.To.Add(emailAddrss);
-                        mail.Subject = "User registration - Password OTP";
+                        mail.Subject = "User Forgot Password - Password OTP";
                         mail.IsBodyHtml = true;
 
                         string verifcodeMail = @"<table>
@@ -91,7 +91,7 @@ namespace Paysmart.Controllers
                                                                              
                                                        Your email OTP is:<h3>" + potp + @" </h3>
 
-                                                        If you didn't make this request, <a href='http://154.120.237.198:52800'>click here</a> to cancel.
+                                                        
 
                                                                                 <br/>
                                                                                 <br/>             
