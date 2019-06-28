@@ -894,7 +894,8 @@ namespace Paysmart.Controllers
                 str.Append("MobileNo:" + vb.CustomerPhoneNo + ",");
                 str.Append("BNo:" + vb.BNo + ",");
                 str.Append("rating:" + vb.Rating + ",");
-               
+                str.Append("Comment:" + vb.Comments + ",");
+
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
 
             conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
@@ -906,7 +907,7 @@ namespace Paysmart.Controllers
             cmd.Parameters.Add("@BNo", SqlDbType.VarChar, 50).Value = vb.BNo;
             cmd.Parameters.Add("@rating", SqlDbType.Decimal).Value = vb.Rating;
             cmd.Parameters.Add("@RatedBy", SqlDbType.Int).Value = vb.RatedBy;
-            cmd.Parameters.Add("@Comment", SqlDbType.VarChar, 150).Value = vb.Comments;
+            cmd.Parameters.Add("@Comment", SqlDbType.VarChar, 250).Value = vb.Comments;
 
             cmd.Connection = conn;
             DataSet ds = new DataSet();

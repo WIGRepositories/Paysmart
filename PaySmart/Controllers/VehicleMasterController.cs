@@ -128,15 +128,23 @@ namespace Paysmart.Controllers
         public DataTable GetVehcileList(int ctryId, int fid, int vgId)
         {
             DataTable dt = new DataTable();
+            StringBuilder str = new StringBuilder();
             LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
             try
-            { 
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Vehicles....");
+                str.Append("ctryId:" + ctryId + ",");
+                str.Append("fleetId:" + fid + ",");
+                str.Append("vgId:" + vgId + ",");
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
+
+                conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+              
 
 
-            conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
-
-            SqlCommand cmd = new SqlCommand();
+                SqlCommand cmd = new SqlCommand();
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.CommandText = "PSGetVehicleList";
             cmd.Connection = conn;
