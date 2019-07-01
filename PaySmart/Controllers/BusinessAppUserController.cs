@@ -1,6 +1,7 @@
 ﻿using Paysmart.Models;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
@@ -110,7 +111,7 @@ namespace Paysmart.Controllers
                 ccode.Value = ocr.CCode;
                 cmd.Parameters.Add(ccode);
 
-                SqlParameter uaccno = new SqlParameter("@UserAccountNo", SqlDbType.VarChar, 15);
+                SqlParameter uaccno = new SqlParameter("@UserAccountNo", SqlDbType.VarChar, 50);
                 uaccno.Value = ocr.UserAccountNo;
                 cmd.Parameters.Add(uaccno);
 
@@ -1150,8 +1151,147 @@ namespace Paysmart.Controllers
         }
 
         [HttpPost]
-        [Route("api/BusinessAppUser/BusinessAppUserResendOTP")]
-        public DataTable ResendOtp(BusinessAppUser ocr)
+        [Route("api/BusinessAppUser/ResendEmailOtp")]
+        public DataTable ResendEmailOtp(BusinessAppUser ocr)
+        {
+            int Status = 0;
+            DataTable dt = new DataTable();
+            LogTraceWriter traceWriter = new LogTraceWriter();
+            SqlConnection conn = new SqlConnection();
+            StringBuilder str = new StringBuilder();
+
+            try
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "ResendOTP....");
+                str.Append("UserAccountNo:" + ocr.UserAccountNo + ",");
+                // str.Append("Email:" + ocr.Email + ",");
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
+
+                conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = "PSInsUpdDelBusinessUserResendOTP";
+
+                cmd.Connection = conn;
+
+                SqlParameter c = new SqlParameter("@UserAccountNo", SqlDbType.VarChar, 20);
+                c.Value = ocr.UserAccountNo;
+                cmd.Parameters.Add(c);
+
+                SqlParameter chag = new SqlParameter("@change", SqlDbType.Int);
+                chag.Value = ocr.change;
+                cmd.Parameters.Add(chag);
+
+                SqlDataAdapter ds = new SqlDataAdapter(cmd);
+                ds.Fill(dt);                
+                
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "ResendOTP successful....");
+
+                #region email opt
+                string emailAddrss = dt.Rows[0]["Email"].ToString();
+                string eotp = dt.Rows[0]["Emailotp"].ToString();
+                if (eotp != null)
+                {
+                    try
+                    {
+                        MailMessage mail = new MailMessage();
+                        string emailserver = System.Configuration.ConfigurationManager.AppSettings["emailserver"].ToString();
+
+                        string username = System.Configuration.ConfigurationManager.AppSettings["username"].ToString();
+                        string pwd = System.Configuration.ConfigurationManager.AppSettings["password"].ToString();
+                        string fromaddress = System.Configuration.ConfigurationManager.AppSettings["fromaddress"].ToString();
+                        string port = System.Configuration.ConfigurationManager.AppSettings["port"].ToString();
+
+                        SmtpClient SmtpServer = new SmtpClient(emailserver);
+
+                        mail.From = new MailAddress(fromaddress);
+                        mail.To.Add(emailAddrss);
+                        mail.Subject = "User registration - Email OTP";
+                        mail.IsBodyHtml = true;
+
+                        string verifcodeMail = @"<table>
+                                                        <tr>
+                                                            <td>
+                                                                <h2>Thank you for registering with PaySmart APP</h2>
+                                                                <table width=\""760\"" align=\""center\"">
+                                                                    <tbody style='background-color:#F0F8FF;'>
+                                                                        <tr>
+                                                                            <td style=\""font-family:'Zurich BT',Arial,Helvetica,sans-serif;font-size:15px;text-align:left;line-height:normal;background-color:#F0F8FF;\"" >
+<div style='padding:10px;border:#0000FF solid 2px;'>    <br /><br />
+                                                                             
+                                                       Your Email OTP is:<h3>" + eotp + @" </h3>
+
+                                                        If you didn't make this request, <a href='http://154.120.237.198:52800'>click here</a> to cancel.
+
+                                                                                <br/>
+                                                                                <br/>             
+                                                                       
+                                                                                Warm regards,<br>
+                                                                                PAYSMART Customer Service Team<br/><br />
+</div>
+                                                                            </td>
+                                                                        </tr>
+
+                                                                    </tbody>
+                                                                </table>
+                                                            </td>
+                                                        </tr>
+
+                                                    </table>";
+
+
+                        mail.Body = verifcodeMail;
+                        //SmtpServer.Port = 465;
+                        //SmtpServer.Port = 587;
+                        SmtpServer.Port = Convert.ToInt32(port);
+                        SmtpServer.UseDefaultCredentials = false;
+
+                        SmtpServer.Credentials = new System.Net.NetworkCredential(username, pwd);
+                        SmtpServer.EnableSsl = true;
+                        //SmtpServer.TargetName = "STARTTLS/smtp.gmail.com";
+                        SmtpServer.Send(mail);
+
+                    }
+                    catch (Exception ex)
+                    {
+                        //throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+                    }
+
+                }
+
+                //send mobile otp
+
+
+                // return dt;
+
+                #endregion email otp
+
+            }
+            catch (Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "ResendOTP...." + ex.Message.ToString());
+                // throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.OK, ex.Message));
+                dt.Columns.Add("Code");
+                dt.Columns.Add("description");
+                DataRow dr = dt.NewRow();
+                dr[0] = "ERR001";
+                dr[1] = ex.Message;
+                dt.Rows.Add(dr);
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
+            }
+            return dt;
+        }
+
+        [HttpPost]
+        [Route("api/BusinessAppUser/ResendMobileOtp")]
+        public DataTable ResendMobileOtp(BusinessAppUser ocr)
         {
             int Status = 0;
             DataTable dt = new DataTable();
@@ -1185,12 +1325,80 @@ namespace Paysmart.Controllers
 
                 SqlDataAdapter ds = new SqlDataAdapter(cmd);
                 ds.Fill(dt);
-                
-                string eotp = dt.Rows[0]["Emailotp"].ToString();
-                string motp = dt.Rows[0]["passwordotp"].ToString();
-                string emailAddrss = dt.Rows[0]["Email"].ToString();
-                
+
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "ResendOTP successful....");
+
+                #region Mobile OTP
+                string emailAddrss = dt.Rows[0]["Email"].ToString();
+                string motp = dt.Rows[0]["Mobileotp"].ToString();
+                if (motp != null)
+                {
+                    try
+                    {
+                        MailMessage mail = new MailMessage();
+                        string emailserver = System.Configuration.ConfigurationManager.AppSettings["emailserver"].ToString();
+
+                        string username = System.Configuration.ConfigurationManager.AppSettings["username"].ToString();
+                        string pwd = System.Configuration.ConfigurationManager.AppSettings["password"].ToString();
+                        string fromaddress = System.Configuration.ConfigurationManager.AppSettings["fromaddress"].ToString();
+                        string port = System.Configuration.ConfigurationManager.AppSettings["port"].ToString();
+
+                        SmtpClient SmtpServer = new SmtpClient(emailserver);
+
+                        mail.From = new MailAddress(fromaddress);
+                        mail.To.Add(emailAddrss);
+                        mail.Subject = "User registration - Mobile OTP";
+                        mail.IsBodyHtml = true;
+
+                        string verifcodeMail = @"<table>
+                                                        <tr>
+                                                            <td>
+                                                                <h2>Thank you for registering with PaySmart APP</h2>
+                                                                <table width=\""760\"" align=\""center\"">
+                                                                    <tbody style='background-color:#F0F8FF;'>
+                                                                        <tr>
+                                                                            <td style=\""font-family:'Zurich BT',Arial,Helvetica,sans-serif;font-size:15px;text-align:left;line-height:normal;background-color:#F0F8FF;\"" >
+<div style='padding:10px;border:#0000FF solid 2px;'>    <br /><br />
+                                                                             
+                                                       Your Mobile OTP is:<h3>" + motp + @" </h3>
+
+                                                        If you didn't make this request, <a href='http://154.120.237.198:52800'>click here</a> to cancel.
+
+                                                                                <br/>
+                                                                                <br/>             
+                                                                       
+                                                                                Warm regards,<br>
+                                                                                PAYSMART Customer Service Team<br/><br />
+</div>
+                                                                            </td>
+                                                                        </tr>
+
+                                                                    </tbody>
+                                                                </table>
+                                                            </td>
+                                                        </tr>
+
+                                                    </table>";
+
+
+                        mail.Body = verifcodeMail;
+                        //SmtpServer.Port = 465;
+                        //SmtpServer.Port = 587;
+                        SmtpServer.Port = Convert.ToInt32(port);
+                        SmtpServer.UseDefaultCredentials = false;
+
+                        SmtpServer.Credentials = new System.Net.NetworkCredential(username, pwd);
+                        SmtpServer.EnableSsl = true;
+                        //SmtpServer.TargetName = "STARTTLS/smtp.gmail.com";
+                        SmtpServer.Send(mail);
+
+                    }
+                    catch (Exception ex)
+                    {
+                        //throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+                    }
+                }
+                #endregion Mobile OTP
 
             }
             catch (Exception ex)
@@ -1211,6 +1419,194 @@ namespace Paysmart.Controllers
                 SqlConnection.ClearPool(conn);
             }
             return dt;
+        }
+
+        [HttpPost]
+        [Route("api/BusinessAppUser/ResendPasswordOtp")]
+        public DataTable ResendPasswordOtp(BusinessAppUser ocr)
+        {
+            int Status = 0;
+            DataTable dt = new DataTable();
+            LogTraceWriter traceWriter = new LogTraceWriter();
+            SqlConnection conn = new SqlConnection();
+            StringBuilder str = new StringBuilder();
+
+            try
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "ResendOTP....");
+                str.Append("UserAccountNo:" + ocr.UserAccountNo + ",");
+                // str.Append("Email:" + ocr.Email + ",");
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
+
+                conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = "PSInsUpdDelBusinessUserResendOTP";
+
+                cmd.Connection = conn;
+
+                SqlParameter c = new SqlParameter("@UserAccountNo", SqlDbType.VarChar, 20);
+                c.Value = ocr.UserAccountNo;
+                cmd.Parameters.Add(c);
+
+                SqlParameter chag = new SqlParameter("@change", SqlDbType.Int);
+                chag.Value = ocr.change;
+                cmd.Parameters.Add(chag);
+
+                SqlDataAdapter ds = new SqlDataAdapter(cmd);
+                ds.Fill(dt);
+
+
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "ResendOTP successful....");
+
+                #region password otp
+                string potp = dt.Rows[0]["passwordotp"].ToString();
+                string emailAddrss = dt.Rows[0]["emailAddr"].ToString();
+                if (potp != null)
+                {
+                    try
+                    {
+                        MailMessage mail = new MailMessage();
+                        string emailserver = System.Configuration.ConfigurationManager.AppSettings["emailserver"].ToString();
+
+                        string username = System.Configuration.ConfigurationManager.AppSettings["username"].ToString();
+                        string pwd = System.Configuration.ConfigurationManager.AppSettings["password"].ToString();
+                        string fromaddress = System.Configuration.ConfigurationManager.AppSettings["fromaddress"].ToString();
+                        string port = System.Configuration.ConfigurationManager.AppSettings["port"].ToString();
+
+                        SmtpClient SmtpServer = new SmtpClient(emailserver);
+
+                        mail.From = new MailAddress(fromaddress);
+                        mail.To.Add(emailAddrss);
+                        mail.Subject = "Business User registration - Password OTP";
+                        mail.IsBodyHtml = true;
+
+                        string verifcodeMail = @"<table>
+                                                        <tr>
+                                                            <td>
+                                                                <h2>Thank you for registering with PaySmart APP</h2>
+                                                                <table width=\""760\"" align=\""center\"">
+                                                                    <tbody style='background-color:#F0F8FF;'>
+                                                                        <tr>
+                                                                            <td style=\""font-family:'Zurich BT',Arial,Helvetica,sans-serif;font-size:15px;text-align:left;line-height:normal;background-color:#F0F8FF;\"" >
+<div style='padding:10px;border:#0000FF solid 2px;'>    <br /><br />
+                                                                             
+                                                       Your Password OTP is:<h3>" + potp + @" </h3>
+
+                                                        If you didn't make this request, <a href='http://154.120.237.198:52800'>click here</a> to cancel.
+
+                                                                                <br/>
+                                                                                <br/>             
+                                                                       
+                                                                                Warm regards,<br>
+                                                                                PAYSMART Customer Service Team<br/><br />
+</div>
+                                                                            </td>
+                                                                        </tr>
+
+                                                                    </tbody>
+                                                                </table>
+                                                            </td>
+                                                        </tr>
+
+                                                    </table>";
+
+
+                        mail.Body = verifcodeMail;
+                        //SmtpServer.Port = 465;
+                        //SmtpServer.Port = 587;
+                        SmtpServer.Port = Convert.ToInt32(port);
+                        SmtpServer.UseDefaultCredentials = false;
+
+                        SmtpServer.Credentials = new System.Net.NetworkCredential(username, pwd);
+                        SmtpServer.EnableSsl = true;
+                        //SmtpServer.TargetName = "STARTTLS/smtp.gmail.com";
+                        SmtpServer.Send(mail);
+                        Status = 1;
+
+                    }
+                    catch (Exception ex)
+                    {
+                        //throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+                    }
+                    finally
+                    {
+                        conn.Close();
+                    }
+                }
+                    #endregion password otp
+
+
+                }
+            catch (Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "ResendOTP...." + ex.Message.ToString());
+                // throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.OK, ex.Message));
+                dt.Columns.Add("Code");
+                dt.Columns.Add("description");
+                DataRow dr = dt.NewRow();
+                dr[0] = "ERR001";
+                dr[1] = ex.Message;
+                dt.Rows.Add(dr);
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
+            }
+            return dt;
+        }
+
+        [HttpGet]
+        [Route("api/BusinessAppUser/Getdrivertrips")]
+        public DataTable Getdrivertrips(string DriverNo, int status)
+        {
+            DataTable dt = new DataTable();
+            LogTraceWriter traceWriter = new LogTraceWriter();
+            SqlConnection conn = new SqlConnection();
+
+            try
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Getdrivertrips....");
+                StringBuilder str = new StringBuilder();
+                str.Append("@PhoneNo" + DriverNo + ",");
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Getdrivertrips Input sent...." + str.ToString());
+                conn.ConnectionString = ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = "PSDriverTripsList";
+                cmd.Connection = conn;
+                cmd.Parameters.Add("@PhoneNo", SqlDbType.VarChar, 50).Value = DriverNo;
+                cmd.Parameters.Add("@status", SqlDbType.Int).Value = status;
+                SqlDataAdapter db = new SqlDataAdapter(cmd);
+                db.Fill(dt);
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Getdrivertrips successful....");
+
+            }
+            catch (Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "Getdrivertrips...." + ex.Message.ToString());
+                //throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+                dt.Columns.Add("Code");
+                dt.Columns.Add("description");
+                DataRow dr = dt.NewRow();
+                dr[0] = "ERR001";
+                dr[1] = ex.Message;
+                dt.Rows.Add(dr);
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
+            }
+            return dt;
+
         }
     }
 }

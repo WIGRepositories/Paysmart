@@ -177,8 +177,8 @@ namespace Paysmart.Controllers
         }
 
         [HttpGet]
-        [Route("api/Driverlogin/GetCustomertrips")]
-        public DataTable Getdrivertrips(string custNo, int status)
+        [Route("api/AppUsers/GetCustomertrips")]
+        public DataTable GetCustomertrips(string custNo, int status)
         {
             DataTable dt = new DataTable();
             LogTraceWriter traceWriter = new LogTraceWriter();
@@ -186,26 +186,26 @@ namespace Paysmart.Controllers
 
             try
             {
-                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Getdrivertrips....");
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetCustomertrips....");
                 StringBuilder str = new StringBuilder();
                 str.Append("@PhoneNo" + custNo + ",");
 
-                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Getdrivertrips Input sent...." + str.ToString());
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetCustomertrips Input sent...." + str.ToString());
                 conn.ConnectionString = ConfigurationManager.ConnectionStrings["btposdb"].ToString();
                 SqlCommand cmd = new SqlCommand();
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.CommandText = "PSCustomerTripsList";
                 cmd.Connection = conn;
-                cmd.Parameters.Add("@PhoneNo", SqlDbType.VarChar, 20).Value = custNo;
+                cmd.Parameters.Add("@PhoneNo", SqlDbType.VarChar, 50).Value = custNo;
                 cmd.Parameters.Add("@status", SqlDbType.Int).Value = status;
                 SqlDataAdapter db = new SqlDataAdapter(cmd);
                 db.Fill(dt);
-                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Getdrivertrips successful....");
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "GetCustomertrips successful....");
 
             }
             catch (Exception ex)
             {
-                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "Getdrivertrips...." + ex.Message.ToString());
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "GetCustomertrips...." + ex.Message.ToString());
                 //throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
                 dt.Columns.Add("Code");
                 dt.Columns.Add("description");
