@@ -27,6 +27,7 @@ namespace Paysmart.Controllers
             LogTraceWriter traceWriter = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
             StringBuilder str = new StringBuilder();
+            SqlTransaction transaction = null;
             try
             {
 
@@ -34,7 +35,10 @@ namespace Paysmart.Controllers
 
                 str.Append("Mobilenumber:" + ocr.Mobilenumber + ",");
                 str.Append("Email:" + ocr.Email + ",");
-                //str.Append("UserPhoto:" + ocr.UserPhoto + ",");
+                str.Append("VehicleGroupId:" + ocr.VehicleGroupId + ",");
+                str.Append("VehicleTypeId:" + ocr.VehicleTypeId + ",");
+                str.Append("RegistrationNo:" + ocr.RegistrationNo + ",");
+                str.Append("CountryId:" + ocr.CountryId + ",");
 
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
 
@@ -135,12 +139,46 @@ namespace Paysmart.Controllers
                 owner.Value = ocr.ownerId;
                 cmd.Parameters.Add(owner);
 
+                SqlParameter vg = new SqlParameter("@VehicleGroupId", SqlDbType.Int);
+                vg.Value = ocr.VehicleGroupId;
+                cmd.Parameters.Add(vg);
+
+                if (ocr.RegistrationNo != null && ocr.RegistrationNo != string.Empty)
+                {
+                    SqlParameter n = new SqlParameter("@RegistrationNo", SqlDbType.VarChar, 50);
+                    n.Value = ocr.RegistrationNo;
+                    cmd.Parameters.Add(n);
+
+                    SqlParameter vt = new SqlParameter("@VehicleTypeId", SqlDbType.Int);
+                    vt.Value = ocr.VehicleTypeId;
+                    cmd.Parameters.Add(vt);
+
+                    SqlParameter isDriverOwned = new SqlParameter("@isDriverOwned", SqlDbType.Int);
+                    isDriverOwned.Value = ocr.isDriverOwned;
+                    cmd.Parameters.Add(isDriverOwned);
+
+                    SqlParameter vcode = new SqlParameter("@VPhoto ", SqlDbType.VarChar, -1);
+                    vcode.Value = ocr.VPhoto;
+                    cmd.Parameters.Add(vcode);
+
+                }
+
+                if (conn.State == ConnectionState.Closed)
+                {
+                    conn.Open();
+                }
+                transaction = conn.BeginTransaction();
+
                 if (ocr.flag != 'U'.ToString()) { 
                 SendNotificationToAdmin(ocr.UserAccountNo,ocr.change,ocr.type);
                 }
 
+             
+
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
+                cmd.Transaction = transaction;
                 da.Fill(dt);
+                transaction.Commit();
                 //[Mobileotp] ,[Emailotp]
                 //send email otp\
                 #region email opt
@@ -292,6 +330,7 @@ namespace Paysmart.Controllers
                     }
                 }
                 #endregion Mobile OTP
+               
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "RegisterUser successful....");
             }
             catch (Exception ex)
@@ -446,11 +485,11 @@ namespace Paysmart.Controllers
 
             #region Mobile OTP
             string email = "";          
-            for (int i = 0; i < dt.Rows.Count; i++)
-            {
-                email += dt.Rows[i]["Name"].ToString()+",";
-            }
-            string emaillist=Regex.Replace(email, @"(,)\z", "");
+            //for (int i = 0; i < dt.Rows.Count; i++)
+            //{
+            //    email += dt.Rows[i]["Name"].ToString()+",";
+            //}
+            //string emaillist=Regex.Replace(email, @"(,)\z", "");
             try
                 {
                     MailMessage mail = new MailMessage();
@@ -464,7 +503,7 @@ namespace Paysmart.Controllers
                     SmtpClient SmtpServer = new SmtpClient(emailserver);
 
                     mail.From = new MailAddress(fromaddress);
-                mail.To.Add(emaillist);
+                mail.To.Add(fromaddress);
                     mail.Subject = "" + accountType + @" registration Notification - next action awaited.";
                     mail.IsBodyHtml = true;
 

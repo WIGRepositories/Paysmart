@@ -30,7 +30,7 @@ namespace Paysmart.Controllers
             conn.ConnectionString = ConfigurationManager.ConnectionStrings["btposdb"].ToString();
             SqlCommand cmd = new SqlCommand();
             cmd.CommandType = CommandType.StoredProcedure;
-            cmd.CommandText = "HVGetallocatedriver";
+            cmd.CommandText = "HVGetallocatedriverById";
             cmd.Connection = conn;
             cmd.Parameters.Add("@VID", SqlDbType.Int).Value = VID;
 

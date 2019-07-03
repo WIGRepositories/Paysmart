@@ -133,6 +133,15 @@ namespace Paysmart.Models
         public int type { get; set; }
         public int ownerId { get; set; }
 
+        public string RegistrationNo { get; set; }
+        public string VPhoto { get; set; }
+        public string VehicleType { get; set; }
+        public int isDriverOwned { get; set; }
+
+        public int VehicleTypeId { get; set; }
+
+        public int VehicleGroupId { get; set; }
+
     }
 
     public class DriverAccount
