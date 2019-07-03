@@ -1291,6 +1291,170 @@ namespace Paysmart.Models
         public string insupdflag { get; set; }
        
     }
+    public class airlines
+    {
+        public int Id { get; set; }
+        public string name { get; set; }
+        public string desce { get; set; }
+        public string code { get; set; }
+        public int active { get; set; }
+        public string flag { get; set; }
+    }
+    public class airport
+    {
+        public int Id { get; set; }
+        public string name { get; set; }
+        public string desc { get; set; }
+        public string code { get; set; }
+        public int active { get; set; }
+        public string flag { get; set; }
+        public decimal longitude { set; get; }
+        public decimal latitude { set; get; }
+        public string countryid { set; get; }
+
+    }
+    public class fbpricing
+    {
+        public int Id { get; set; }
+        public string routeid { get; set; }
+        public string airlineid { get; set; }
+        public decimal amount { get; set; }
+        public decimal taxes { get; set; }
+        public decimal discounts { get; set; }
+        public string flag { set; get; }
+        public DateTime? fromdate { set; get; }
+        public DateTime? todate { set; get; }
+
+    }
+    public class fbrouting
+    {
+        public int Id { get; set; }
+        public string srcPortid { get; set; }
+        public string destPortid { get; set; }
+        public string RouteCode { get; set; }
+        public decimal distance { get; set; }
+        public decimal discounts { get; set; }
+        public string flag { set; get; }
+        public DateTime? fromdate { set; get; }
+        public DateTime? todate { set; get; }
+
+    }
+    public class fbtax
+    {
+        public int Id { get; set; }
+        public string routeid { get; set; }
+        public string airlineid { get; set; }
+        public string ChargeType { get; set; }
+        public decimal amount { get; set; }
+        public decimal discounts { get; set; }
+        public string flag { set; get; }
+        public DateTime? fromdate { set; get; }
+        public DateTime? todate { set; get; }
+    }
+    public class flight
+    {
+        public int Id { get; set; }
+        public string flightseatingid { get; set; }
+        public string flightscheduleid { get; set; }
+        public int passengerid { get; set; }
+        public int fbTransMasterid { get; set; }
+        public string SentSMS { get; set; }
+        public string flag { set; get; }
+        public string SentEmail { set; get; }
+        public DateTime? todate { set; get; }
+
+    }
+    public class fly
+    {
+        public int Id { get; set; }
+        public string code { get; set; }
+        public string type { get; set; }
+        public int airlineid { get; set; }
+        public int capacity { get; set; }
+        public int rows { get; set; }
+        public string flag { set; get; }
+        public int cols { set; get; }
+        public DateTime? todate { set; get; }
+
+    }
+
+    public class flightschedule
+    {
+        public int Id { get; set; }
+        public string flightid { get; set; }
+        public string FBRoutingId { get; set; }
+        public string weekdays { get; set; }
+        public int capacity { get; set; }
+        public int rows { get; set; }
+        public string flag { set; get; }
+        public int cols { set; get; }
+        public DateTime? arrivaltime { set; get; }
+        public DateTime? depttime { set; get; }
+        public DateTime? interval { set; get; }
+
+    }
+    public class flightseating
+    {
+        public int Id { get; set; }
+        public string flightid { get; set; }
+        public string rowid { get; set; }
+        public string columnid { get; set; }
+        public string seatno { get; set; }
+        public string seattype { get; set; }
+        public string flag { set; get; }
+        public string category { set; get; }
+        public DateTime? arrivaltime { set; get; }
+        public DateTime? depttime { set; get; }
+        public DateTime? interval { set; get; }
+
+    }
+    public class passengerfight
+    {
+        public int Id { get; set; }
+        public string name { get; set; }
+        public int age { get; set; }
+        public string gender { get; set; }
+        public string appuserid { get; set; }
+        public string passengercode { get; set; }
+        public string flag { set; get; }
+
+    }
+    public class FBTra
+    {
+        public int Id { get; set; }
+        public string TransId { get; set; }
+        public decimal TotalAmt { get; set; }
+        public string PaymentId { get; set; }
+        public string BTPOSid { get; set; }
+        public string flag { set; get; }
+
+    }
+    public class FBTranMaster
+    {
+        public int Id { get; set; }
+        public DateTime TransactionDate { get; set; }
+        public DateTime TransactionTime { get; set; }
+        public decimal Amount { get; set; }
+        public int StatusId { get; set; }
+        public decimal Charges { get; set; }
+        public decimal Discount { get; set; }
+        public decimal TotalAmount { get; set; }
+        public int TransRefId { set; get; }
+        public int TransGatewayId { get; set; }
+        public int TransCatId { get; set; }
+        public int TransModeId { set; get; }
+
+        public int TransactionTypeId { get; set; }
+        public string AccountNumber { get; set; }
+        public string HolderName { get; set; }
+        public string Code { get; set; }
+        public string ExpMonth { get; set; }
+        public string ExpYear { set; get; }
+        public string AccountCode { get; set; }
+        public string TransCode { get; set; }
+        public string flag { set; get; }
+
+    }
 }
 
 

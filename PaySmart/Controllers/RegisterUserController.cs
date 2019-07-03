@@ -361,7 +361,13 @@ namespace Paysmart.Controllers
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "MOTPverifications...." + ex.Message.ToString());
                 //throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.OK, ex.Message));
-                throw ex;
+                //throw ex;
+                dt.Columns.Add("Code");
+                dt.Columns.Add("description");
+                DataRow dr = dt.NewRow();
+                dr[0] = "ERR001";
+                dr[1] = ex.Message;
+                dt.Rows.Add(dr);
             }
             finally
             {
@@ -447,7 +453,13 @@ namespace Paysmart.Controllers
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "EOTPVerification...." + ex.Message.ToString());
                 //throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.OK, ex.Message));
-                throw ex;
+                //throw ex;
+                tbl.Columns.Add("Code");
+                tbl.Columns.Add("description");
+                DataRow dr = tbl.NewRow();
+                dr[0] = "ERR001";
+                dr[1] = ex.Message;
+                tbl.Rows.Add(dr);
             }
             finally
             {
@@ -623,7 +635,7 @@ namespace Paysmart.Controllers
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "ResendOTP....");
                 str.Append("UserAccountNo:" + ocr.UserAccountNo + ",");
-                // str.Append("Email:" + ocr.Email + ",");
+                 str.Append("change:" + ocr.change + ",");
 
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
 
@@ -647,87 +659,18 @@ namespace Paysmart.Controllers
                 ds.Fill(dt);
 
                
-                string potp = dt.Rows[0]["passwordotp"].ToString();
-                string eotp = dt.Rows[0]["Emailotp"].ToString();
-                string motp = dt.Rows[0]["passwordotp"].ToString();
+                            
+                
                 string emailAddrss = dt.Rows[0]["Email"].ToString();
-                //send pwd otp
-                #region password otp
-                if (potp != null)
+
+
+                //send email otp\
+                #region email opt
+                string eotp = null;
+                if (ocr.change == 1)
                 {
-                    try
-                    {
-                        MailMessage mail = new MailMessage();
-                        string emailserver = System.Configuration.ConfigurationManager.AppSettings["emailserver"].ToString();
-
-                        string username = System.Configuration.ConfigurationManager.AppSettings["username"].ToString();
-                        string pwd = System.Configuration.ConfigurationManager.AppSettings["password"].ToString();
-                        string fromaddress = System.Configuration.ConfigurationManager.AppSettings["fromaddress"].ToString();
-                        string port = System.Configuration.ConfigurationManager.AppSettings["port"].ToString();
-
-                        SmtpClient SmtpServer = new SmtpClient(emailserver);
-
-                        mail.From = new MailAddress(fromaddress);
-                        mail.To.Add(emailAddrss);
-                        mail.Subject = "User registration - Password OTP";
-                        mail.IsBodyHtml = true;
-
-                        string verifcodeMail = @"<table>
-                                                        <tr>
-                                                            <td>
-                                                                <h2>Thank you for registering with PaySmart APP</h2>
-                                                                <table width=\""760\"" align=\""center\"">
-                                                                    <tbody style='background-color:#F0F8FF;'>
-                                                                        <tr>
-                                                                            <td style=\""font-family:'Zurich BT',Arial,Helvetica,sans-serif;font-size:15px;text-align:left;line-height:normal;background-color:#F0F8FF;\"" >
-<div style='padding:10px;border:#0000FF solid 2px;'>    <br /><br />
-                                                                             
-                                                       Your email OTP is:<h3>" + potp + @" </h3>
-
-                                                        If you didn't make this request, <a href='http://154.120.237.198:52800'>click here</a> to cancel.
-
-                                                                                <br/>
-                                                                                <br/>             
-                                                                       
-                                                                                Warm regards,<br>
-                                                                                PAYSMART Customer Service Team<br/><br />
-</div>
-                                                                            </td>
-                                                                        </tr>
-
-                                                                    </tbody>
-                                                                </table>
-                                                            </td>
-                                                        </tr>
-
-                                                    </table>";
-
-
-                        mail.Body = verifcodeMail;
-                        //SmtpServer.Port = 465;
-                        //SmtpServer.Port = 587;
-                        SmtpServer.Port = Convert.ToInt32(port);
-                        SmtpServer.UseDefaultCredentials = false;
-
-                        SmtpServer.Credentials = new System.Net.NetworkCredential(username, pwd);
-                        SmtpServer.EnableSsl = true;
-                        //SmtpServer.TargetName = "STARTTLS/smtp.gmail.com";
-                        SmtpServer.Send(mail);
-                        Status = 1;
-
-                    }
-                    catch (Exception ex)
-                    {
-                        //throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
-                    }
-                    finally
-                    {
-                        conn.Close();
-                    }
-                    #endregion password otp
-
-                    //send email otp\
-                    #region email opt                    
+                    eotp = dt.Rows[0]["Emailotp"].ToString();
+                }
                     if (eotp != null)
                     {
                         try
@@ -797,15 +740,20 @@ namespace Paysmart.Controllers
 
                     }
 
-                    //send mobile otp
+                //send mobile otp
 
 
-                    // return dt;
+                // return dt;
 
-                    #endregion email otp
+                #endregion email otp
 
-                    //send mobile otp as SMS
-                    #region Mobile OTP                    
+                //send mobile otp as SMS
+                #region Mobile OTP   
+                string motp = null;
+                if (ocr.change == 2)
+                {
+                    motp = dt.Rows[0]["Mobileotp"].ToString();
+                }
                     if (motp != null)
                     {
                         try
@@ -873,8 +821,87 @@ namespace Paysmart.Controllers
                             //throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
                         }
                     }
-                    #endregion Mobile OTP
+                #endregion Mobile OTP
+                //send pwd otp
+                #region password otp
+                string potp = null;
+                if (ocr.change == 3)
+                {
+                    potp = dt.Rows[0]["Passwordotp"].ToString();
+                }
 
+                if (potp != null)
+                {
+                    try
+                    {
+                        MailMessage mail = new MailMessage();
+                        string emailserver = System.Configuration.ConfigurationManager.AppSettings["emailserver"].ToString();
+
+                        string username = System.Configuration.ConfigurationManager.AppSettings["username"].ToString();
+                        string pwd = System.Configuration.ConfigurationManager.AppSettings["password"].ToString();
+                        string fromaddress = System.Configuration.ConfigurationManager.AppSettings["fromaddress"].ToString();
+                        string port = System.Configuration.ConfigurationManager.AppSettings["port"].ToString();
+
+                        SmtpClient SmtpServer = new SmtpClient(emailserver);
+
+                        mail.From = new MailAddress(fromaddress);
+                        mail.To.Add(emailAddrss);
+                        mail.Subject = "User registration - Password OTP";
+                        mail.IsBodyHtml = true;
+
+                        string verifcodeMail = @"<table>
+                                                        <tr>
+                                                            <td>
+                                                                <h2>Thank you for registering with PaySmart APP</h2>
+                                                                <table width=\""760\"" align=\""center\"">
+                                                                    <tbody style='background-color:#F0F8FF;'>
+                                                                        <tr>
+                                                                            <td style=\""font-family:'Zurich BT',Arial,Helvetica,sans-serif;font-size:15px;text-align:left;line-height:normal;background-color:#F0F8FF;\"" >
+<div style='padding:10px;border:#0000FF solid 2px;'>    <br /><br />
+                                                                             
+                                                       Your Password OTP is:<h3>" + potp + @" </h3>
+
+                                                        If you didn't make this request, <a href='http://154.120.237.198:52800'>click here</a> to cancel.
+
+                                                                                <br/>
+                                                                                <br/>             
+                                                                       
+                                                                                Warm regards,<br>
+                                                                                PAYSMART Customer Service Team<br/><br />
+</div>
+                                                                            </td>
+                                                                        </tr>
+
+                                                                    </tbody>
+                                                                </table>
+                                                            </td>
+                                                        </tr>
+
+                                                    </table>";
+
+
+                        mail.Body = verifcodeMail;
+                        //SmtpServer.Port = 465;
+                        //SmtpServer.Port = 587;
+                        SmtpServer.Port = Convert.ToInt32(port);
+                        SmtpServer.UseDefaultCredentials = false;
+
+                        SmtpServer.Credentials = new System.Net.NetworkCredential(username, pwd);
+                        SmtpServer.EnableSsl = true;
+                        //SmtpServer.TargetName = "STARTTLS/smtp.gmail.com";
+                        SmtpServer.Send(mail);
+                        Status = 1;
+
+                    }
+                    catch (Exception ex)
+                    {
+                        //throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+                    }
+                    finally
+                    {
+                        conn.Close();
+                    }
+                    #endregion password otp
 
                 }
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "ResendOTP successful....");

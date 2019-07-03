@@ -89,7 +89,7 @@ namespace Paysmart.Controllers
                                                                             <td style=\""font-family:'Zurich BT',Arial,Helvetica,sans-serif;font-size:15px;text-align:left;line-height:normal;background-color:#F0F8FF;\"" >
 <div style='padding:10px;border:#0000FF solid 2px;'>    <br /><br />
                                                                              
-                                                       Your email OTP is:<h3>" + potp + @" </h3>
+                                                       Your Password OTP is:<h3>" + potp + @" </h3>
 
                                                         
 
