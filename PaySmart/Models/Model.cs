@@ -1313,7 +1313,7 @@ namespace Paysmart.Models
     {
         public int Id { get; set; }
         public string name { get; set; }
-        public string desc { get; set; }
+        public string desce { get; set; }
         public string code { get; set; }
         public int active { get; set; }
         public string flag { get; set; }
@@ -1331,8 +1331,8 @@ namespace Paysmart.Models
         public decimal taxes { get; set; }
         public decimal discounts { get; set; }
         public string flag { set; get; }
-        public DateTime? fromdate { set; get; }
-        public DateTime? todate { set; get; }
+        public DateTime ?fromdate { set; get; }
+        public DateTime ?todate { set; get; }
 
     }
     public class fbrouting
@@ -1370,8 +1370,7 @@ namespace Paysmart.Models
         public string SentSMS { get; set; }
         public string flag { set; get; }
         public string SentEmail { set; get; }
-        public DateTime? todate { set; get; }
-
+      
     }
     public class fly
     {
@@ -1380,10 +1379,10 @@ namespace Paysmart.Models
         public string type { get; set; }
         public int airlineid { get; set; }
         public int capacity { get; set; }
-        public int rows { get; set; }
+        public string rows { get; set; }
         public string flag { set; get; }
-        public int cols { set; get; }
-        public DateTime? todate { set; get; }
+        public string cols { set; get; }
+       // public DateTime? todate { set; get; }
 
     }
 
@@ -1393,13 +1392,13 @@ namespace Paysmart.Models
         public string flightid { get; set; }
         public string FBRoutingId { get; set; }
         public string weekdays { get; set; }
-        public int capacity { get; set; }
-        public int rows { get; set; }
+       // public int capacity { get; set; }
+       // public int rows { get; set; }
         public string flag { set; get; }
-        public int cols { set; get; }
-        public DateTime? arrivaltime { set; get; }
-        public DateTime? depttime { set; get; }
-        public DateTime? interval { set; get; }
+       // public int cols { set; get; }
+        public DateTime arrivaltime { set; get; }
+        public DateTime depttime { set; get; }
+        public DateTime interval { set; get; }
 
     }
     public class flightseating
@@ -1441,8 +1440,8 @@ namespace Paysmart.Models
     public class FBTranMaster
     {
         public int Id { get; set; }
-        public DateTime TransactionDate { get; set; }
-        public DateTime TransactionTime { get; set; }
+        public DateTime? TransactionDate { get; set; }
+        public DateTime? TransactionTime { get; set; }
         public decimal Amount { get; set; }
         public int StatusId { get; set; }
         public decimal Charges { get; set; }

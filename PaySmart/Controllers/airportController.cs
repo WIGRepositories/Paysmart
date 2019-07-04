@@ -35,7 +35,7 @@ namespace paysmart.Controllers
         public DataTable saveairport(airport n)
         {
             DataTable dt = new DataTable();
-            LogTraceWriter tracer = new LogTraceWriter();
+           LogTraceWriter tracer = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
             conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
             try
@@ -55,7 +55,7 @@ namespace paysmart.Controllers
                 cmd.Parameters.Add(na);
 
                 SqlParameter dee = new SqlParameter("@desce", SqlDbType.VarChar, 500);
-                dee.Value = n.desc;
+                dee.Value = n.desce;
                 cmd.Parameters.Add(dee);
 
                 SqlParameter lon = new SqlParameter("@longitude", SqlDbType.Decimal);
@@ -83,7 +83,7 @@ namespace paysmart.Controllers
 
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
                 da.Fill(dt);
-                tracer.Trace(Request, "0",TraceLevel.Info, "{0}", "airport....");
+                tracer.Trace(Request, "0", TraceLevel.Info, "{0}", "airport closed....");
 
             }
             catch (Exception ex)

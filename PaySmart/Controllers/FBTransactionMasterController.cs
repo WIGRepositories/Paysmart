@@ -1,4 +1,5 @@
-﻿using Paysmart.Models;
+﻿using Paysmart;
+using Paysmart.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -14,7 +15,7 @@ namespace paysmart.Controllers
     public class FBTransactionMasterController : ApiController
     {
         [HttpGet]
-        [Route("api/ FBTransactionMaster/getFBTransactionMaster")]
+        [Route("api/FBTransactionMaster/getFBTransactionMaster")]
         public DataTable getFBTransactionMaster()
         {
             DataTable dt = new DataTable();
@@ -35,12 +36,12 @@ namespace paysmart.Controllers
         {
             DataTable dt = new DataTable();
             SqlConnection conn = new SqlConnection();
-          //  LogTraceWriter traceWriter = new LogTraceWriter();
+            LogTraceWriter traceWriter = new LogTraceWriter();
            
             conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
             try
             {
-               // traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "FBTransactionMaster....");
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "FBTransactionMaster....");
                 SqlCommand cmd = new SqlCommand();
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.CommandText = "InsUpdDelFBTransactionMaster";
@@ -54,7 +55,7 @@ namespace paysmart.Controllers
                 na.Value = n.TransactionDate;
                 cmd.Parameters.Add(na);
 
-                SqlParameter dee = new SqlParameter("@TransactionTime", SqlDbType.Time);
+                SqlParameter dee = new SqlParameter("@TransactionTime", SqlDbType.DateTime);
                 dee.Value = n.TransactionTime;
                 cmd.Parameters.Add(dee);
 
@@ -128,7 +129,7 @@ namespace paysmart.Controllers
                 
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
                 da.Fill(dt);
-             //   traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "FBTransactionMaster closed....");
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "FBTransactionMaster closed....");
 
             }
             catch (Exception ex)

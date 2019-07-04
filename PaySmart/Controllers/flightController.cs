@@ -8,6 +8,7 @@ using System.Net.Http;
 using System.Web.Http;
 using Paysmart.Models;
 using System.Web.Http.Tracing;
+using Paysmart;
 
 namespace paysmart.Controllers
 {
@@ -34,12 +35,12 @@ namespace paysmart.Controllers
         public DataTable saveflight(fly n)
         {
             DataTable dt = new DataTable();
-           // LogTraceWriter tracer = new LogTraceWriter();
+            LogTraceWriter tracer = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
             conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
             try
             {
-              //  tracer.Trace(Request, "0", System.Web.Http.Tracing.TraceLevel.Info, "{0}", "flight....");
+                tracer.Trace(Request, "0", System.Web.Http.Tracing.TraceLevel.Info, "{0}", "flight....");
                 SqlCommand cmd = new SqlCommand();
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.CommandText = "InsUpdDelflights";
@@ -72,17 +73,17 @@ namespace paysmart.Controllers
                 fla.Value = n.flag;
                 cmd.Parameters.Add(fla);
 
-                SqlParameter cod = new SqlParameter("@rows", SqlDbType.Int);
+                SqlParameter cod = new SqlParameter("@rows", SqlDbType.VarChar,50);
                 cod.Value = n.rows;
                 cmd.Parameters.Add(cod);
 
-                SqlParameter cou = new SqlParameter("@cols", SqlDbType.Int);
+                SqlParameter cou = new SqlParameter("@cols", SqlDbType.VarChar,50);
                 cou.Value = n.cols;
                 cmd.Parameters.Add(cou);
 
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
                 da.Fill(dt);
-               // tracer.Trace(Request, "0", System.Web.Http.Tracing.TraceLevel.Info, "{0}", "flight....");
+                tracer.Trace(Request, "0", System.Web.Http.Tracing.TraceLevel.Info, "{0}", "flight closed....");
 
             }
             catch (Exception ex)
