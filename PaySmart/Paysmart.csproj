@@ -131,7 +131,7 @@
     <Compile Include="Controllers\LicenseController.cs" />
     <Compile Include="Controllers\LicensePricingController.cs" />
     <Compile Include="Controllers\MeteredTaxiController.cs" />
-    <Compile Include="Controllers\passengerControllerFlight.cs" />
+    <Compile Include="Controllers\passengerFlightController.cs" />
     <Compile Include="Controllers\SOSMessageController.cs" />
     <Compile Include="Controllers\SOSNumberController.cs" />
     <Compile Include="Controllers\TransactionController.cs" />

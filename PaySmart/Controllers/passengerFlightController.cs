@@ -1,4 +1,5 @@
 ﻿
+using Paysmart;
 using Paysmart.Models;
 using System;
 using System.Collections.Generic;
@@ -12,10 +13,10 @@ using System.Web.Http.Tracing;
 
 namespace paysmart.Controllers
 {
-    public class passengerControllerFlight : ApiController
+    public class passengerFlightController : ApiController
     {
         [HttpGet]
-        [Route("api/passenger/getpassenger")]
+        [Route("api/ passengerFlight/getpassenger")]
         public DataTable getpassenger()
         {
             DataTable dt = new DataTable();
@@ -31,17 +32,17 @@ namespace paysmart.Controllers
 
         }
         [HttpPost]
-        [Route("api/passenger/savepassenger")]
+        [Route("api/ passengerFlight/savepassenger")]
         public DataTable savepassenger(passengerfight n)
         {
             DataTable dt = new DataTable();
             SqlConnection conn = new SqlConnection();
-           // LogTraceWriter tracer = new LogTraceWriter();
+            LogTraceWriter tracer = new LogTraceWriter();
 
             conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
             try
             {
-               // tracer.Trace(Request, "0",System.Web.Http.Tracing.TraceLevel.Info,"{0}", "passenger....");
+                tracer.Trace(Request, "0",System.Web.Http.Tracing.TraceLevel.Info,"{0}", "passenger....");
                 SqlCommand cmd = new SqlCommand();
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.CommandText = "InsUpdDelpassenger";
@@ -77,7 +78,7 @@ namespace paysmart.Controllers
                SqlDataAdapter da = new SqlDataAdapter(cmd);
                 da.Fill(dt);
 
-              //  tracer.Trace(Request, "0", System.Web.Http.Tracing.TraceLevel.Info, "{0}", "passenger info end ....");
+                tracer.Trace(Request, "0", System.Web.Http.Tracing.TraceLevel.Info, "{0}", "passenger Info closed ....");
             }
             catch (Exception ex)
             {
