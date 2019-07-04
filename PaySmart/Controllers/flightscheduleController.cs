@@ -14,21 +14,32 @@ namespace paysmart.Controllers
 {
     public class flightscheduleController : ApiController
     {
-        [HttpGet]
+        [HttpPost]
         [Route("api/flightschedule/getflightschedule")]
-        public DataTable getflightschedule()
+        public DataTable getflightschedule(flightschedule fl)
         {
             DataTable dt = new DataTable();
             SqlConnection conn = new SqlConnection();
             conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
             SqlCommand cmd = new SqlCommand();
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.CommandText = "Getflightschedule";
-            cmd.Connection = conn;
-            SqlDataAdapter da = new SqlDataAdapter(cmd);
-            da.Fill(dt);
+            try {
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = "Getflightschedule";
+                cmd.Connection = conn;
+                cmd.Parameters.Add(new SqlParameter("@srcid", SqlDbType.Int)).Value = fl.srcid;
+                cmd.Parameters.Add(new SqlParameter("@destId", SqlDbType.Int)).Value = fl.destid;
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(dt);
+                }
+            catch (Exception ex) { 
+            dt.Columns.Add("Code");
+            dt.Columns.Add("description");
+            DataRow dr = dt.NewRow();
+            dr[0] = "ERR001";
+            dr[1] = ex.Message;
+            dt.Rows.Add(dr);
+            }
             return dt;
-
         }
         [HttpPost]
         [Route("api/flightschedule/saveflightschedule")]
