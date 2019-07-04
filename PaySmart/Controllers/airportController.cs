@@ -1,4 +1,5 @@
-﻿using Paysmart.Models;
+﻿using Paysmart;
+using Paysmart.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -34,12 +35,12 @@ namespace paysmart.Controllers
         public DataTable saveairport(airport n)
         {
             DataTable dt = new DataTable();
-         //   LogTraceWriter tracer = new LogTraceWriter();
+            LogTraceWriter tracer = new LogTraceWriter();
             SqlConnection conn = new SqlConnection();
             conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
             try
             {
-             //   tracer.Trace(Request, "0", System.Web.Http.Tracing.TraceLevel.Info, "{0}", "airport....");
+                tracer.Trace(Request, "0", TraceLevel.Info, "{0}", "airport....");
                 SqlCommand cmd = new SqlCommand();
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.CommandText = "InsUpdDelAirports";
@@ -82,7 +83,7 @@ namespace paysmart.Controllers
 
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
                 da.Fill(dt);
-            //    tracer.Trace(Request, "0", System.Web.Http.Tracing.TraceLevel.Info, "{0}", "airport....");
+                tracer.Trace(Request, "0",TraceLevel.Info, "{0}", "airport....");
 
             }
             catch (Exception ex)
