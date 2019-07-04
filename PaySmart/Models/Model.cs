@@ -1399,6 +1399,8 @@ namespace Paysmart.Models
         public DateTime arrivaltime { set; get; }
         public DateTime depttime { set; get; }
         public DateTime interval { set; get; }
+        public int srcid { get; set; }
+        public int destid { get; set; }
 
     }
     public class flightseating
