@@ -555,7 +555,8 @@ namespace Paysmart.Controllers
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "SaveVehicleApprovals....");
                 str.Append("RegistrationNo:" + a.RegistrationNo + ",");
                 str.Append("IsApproved:" + a.IsApproved + ",");
-                
+                str.Append("Email:" + a.Email + ",");
+
 
 
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
@@ -580,13 +581,17 @@ namespace Paysmart.Controllers
                 flag.Value = a.RegistrationNo;
                 cmd.Parameters.Add(flag);
 
+                SqlParameter ema = new SqlParameter("@Email", SqlDbType.VarChar);
+                ema.Value = a.Email;
+                cmd.Parameters.Add(ema);
+
 
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
                 da.Fill(dt);
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "SaveVehicleApprovals successful....");
 
                 #region Mobile OTP
-                string eotp = dt.Rows[0]["VehicleCode"].ToString();
+                string eotp = dt.Rows[0]["VehicleCode"].ToString();                
                 if (eotp != null)
                 {
                     try

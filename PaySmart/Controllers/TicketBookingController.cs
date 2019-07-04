@@ -174,7 +174,7 @@ namespace Paysmart.Controllers
 
        [HttpPost]
        [Route("api/TicketBooking/SaveBookingDetails")]
-       public int SaveBookingDetails(BookingDetails B)
+       public DataTable SaveBookingDetails(BookingDetails B)
        {
            int status = 0;
            DataTable Tbl = new DataTable();
@@ -316,9 +316,13 @@ namespace Paysmart.Controllers
                insupddelflag.Value = B.insupddelflag;
                PnrDeatilscmd.Parameters.Add(insupddelflag);
 
-               conn.Open();
-               object bookingId = PnrDeatilscmd.ExecuteScalar();
-               conn.Close();
+                SqlDataAdapter ds = new SqlDataAdapter(PnrDeatilscmd);
+
+                string tno = Tbl.Rows[0]["Id"].ToString();
+
+               // conn.Open();
+               //object bookingId = PnrDeatilscmd.ExecuteScalar();
+               //conn.Close();
                #endregion save booking information
 
                #region Save seats information
@@ -340,7 +344,7 @@ namespace Paysmart.Controllers
                        PnrDeatilscmd.Parameters.Add(bId);
 
                        SqlParameter BookingId = new SqlParameter("@BookingId", SqlDbType.Int);
-                       BookingId.Value = bookingId;
+                       BookingId.Value = tno;
                        PnrDeatilscmd.Parameters.Add(BookingId);
 
                        SqlParameter bTicketNo = new SqlParameter("@TicketNo", SqlDbType.VarChar, 50);
@@ -414,6 +418,9 @@ namespace Paysmart.Controllers
                        SqlParameter binsupddelflag = new SqlParameter("@insupddelflag", SqlDbType.VarChar);
                        binsupddelflag.Value = b.insupddelflag;
                        PnrDeatilscmd.Parameters.Add(binsupddelflag);
+
+                        //SqlDataAdapter ds1 = new SqlDataAdapter(PnrDeatilscmd);
+
                        conn.Open();
                        PnrDeatilscmd.ExecuteScalar();
                        conn.Close();
@@ -428,7 +435,7 @@ namespace Paysmart.Controllers
 
                transaction.Commit();
                //return Tbl;
-               int bid = Convert.ToInt32(bookingId);
+               int bid = Convert.ToInt32(tno);
 
                #region save ticket information
 
@@ -617,7 +624,7 @@ namespace Paysmart.Controllers
                    cmd1.Parameters.Add(trandate);
 
                    SqlParameter bkid = new SqlParameter("@BookingId", SqlDbType.Int);
-                   bkid.Value = bookingId;
+                   bkid.Value = tno;
                    cmd1.Parameters.Add(bkid);
 
                    SqlParameter gtranId = new SqlParameter("@GateWayTransId", SqlDbType.VarChar, 50);
@@ -697,7 +704,7 @@ namespace Paysmart.Controllers
                #region update the status of the booking
                #endregion update the status of the booking
 
-               return bid;
+               return Tbl;
            }
            catch (SqlException ex)
            {
@@ -720,7 +727,7 @@ namespace Paysmart.Controllers
                dr[0] = "ERR001";
                dr[1] = ex.Message;
                Tbl.Rows.Add(dr);
-               return -1;
+               return Tbl;
            }
            catch (Exception ex)
            {
@@ -736,7 +743,7 @@ namespace Paysmart.Controllers
                dr[0] = "ERR001";
                dr[1] = ex.Message;
                Tbl.Rows.Add(dr);
-               return -1;
+               return Tbl;
 
            }
            finally
@@ -744,7 +751,7 @@ namespace Paysmart.Controllers
                conn.Close();
                conn.Dispose();
            }
-           return status;
+           return Tbl;
        }
 
        [HttpGet]

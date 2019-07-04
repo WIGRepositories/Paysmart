@@ -729,7 +729,8 @@ namespace Paysmart.Controllers
                 da.Fill(dt);
 
                 #region Mobile OTP
-                string motp = dt.Rows[0]["Mobileotp"].ToString();
+                string motp = dt.Rows[0]["NAme"].ToString();
+                string email = dt.Rows[0]["Email"].ToString();
                 if (motp != null)
                 {
                     try
@@ -745,8 +746,8 @@ namespace Paysmart.Controllers
                         SmtpClient SmtpServer = new SmtpClient(emailserver);
 
                         mail.From = new MailAddress(fromaddress);
-                        mail.To.Add(a.Email);
-                        mail.Subject = "Driver registration - Mobile OTP";
+                        mail.To.Add(email);
+                        mail.Subject = "Driver Approval";
                         mail.IsBodyHtml = true;
 
                         string verifcodeMail = @"<table>
