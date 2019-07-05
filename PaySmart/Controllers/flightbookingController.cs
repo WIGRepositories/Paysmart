@@ -32,7 +32,7 @@ namespace paysmart.Controllers
         }
         [HttpPost]
         [Route("api/flightbooking/saveflightbooking")]
-        public DataTable saveflightbooking(flight n)
+        public void saveflightbooking(List<flight> n)
         {
             DataTable dt = new DataTable();
             LogTraceWriter tracer = new LogTraceWriter();
@@ -46,53 +46,63 @@ namespace paysmart.Controllers
                 cmd.CommandText = "InsUpdDelflightbooking";
                 cmd.Connection = conn;
 
-                SqlParameter id = new SqlParameter("@Id", SqlDbType.Int);
-                id.Value = n.Id;
-                cmd.Parameters.Add(id);
+                foreach (flight m in n)
+                {
+                    try
+                    {
+                        SqlParameter id = new SqlParameter("@Id", SqlDbType.Int);
+                        id.Value = m.Id;
+                        cmd.Parameters.Add(id);
 
-                SqlParameter na = new SqlParameter("@flightseatingid", SqlDbType.VarChar, 50);
-                na.Value = n.flightseatingid;
-                cmd.Parameters.Add(na);
+                        SqlParameter na = new SqlParameter("@flightseatingid", SqlDbType.VarChar, 50);
+                        na.Value = m.flightseatingid;
+                        cmd.Parameters.Add(na);
 
-                SqlParameter dee = new SqlParameter("@flightscheduleid", SqlDbType.VarChar, 50);
-                dee.Value = n.flightscheduleid;
-                cmd.Parameters.Add(dee);
+                        SqlParameter dee = new SqlParameter("@flightscheduleid", SqlDbType.VarChar, 50);
+                        dee.Value = m.flightscheduleid;
+                        cmd.Parameters.Add(dee);
 
-                SqlParameter lon = new SqlParameter("@passengerid", SqlDbType.Int);
-                lon.Value = n.passengerid;
-                cmd.Parameters.Add(lon);
-                SqlParameter lal = new SqlParameter("@fbTransMasterid", SqlDbType.Int);
-                lal.Value = n.fbTransMasterid;
-                cmd.Parameters.Add(lal);
+                        SqlParameter lon = new SqlParameter("@passengerid", SqlDbType.Int);
+                        lon.Value = m.passengerid;
+                        cmd.Parameters.Add(lon);
+                        SqlParameter lal = new SqlParameter("@fbTransMasterid", SqlDbType.Int);
+                        lal.Value = m.fbTransMasterid;
+                        cmd.Parameters.Add(lal);
 
-                //SqlParameter acc = new SqlParameter("@fromdate", SqlDbType.DateTime);
-                //acc.Value = n.fromdate;
-                //cmd.Parameters.Add(acc);
+                        //SqlParameter acc = new SqlParameter("@fromdate", SqlDbType.DateTime);
+                        //acc.Value = n.fromdate;
+                        //cmd.Parameters.Add(acc);
 
-                SqlParameter fla = new SqlParameter("@flag", SqlDbType.VarChar);
-                fla.Value = n.flag;
-                cmd.Parameters.Add(fla);
+                        SqlParameter fla = new SqlParameter("@flag", SqlDbType.VarChar);
+                        fla.Value = m.flag;
+                        cmd.Parameters.Add(fla);
 
-                SqlParameter cod = new SqlParameter("@SentSMS", SqlDbType.VarChar,500);
-                cod.Value = n.SentSMS;
-                cmd.Parameters.Add(cod);
+                        SqlParameter cod = new SqlParameter("@SentSMS", SqlDbType.VarChar, 500);
+                        cod.Value = m.SentSMS;
+                        cmd.Parameters.Add(cod);
 
-                SqlParameter cou = new SqlParameter("@SentEmail", SqlDbType.VarChar, 500);
-                cou.Value = n.SentEmail;
-                cmd.Parameters.Add(cou);
+                        SqlParameter cou = new SqlParameter("@SentEmail", SqlDbType.VarChar, 500);
+                        cou.Value = m.SentEmail;
+                        cmd.Parameters.Add(cou);
 
-                SqlDataAdapter da = new SqlDataAdapter(cmd);
-                da.Fill(dt);
+                        SqlDataAdapter da = new SqlDataAdapter(cmd);
+                        da.Fill(dt);
 
-                tracer.Trace(Request, "0", System.Web.Http.Tracing.TraceLevel.Info, "{0}", "flightbooking closed....");
+                        tracer.Trace(Request, "0", System.Web.Http.Tracing.TraceLevel.Info, "{0}", "flightbooking closed....");
+                    }
+                    catch (Exception ex)
+                    {
+                        throw ex;
 
+                    }
+                }
             }
             catch (Exception ex)
             {
                 throw ex;
 
             }
-            return dt;
+            //return dt;
         }
     }
 }
