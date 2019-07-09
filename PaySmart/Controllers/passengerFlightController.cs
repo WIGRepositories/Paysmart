@@ -51,6 +51,7 @@ namespace paysmart.Controllers
                 foreach (passengerfight p in n) {
                     try
                     {
+ 
                         tracer.Trace(Request, "0", System.Web.Http.Tracing.TraceLevel.Info, "{0}", "passenger Name: ...."+p.name);
                         SqlParameter id = new SqlParameter("@Id", SqlDbType.Int);
                         id.Value = p.Id;
@@ -67,7 +68,7 @@ namespace paysmart.Controllers
                         SqlParameter lon = new SqlParameter("@gender", SqlDbType.VarChar, 50);
                         lon.Value = p.gender;
                         cmd.Parameters.Add(lon);
-                        SqlParameter lal = new SqlParameter("@appuserid", SqlDbType.VarChar, 50);
+                        SqlParameter lal = new SqlParameter("@appuserid", SqlDbType.Int);
                         lal.Value = p.appuserid;
                         cmd.Parameters.Add(lal);
 
@@ -84,13 +85,15 @@ namespace paysmart.Controllers
                         tracer.Trace(Request, "0", System.Web.Http.Tracing.TraceLevel.Info, "{0}", p.name+"Passenger is created");
                     }
                     catch (Exception ex) {
-
+                        tracer.Trace(Request, "0", System.Web.Http.Tracing.TraceLevel.Info, "{0}", ex.Message);
                         throw ex;
                     }
                 }
             }
             catch (Exception ex)
             {
+
+                tracer.Trace(Request, "0", System.Web.Http.Tracing.TraceLevel.Info, "{0}", ex.Message);
                 throw ex;
 
             }

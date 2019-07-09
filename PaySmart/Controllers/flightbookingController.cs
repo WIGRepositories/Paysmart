@@ -85,8 +85,11 @@ namespace paysmart.Controllers
                         cou.Value = m.SentEmail;
                         cmd.Parameters.Add(cou);
 
-                        SqlDataAdapter da = new SqlDataAdapter(cmd);
-                        da.Fill(dt);
+                        cmd.ExecuteScalar();
+                        cmd.Parameters.Clear();
+
+                        //SqlDataAdapter da = new SqlDataAdapter(cmd);
+                        //da.Fill(dt);
 
                         tracer.Trace(Request, "0", System.Web.Http.Tracing.TraceLevel.Info, "{0}", "flightbooking closed....");
                     }
