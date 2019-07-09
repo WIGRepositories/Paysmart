@@ -1427,6 +1427,10 @@ namespace Paysmart.Models
         public string appuserid { get; set; }
         public string passengercode { get; set; }
         public string flag { set; get; }
+        public string Mobileno { set; get; }
+        public string emailid { set; get; }
+        public string seatno { set; get; }
+        
 
     }
     public class FBTra

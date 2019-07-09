@@ -33,7 +33,7 @@ namespace paysmart.Controllers
         }
         [HttpPost]
         [Route("api/passengerFlight/savepassenger")]
-        public DataTable savepassenger(List<passengerfight> n)
+        public DataTable savepassenger(List<passengerfight> list)
         {
             DataTable dt = new DataTable();
             SqlConnection conn = new SqlConnection();
@@ -47,44 +47,29 @@ namespace paysmart.Controllers
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.CommandText = "InsUpdDelpassenger";
                 cmd.Connection = conn;
-
-                foreach (passengerfight p in n) {
+                conn.Open();
+                foreach (passengerfight p in list)
+                {
                     try
                     {
- 
-                        tracer.Trace(Request, "0", System.Web.Http.Tracing.TraceLevel.Info, "{0}", "passenger Name: ...."+p.name);
-                        SqlParameter id = new SqlParameter("@Id", SqlDbType.Int);
-                        id.Value = p.Id;
-                        cmd.Parameters.Add(id);
 
-                        SqlParameter na = new SqlParameter("@name", SqlDbType.VarChar, 50);
-                        na.Value = p.name;
-                        cmd.Parameters.Add(na);
-
-                        SqlParameter dee = new SqlParameter("@age", SqlDbType.Int);
-                        dee.Value = p.age;
-                        cmd.Parameters.Add(dee);
-
-                        SqlParameter lon = new SqlParameter("@gender", SqlDbType.VarChar, 50);
-                        lon.Value = p.gender;
-                        cmd.Parameters.Add(lon);
-                        SqlParameter lal = new SqlParameter("@appuserid", SqlDbType.Int);
-                        lal.Value = p.appuserid;
-                        cmd.Parameters.Add(lal);
-
-                        SqlParameter acc = new SqlParameter("@passengercode", SqlDbType.VarChar, 50);
-                        acc.Value = p.passengercode;
-                        cmd.Parameters.Add(acc);
-
-                        SqlParameter fla = new SqlParameter("@flag", SqlDbType.VarChar);
-                        fla.Value = p.flag;
-                        cmd.Parameters.Add(fla);
-
+                        tracer.Trace(Request, "0", System.Web.Http.Tracing.TraceLevel.Info, "{0}", "passenger Name: ...." + p.name);
+                        cmd.Parameters.Add(new SqlParameter("@Id", SqlDbType.Int)).SqlValue = p.Id;
+                        cmd.Parameters.Add(new SqlParameter("@name", SqlDbType.VarChar, 50)).SqlValue = p.name;
+                        cmd.Parameters.Add(new SqlParameter("@age", SqlDbType.Int)).SqlValue = p.age;
+                        cmd.Parameters.Add(new SqlParameter("@gender", SqlDbType.VarChar, 50)).SqlValue = p.gender;
+                        cmd.Parameters.Add(new SqlParameter("@appuserid", SqlDbType.Int)).SqlValue = p.appuserid;
+                        cmd.Parameters.Add(new SqlParameter("@passengercode", SqlDbType.VarChar, 50)).SqlValue = p.passengercode;
+                        cmd.Parameters.Add(new SqlParameter("@flag", SqlDbType.VarChar)).SqlValue = p.flag;
+                        cmd.Parameters.Add(new SqlParameter("@seatno", SqlDbType.VarChar,20)).SqlValue = p.seatno;
+                        cmd.Parameters.Add(new SqlParameter("@EmailId", SqlDbType.VarChar,50)).SqlValue = p.emailid;
+                        cmd.Parameters.Add(new SqlParameter("@ContactNo", SqlDbType.VarChar,50)).SqlValue = p.Mobileno;
+   
                         cmd.ExecuteScalar();
-
-                        tracer.Trace(Request, "0", System.Web.Http.Tracing.TraceLevel.Info, "{0}", p.name+"Passenger is created");
+                        tracer.Trace(Request, "0", System.Web.Http.Tracing.TraceLevel.Info, "{0}", p.name + "Passenger is created");
                     }
-                    catch (Exception ex) {
+                    catch (Exception ex)
+                    {
                         tracer.Trace(Request, "0", System.Web.Http.Tracing.TraceLevel.Info, "{0}", ex.Message);
                         throw ex;
                     }
@@ -96,6 +81,9 @@ namespace paysmart.Controllers
                 tracer.Trace(Request, "0", System.Web.Http.Tracing.TraceLevel.Info, "{0}", ex.Message);
                 throw ex;
 
+            }
+            finally{
+              
             }
             return dt;
         }
