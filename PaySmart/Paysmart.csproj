@@ -96,6 +96,10 @@
     <Content Include="js\button.js" />
     <Content Include="UI\Email.html" />
     <Content Include="UI\EmailTemplates\1.txt" />
+    <Content Include="UI\EmailTemplates\ariindia.jpeg" />
+    <Content Include="UI\EmailTemplates\FlightTicket.html" />
+    <Content Include="UI\EmailTemplates\FlightTicket1.txt" />
+    <Content Include="UI\EmailTemplates\SSCC-Pallet-Barcode.jpg" />
     <Content Include="UI\EmailTemplates\TicketFormat.html" />
     <Content Include="UI\images\phone.jpg" />
     <Content Include="UI\js\angular.js" />

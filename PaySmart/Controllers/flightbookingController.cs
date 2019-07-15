@@ -86,7 +86,7 @@ namespace paysmart.Controllers
                         cmd.Parameters.Add(cou);
 
                         cmd.ExecuteScalar();
-                        cmd.Parameters.Clear();
+                        //cmd.Parameters.Clear();
 
                         //SqlDataAdapter da = new SqlDataAdapter(cmd);
                         //da.Fill(dt);
