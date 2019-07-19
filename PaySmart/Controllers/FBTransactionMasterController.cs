@@ -7,6 +7,8 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Mail;
+using System.Web;
 using System.Web.Http;
 using System.Web.Http.Tracing;
 
@@ -46,7 +48,7 @@ namespace paysmart.Controllers
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.CommandText = "InsUpdDelFBTransactionMaster";
                 cmd.Connection = conn;
-
+                conn.Open();
                 SqlParameter id = new SqlParameter("@Id", SqlDbType.Int);
                 id.Value = n.Id;
                 cmd.Parameters.Add(id);
@@ -131,10 +133,19 @@ namespace paysmart.Controllers
                 da.Fill(dt);
                 traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "FBTransactionMaster closed....");
 
+                //int bid = Convert.ToInt32(tno);
+
+               
+
             }
             catch (Exception ex)
             {
-                throw ex;
+                dt.Columns.Add("Code");
+                dt.Columns.Add("description");
+                DataRow dr = dt.NewRow();
+                dr[0] = "ERR001";
+                dr[1] = ex.Message;
+                dt.Rows.Add(dr);
 
             }
             return dt;
