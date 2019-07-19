@@ -196,7 +196,7 @@ namespace Paysmart.Controllers
                 ds.Value = A.ServiceTypeId;
                 cmd.Parameters.Add(ds);
 
-                SqlParameter dg = new SqlParameter("@VehicleGroupId", SqlDbType.Int);
+                SqlParameter dg = new SqlParameter("@VehicleGroupId", SqlDbType.VarChar);
                 dg.Value = A.VehicleGroupId;
                 cmd.Parameters.Add(dg);
 

@@ -561,7 +561,7 @@ namespace Paysmart.Models
         public int DriverId { get; set; }
         public int VehicleModelId { get; set; }
         public int ServiceTypeId { get; set; }
-        public int VehicleGroupId { get; set; }
+        public string VehicleGroupId { get; set; }
         public int fleetId { get; set; }
     }
     public class cancel
