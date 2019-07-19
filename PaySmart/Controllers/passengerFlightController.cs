@@ -139,9 +139,12 @@ namespace paysmart.Controllers
                     //SmtpServer.TargetName = "STARTTLS/smtp.gmail.com";
                     SmtpServer.Send(mail);
                     status = 1;
-
-
-
+                    dt.Columns.Add("Pdf");
+                    dt.Columns.Add("description");
+                    DataRow dr = dt.NewRow();
+                    dr[0] = "ERR001";
+                    dr[1] = mailContent;
+                    dt.Rows.Add(dr);
                 }
                 catch (Exception ex)
                 {
@@ -153,14 +156,11 @@ namespace paysmart.Controllers
                     dr[0] = "ERR001";
                     dr[1] = ex.Message;
                     dt.Rows.Add(dr);
-
                 }
-
                 #endregion 
             }
             catch (Exception ex)
             {
-
                 tracer.Trace(Request, "0", System.Web.Http.Tracing.TraceLevel.Info, "{0}", ex.Message);
                 dt.Columns.Add("Code");
                 dt.Columns.Add("description");
@@ -168,7 +168,6 @@ namespace paysmart.Controllers
                 dr[0] = "ERR001";
                 dr[1] = ex.Message;
                 dt.Rows.Add(dr);
-
             }
             finally
             {
