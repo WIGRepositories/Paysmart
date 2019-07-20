@@ -43,6 +43,15 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="HtmlAgilityPack">
+      <HintPath>..\..\..\..\Chris\EES_SRC\EES\packages\HtmlAgilityPack.1.7.2\lib\Net20\HtmlAgilityPack.dll</HintPath>
+    </Reference>
+    <Reference Include="itextsharp">
+      <HintPath>..\..\..\..\Chris\EES_SRC\EES\packages\iTextSharp.5.5.13\lib\itextsharp.dll</HintPath>
+    </Reference>
+    <Reference Include="itextsharp.xmlworker">
+      <HintPath>..\..\..\..\Chris\EES_SRC\EES\packages\itextsharp.xmlworker.5.5.13\lib\itextsharp.xmlworker.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -97,6 +106,7 @@
     <Content Include="UI\Email.html" />
     <Content Include="UI\EmailTemplates\1.txt" />
     <Content Include="UI\EmailTemplates\ariindia.jpeg" />
+    <Content Include="UI\EmailTemplates\FBoardPass.html" />
     <Content Include="UI\EmailTemplates\FlightTicket.html" />
     <Content Include="UI\EmailTemplates\FlightTicket1.txt" />
     <Content Include="UI\EmailTemplates\SSCC-Pallet-Barcode.jpg" />

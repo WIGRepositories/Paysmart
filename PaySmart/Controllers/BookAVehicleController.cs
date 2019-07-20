@@ -16,7 +16,7 @@ namespace Paysmart.Controllers
     public class BookAVehicleController : ApiController
     {
 
-        [HttpPost]
+        [HttpPost] 
         [Route("api/BookAVehicle/SaveBookingDetails")]
         public int SaveBookingDetails(VehicleBooking b)
         {

@@ -1,21 +1,166 @@
 ﻿
+using HtmlAgilityPack;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
+using iTextSharp.tool.xml;
 using Paysmart;
 using Paysmart.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Mail;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Http;
 using System.Web.Http.Tracing;
 
 namespace paysmart.Controllers
 {
+    public class ityextEvents : IPdfPageEvent
+    {
+
+        //Create object of PdfContentByte
+        PdfContentByte pdfContent;
+
+        public void OnChapter(PdfWriter writer, Document document, float paragraphPosition, Paragraph title)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void OnChapterEnd(PdfWriter writer, Document document, float paragraphPosition)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void OnCloseDocument(PdfWriter writer, Document document)
+        {
+            //throw new NotImplementedException();
+        }
+
+        public void OnEndPage(iTextSharp.text.pdf.PdfWriter writer, iTextSharp.text.Document document)
+        {
+
+            //create iTextSharp.text Image object using local image path
+            //iTextSharp.text.Image imgPDF = iTextSharp.text.Image.GetInstance(HttpContext.Current.Server.MapPath(@"\UI\images\ees-logo.jpg"));
+
+            //Create PdfTable object
+            //PdfPTable pdfTab = new PdfPTable(2);
+
+            //We will have to create separate cells to include image logo and 2 separate strings
+            //PdfPCell pdfCell1 = new PdfPCell(imgPDF);
+            //pdfCell1.Border = 0;
+            //pdfCell1.FixedHeight = 50f;
+            //pdfCell1.VerticalAlignment = Element.ALIGN_TOP;
+            //pdfCell1.Rowspan = 3;
+            //BaseFont bfHelvetica = BaseFont.CreateFont(BaseFont.HELVETICA, BaseFont.CP1252, false);
+            //PdfPTable pdfTab = new PdfPTable(3);
+            //PdfPCell cell = new PdfPCell(new Phrase("Extreme Energy Services",new Font(bfHelvetica,20,Font.ITALIC,BaseColor.BLACK)));
+            //cell.Colspan = 3;
+            //cell.HorizontalAlignment = Element.ALIGN_CENTER;
+            //cell.Border = 0;
+            //pdfTab.AddCell(cell);
+
+            //PdfPCell cell1 = new PdfPCell(new Phrase("Thru Tubing Fishing & Milling ", new Font(bfHelvetica, 12, Font.ITALIC, BaseColor.BLACK)));
+            //cell1.Colspan = 3;
+            //cell1.HorizontalAlignment = Element.ALIGN_CENTER;
+            //cell1.Border = 0;
+            //pdfTab.AddCell(cell1);
+
+            //PdfPCell cell2 = new PdfPCell(new Phrase("1016 QCP Park Dr.  Broussard, La 70518", new Font(bfHelvetica, 12, Font.ITALIC, BaseColor.BLACK)));
+            //cell2.Colspan = 3;
+            //cell2.HorizontalAlignment = Element.ALIGN_CENTER;
+            //cell2.Border = 0;
+            //pdfTab.AddCell(cell2);
+
+            //PdfPCell cell4 = new PdfPCell(new Phrase("Phone # 1-337-837-5600 / Fax # 1-337-837-5608", new Font(bfHelvetica, 12, Font.NORMAL, BaseColor.BLACK)));
+            //cell4.Colspan = 3;
+            //cell4.HorizontalAlignment = Element.ALIGN_CENTER;
+            //cell4.Border = 0;
+            //pdfTab.AddCell(cell4);
+
+            //PdfPCell blankCell = new PdfPCell(new Phrase(Chunk.NEWLINE));
+            //blankCell.Border = PdfPCell.NO_BORDER;
+            //pdfTab.AddCell(blankCell);
+
+            //BaseFont bfHelvetica = BaseFont.CreateFont(BaseFont.HELVETICA, BaseFont.CP1252, false);
+            //Font times = new Font(bfHelvetica, 14, Font.BOLD, BaseColor.BLACK);
+
+            //PdfPCell pdfCell2 = new PdfPCell(new Phrase("Delivery Ticket", times));
+            //pdfCell2.HorizontalAlignment = Element.ALIGN_CENTER;
+            //pdfCell2.Rowspan = 1;
+            //pdfCell2.Border = 0;
+
+            //PdfPCell pdfCell4 = new PdfPCell(new Phrase("", times));
+            //pdfCell4.HorizontalAlignment = Element.ALIGN_CENTER;
+            //pdfCell2.Rowspan = 3;
+            //pdfCell4.Border = 0;
+
+            //Font times6 = new Font(bfHelvetica, 8, Font.BOLD, BaseColor.DARK_GRAY);
+            //PdfPCell pdfCell3 = new PdfPCell(new Phrase("1016 QCP Park Drive Broussard La. 70518 (337) 837-5600 Fax (337) 837-5608", times6));
+            //pdfCell3.HorizontalAlignment = Element.ALIGN_LEFT;
+            //pdfCell3.PaddingRight = 40f;
+            //pdfCell3.Border = 0;
+
+            //add all three cells into PdfTable
+            //pdfTab.AddCell(pdfCell1);
+            //pdfTab.AddCell(pdfCell2);
+            //pdfTab.AddCell(pdfCell3);
+            //pdfTab.AddCell(pdfCell4);
+
+            //pdfTab.TotalWidth = document.PageSize.Width - 20;
+            //call WriteSelectedRows of PdfTable. This writes rows from PdfWriter in PdfTable
+            //first param is start row. -1 indicates there is no end row and all the rows to be included to write
+            //Third and fourth param is x and y position to start writing
+            //pdfTab.WriteSelectedRows(0, -1, document.Left, document.PageSize.Height - 15, writer.DirectContent);
+
+            //pdfTab.WriteSelectedRows(0, -1, document.Left, 820,writer.DirectContent);
+            //set pdfContent value
+            //pdfContent = writer.DirectContent;
+            //Move the pointer and draw line to separate header section from rest of page
+
+        }
+
+        public void OnGenericTag(PdfWriter writer, Document document, Rectangle rect, string text)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void OnOpenDocument(PdfWriter writer, Document document)
+        {
+            //throw new NotImplementedException();
+        }
+
+        public void OnParagraph(PdfWriter writer, Document document, float paragraphPosition)
+        {
+            //throw new NotImplementedException();
+        }
+
+        public void OnParagraphEnd(PdfWriter writer, Document document, float paragraphPosition)
+        {
+            //throw new NotImplementedException();
+        }
+
+        public void OnSection(PdfWriter writer, Document document, float paragraphPosition, int depth, Paragraph title)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void OnSectionEnd(PdfWriter writer, Document document, float paragraphPosition)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void OnStartPage(PdfWriter writer, Document document)
+        {
+            //throw new NotImplementedException();
+        }
+    }
     public class passengerFlightController : ApiController
     {
         [HttpGet]
@@ -38,6 +183,7 @@ namespace paysmart.Controllers
         [Route("api/passengerFlight/savepassenger")]
         public DataTable savepassenger(List<passengerfight> list)
         {
+            byte[] result = null;
             int status;
             DataTable dt = new DataTable();
             SqlConnection conn = new SqlConnection();
@@ -83,6 +229,7 @@ namespace paysmart.Controllers
                         throw ex;
                     }
                 }
+                result=GeneratePDF1(list);
                 #region save ticket information
 
                 string root = HttpContext.Current.Server.MapPath("~/ui/emailtemplates/FlightTicket1.txt");
@@ -143,7 +290,7 @@ namespace paysmart.Controllers
                     dt.Columns.Add("description");
                     DataRow dr = dt.NewRow();
                     dr[0] = "ERR001";
-                    dr[1] = mailContent;
+                    dr[1] = result;
                     dt.Rows.Add(dr);
                 }
                 catch (Exception ex)
@@ -176,6 +323,55 @@ namespace paysmart.Controllers
                 SqlConnection.ClearPool(conn);
             }
             return dt;
+        }
+
+        private byte[] GeneratePDF1(List<passengerfight> list)
+        {
+            using (MemoryStream memoryStream = new MemoryStream())
+            {
+                StringBuilder sb = new StringBuilder();
+                HtmlDocument htmlDocument = new HtmlDocument();
+                byte[] bytes = null;
+                htmlDocument.Load(@"" + HttpContext.Current.Server.MapPath("/UI/EmailTemplates/FBoardPass.html"));
+                //relplace all column values
+
+                if (list.Count > 0)
+                {
+                   
+                   String pattern = @"\{\{name\}\}";
+                    htmlDocument.DocumentNode.InnerHtml = Regex.Replace(htmlDocument.DocumentNode.InnerHtml, pattern, list[0].name + "");
+
+
+                    HtmlNode tblBody = htmlDocument.GetElementbyId("passenger-body");
+
+                    //  var hrRow = "<tr><td colspan = \"10\"><hr/></td></tr>";
+
+                    for (int count = 0; count < list.Count; count++)
+                    {
+                        tblBody.InnerHtml += "<tr width=\"100%\" style=\"text-align:center;background:#f7f9ff;padding-left:8px;\"><td>AirIndia520</td><td>" + list[count].name+"</td><td>"+ list[count].seatno+ "</td><td>Hyderabad</td><td>Banglore</td></tr>";
+                        tblBody.InnerHtml += "<tr><td colspan = \"5\" style=\"border-bottom:1px solid black;\"></td></tr>";
+                    }
+
+                    Document pdfDoc = new Document(PageSize.A4, 10f, 10f, 25f, 10f);
+                    PdfWriter writer = PdfWriter.GetInstance(pdfDoc, memoryStream);
+
+                    writer.PageEvent = new ityextEvents();
+                    // open the document for writing  
+                    pdfDoc.Open();
+                    // read html data to StringReader  
+                    using (var html = new StringReader(htmlDocument.DocumentNode.InnerHtml.ToString()))
+                    {
+                        XMLWorkerHelper.GetInstance().ParseXHtml(writer, pdfDoc, html);
+                    }
+
+                    // close document  
+                    pdfDoc.Close();
+
+                    bytes = memoryStream.ToArray();
+                    memoryStream.Close();
+                }
+                return bytes;
+            }
         }
     }
 }
