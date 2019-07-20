@@ -221,7 +221,7 @@ namespace paysmart.Controllers
 
                         var fi = cmd.ExecuteScalar();
                         id =Convert.ToString(fi);
-                        string pTd = string.Format("<tr width='100%' style='text-align:left;background:#f7f9ff;padding-left:8px'><td align='center'>{0}</td><td align='center'>{1}</td><td align='center'>{2}</td><td align='center'>{3}</td><td align='center'>{4}</td></tr>", p.name, p.name, p.seatno,"Hyderabad","Banglore");
+                        string pTd = string.Format("<tr width='100%' style='text-align:left;background:#f7f9ff;padding-left:8px'><td align='center'>{0}</td><td align='center'>{1}</td><td align='center'>{2}</td><td align='center'>{3}</td><td align='center'>{4}</td></tr>", p.name, p.name, p.seatno,p.Source,p.Destination);
 
                         passangersList.Append(pTd);
                         cmd.Parameters.Clear();
@@ -364,7 +364,7 @@ namespace paysmart.Controllers
 
                     for (int count = 0; count < list.Count; count++)
                     {
-                        tblBody.InnerHtml += "<tr width=\"100%\" style=\"text-align:center;background:#f7f9ff;padding-left:8px;\"><td>AirIndia520</td><td>" + list[count].name+"</td><td>"+ list[count].seatno+ "</td><td>Hyderabad</td><td>Banglore</td></tr>";
+                        tblBody.InnerHtml += "<tr width=\"100%\" style=\"text-align:center;background:#f7f9ff;padding-left:8px;\"><td>AirIndia520</td><td>" + list[count].name+"</td><td>"+ list[count].seatno+ "</td><td>"+list[count].Source+ "</td><td>" + list[count].Destination + "</td></tr>";
                         tblBody.InnerHtml += "<tr><td colspan = \"5\" style=\"border-bottom:1px solid black;\"></td></tr>";
                     }
 

@@ -1430,7 +1430,9 @@ namespace Paysmart.Models
         public string Mobileno { set; get; }
         public string emailid { set; get; }
         public string seatno { set; get; }
-        
+        public string Source { set; get; }
+        public string Destination { set; get; }
+
 
     }
     public class FBTra
