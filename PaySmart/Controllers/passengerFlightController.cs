@@ -38,6 +38,8 @@ namespace paysmart.Controllers
         [Route("api/passengerFlight/savepassenger")]
         public DataTable savepassenger(List<passengerfight> list)
         {
+            string id=null;
+            
             int status;
             DataTable dt = new DataTable();
             SqlConnection conn = new SqlConnection();
@@ -68,8 +70,10 @@ namespace paysmart.Controllers
                         cmd.Parameters.Add(new SqlParameter("@seatno", SqlDbType.VarChar,20)).SqlValue = p.seatno;
                         cmd.Parameters.Add(new SqlParameter("@EmailId", SqlDbType.VarChar,50)).SqlValue = p.emailid;
                         cmd.Parameters.Add(new SqlParameter("@ContactNo", SqlDbType.VarChar,50)).SqlValue = p.Mobileno;
-   
-                        cmd.ExecuteScalar();
+
+
+                        var fi = cmd.ExecuteScalar();
+                        id =Convert.ToString(fi);
                         string pTd = string.Format("<tr width='100%' style='text-align:left;background:#f7f9ff;padding-left:8px'><td align='center'>{0}</td><td align='center'>{1}</td><td align='center'>{2}</td><td align='center'>{3}</td><td align='center'>{4}</td></tr>", p.name, p.name, p.seatno,"Hyderabad","Banglore");
 
                         passangersList.Append(pTd);
@@ -83,6 +87,7 @@ namespace paysmart.Controllers
                         throw ex;
                     }
                 }
+
                 #region save ticket information
 
                 string root = HttpContext.Current.Server.MapPath("~/ui/emailtemplates/FlightTicket1.txt");
@@ -141,9 +146,16 @@ namespace paysmart.Controllers
                     status = 1;
                     dt.Columns.Add("Pdf");
                     dt.Columns.Add("description");
+
+                    dt.Columns.Add("Id");
+                    dt.Columns.Add("PasssengerId");
+
                     DataRow dr = dt.NewRow();
                     dr[0] = "ERR001";
                     dr[1] = mailContent;
+
+                    dr[2] = "Id";
+                    dr[3] = id.ToString() ;
                     dt.Rows.Add(dr);
                 }
                 catch (Exception ex)
@@ -152,6 +164,7 @@ namespace paysmart.Controllers
                     status = 0;
                     dt.Columns.Add("Code");
                     dt.Columns.Add("description");
+                   
                     DataRow dr = dt.NewRow();
                     dr[0] = "ERR001";
                     dr[1] = ex.Message;

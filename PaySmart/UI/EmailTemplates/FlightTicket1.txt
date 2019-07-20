@@ -93,23 +93,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                           <tr width="100%" style="text-align:center;background:#f7f9ff;padding-left:8px">
-                                               <td >
-                                                   AirIndia520
-                                               </td>
-                                               <td >
-                                                   Manoj    
-                                               </td>
-                                               <td >
-                                                   s1
-                                               </td>
-                                               <td>
-                                                   Hyderabad
-                                               </td>
-                                               <td>
-                                                   Banglore
-                                               </td>
-                                           </tr>
+                                           
 										   {0}
                                             <!-- <tr width="100%" style="text-align:center;background:#f7f9ff;padding-left:8px"> -->
                                                 <!-- <td> -->
