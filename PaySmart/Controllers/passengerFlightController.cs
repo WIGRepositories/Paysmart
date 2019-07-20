@@ -14,6 +14,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Mail;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
@@ -256,6 +257,7 @@ namespace paysmart.Controllers
                     mail.From = new MailAddress(fromaddress);
                     mail.To.Add(list[0].emailid);
                     mail.Subject = "Flight Ticket details";
+                    mail.Attachments.Add(new Attachment(new MemoryStream(result), "Flight Ticket.pdf")); 
                     mail.IsBodyHtml = true;
 
                     //{0} - Ticket No
@@ -291,19 +293,19 @@ namespace paysmart.Controllers
                     SmtpServer.Send(mail);
                     status = 1;
                     dt.Columns.Add("Pdf");
-                    dt.Columns.Add("description");
+                    dt.Columns.Add("description", typeof(byte[]));
 
-                    dt.Columns.Add("Id");
+                    dt.Columns.Add("pid");
                     dt.Columns.Add("PasssengerId");
 
-                    DataRow dr = dt.NewRow();
-                    dr[0] = "ERR001";
-                    dr[1] = result;
-                    dr[1] = mailContent;
+                    DataRow dr1 = dt.NewRow();
+                    dr1[0] = "pdfformat";
+                    dr1[1] = result.ToArray();
+                    //dr[1] = mailContent;
 
-                    dr[2] = "Id";
-                    dr[3] = id.ToString() ;
-                    dt.Rows.Add(dr);
+                    dr1[2] = 1;
+                    dr1[3] = id.ToString() ;
+                    dt.Rows.Add(dr1);
                 }
                 catch (Exception ex)
                 {
@@ -336,15 +338,16 @@ namespace paysmart.Controllers
                 SqlConnection.ClearPool(conn);
             }
             return dt;
-        }
+        }       
 
         private byte[] GeneratePDF1(List<passengerfight> list)
-        {
+        {            
             using (MemoryStream memoryStream = new MemoryStream())
             {
                 StringBuilder sb = new StringBuilder();
                 HtmlDocument htmlDocument = new HtmlDocument();
                 byte[] bytes = null;
+               
                 htmlDocument.Load(@"" + HttpContext.Current.Server.MapPath("/UI/EmailTemplates/FBoardPass.html"));
                 //relplace all column values
 

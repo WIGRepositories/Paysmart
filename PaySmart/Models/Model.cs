@@ -1446,6 +1446,8 @@ namespace Paysmart.Models
     public class FBTranMaster
     {
         public int Id { get; set; }
+        public int PassengerId { get; set; }
+        
         public DateTime? TransactionDate { get; set; }
         public DateTime? TransactionTime { get; set; }
         public decimal Amount { get; set; }

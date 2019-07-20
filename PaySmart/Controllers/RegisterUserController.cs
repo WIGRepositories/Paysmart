@@ -97,7 +97,7 @@ namespace Paysmart.Controllers
                 cts.Value = ocr.CurrentStateId;
                 cmd.Parameters.Add(cts);
 
-                SqlParameter pd = new SqlParameter("@UserPhoto", SqlDbType.VarChar, 50);
+                SqlParameter pd = new SqlParameter("@UserPhoto", SqlDbType.VarChar,-1);
                 pd.Value = ocr.UserPhoto;
                 cmd.Parameters.Add(pd);
 
@@ -277,6 +277,136 @@ namespace Paysmart.Controllers
             {
                 traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "RegisterUser...." + ex.Message.ToString());
                 //throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+                dt.Columns.Add("Code");
+                dt.Columns.Add("description");
+                DataRow dr = dt.NewRow();
+                dr[0] = "ERR001";
+                dr[1] = ex.Message;
+                dt.Rows.Add(dr);
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
+            }
+            return dt;
+        }
+
+
+        [HttpPost]
+        [Route("api/UserAccount/UpdateRegisterUser")]
+        public DataTable UpdateRegisterUser(UserAccount ocr)
+        {
+            DataTable dt = new DataTable();
+            LogTraceWriter traceWriter = new LogTraceWriter();
+            SqlConnection conn = new SqlConnection();
+            StringBuilder str = new StringBuilder();
+            try
+            {
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "RegisterUser....");
+
+                str.Append("Mobilenumber:" + ocr.Mobilenumber + ",");
+                str.Append("Email:" + ocr.Email + ",");
+                str.Append("Username:" + ocr.Username + ",");
+                str.Append("Firstname:" + ocr.Firstname + ",");                
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
+
+                conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = "PSInsUpdAppusers";
+
+                cmd.Connection = conn;
+
+                SqlParameter f = new SqlParameter("@flag", SqlDbType.VarChar);
+                f.Value = ocr.flag;
+                cmd.Parameters.Add(f);
+
+                SqlParameter ccc = new SqlParameter("@Id", SqlDbType.Int);
+                ccc.Value = ocr.id;
+                cmd.Parameters.Add(ccc);
+
+                SqlParameter c = new SqlParameter("@Username", SqlDbType.VarChar, 20);
+                c.Value = ocr.Username;
+                cmd.Parameters.Add(c);
+
+                SqlParameter ce = new SqlParameter("@Email", SqlDbType.VarChar, 50);
+                ce.Value = ocr.Email;
+                cmd.Parameters.Add(ce);
+
+
+                SqlParameter cm = new SqlParameter("@Mobilenumber", SqlDbType.VarChar, 20);
+                cm.Value = ocr.Mobilenumber;
+                cmd.Parameters.Add(cm);
+
+                SqlParameter q1 = new SqlParameter("@Password", SqlDbType.VarChar, 50);
+                q1.Value = ocr.Password;
+                cmd.Parameters.Add(q1);
+
+                SqlParameter v = new SqlParameter("@Firstname", SqlDbType.VarChar, 50);
+                v.Value = ocr.Firstname;
+                cmd.Parameters.Add(v);
+
+                SqlParameter v1 = new SqlParameter("@lastname", SqlDbType.VarChar, 50);
+                v1.Value = ocr.lastname;
+                cmd.Parameters.Add(v1);
+
+                SqlParameter v2 = new SqlParameter("@AuthTypeId", SqlDbType.VarChar, 50);
+                v2.Value = ocr.AuthTypeId;
+                cmd.Parameters.Add(v2);
+
+                SqlParameter u = new SqlParameter("@AltPhonenumber", SqlDbType.VarChar, 50);
+                u.Value = ocr.AltPhonenumber;
+                cmd.Parameters.Add(u);
+
+                SqlParameter u1 = new SqlParameter("@Altemail", SqlDbType.VarChar, 50);
+                u1.Value = ocr.Altemail;
+                cmd.Parameters.Add(u1);
+
+                SqlParameter i = new SqlParameter("@AccountNumber", SqlDbType.VarChar, 50);
+                i.Value = ocr.AccountNo;
+                cmd.Parameters.Add(i);
+
+                SqlParameter ct = new SqlParameter("@CountryId", SqlDbType.Int);
+                ct.Value = ocr.CountryId;
+                cmd.Parameters.Add(ct);
+
+                SqlParameter cts = new SqlParameter("@CurrentStateId", SqlDbType.Int);
+                cts.Value = ocr.CurrentStateId;
+                cmd.Parameters.Add(cts);
+
+                SqlParameter pd = new SqlParameter("@UserPhoto", SqlDbType.VarChar, -1);
+                pd.Value = ocr.UserPhoto;
+                cmd.Parameters.Add(pd);
+
+                SqlParameter paym = new SqlParameter("@PaymentModeId", SqlDbType.Int);
+                paym.Value = ocr.PaymentModeId;
+                cmd.Parameters.Add(paym);
+
+                SqlParameter ccode = new SqlParameter("@CCode", SqlDbType.VarChar, 10);
+                ccode.Value = ocr.CCode;
+                cmd.Parameters.Add(ccode);
+
+
+                SqlParameter uaccno = new SqlParameter("@UserAccountNo", SqlDbType.VarChar, 15);
+                uaccno.Value = ocr.UserAccountNo;
+                cmd.Parameters.Add(uaccno);
+
+                SqlParameter active = new SqlParameter("@Active", SqlDbType.Int);
+                active.Value = ocr.Active;
+                cmd.Parameters.Add(active);
+
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(dt);               
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "RegisterUser successful....");
+            }
+            catch (Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "RegisterUser...." + ex.Message.ToString());                
                 dt.Columns.Add("Code");
                 dt.Columns.Add("description");
                 DataRow dr = dt.NewRow();

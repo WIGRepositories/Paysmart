@@ -53,6 +53,10 @@ namespace paysmart.Controllers
                 id.Value = n.Id;
                 cmd.Parameters.Add(id);
 
+                SqlParameter pid = new SqlParameter("@passengerId", SqlDbType.Int);
+                pid.Value = n.PassengerId;
+                cmd.Parameters.Add(pid);
+
                 SqlParameter na = new SqlParameter("@TransactionDate", SqlDbType.Date);
                 na.Value = n.TransactionDate;
                 cmd.Parameters.Add(na);
