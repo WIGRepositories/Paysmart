@@ -1505,8 +1505,60 @@ namespace Paysmart.Controllers
             return Tbl;
 
         }
-    
-    
-    
+
+        [HttpGet]
+        [Route("api/VehicleBooking/GetPSVehiclebookingbyStatus")]
+        public DataTable GetPSVehiclebookingbyStatus(string customermno,int flag )
+        {
+            DataTable Tbl = new DataTable();
+
+            LogTraceWriter traceWriter = new LogTraceWriter();
+            traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "OngoingTrips credentials....");
+            SqlConnection conn = new SqlConnection();
+            StringBuilder str = new StringBuilder();
+            str.Append("Customer MNO:" + customermno + ",");
+            str.Append("Flag:" + flag + ",");
+            try
+            {
+                conn.ConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = "GetPSVehiclebookingbyStatus";
+                cmd.Connection = conn;
+                //@customermno varchar(50)=null,@flag int=null
+                cmd.Parameters.Add(new SqlParameter("@customermno", SqlDbType.VarChar,50)).SqlValue = customermno;
+                cmd.Parameters.Add(new SqlParameter("@flag", SqlDbType.Int)).SqlValue = flag;
+
+                SqlDataAdapter db = new SqlDataAdapter(cmd);
+                db.Fill(Tbl);
+
+            }
+            catch (Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "OngoingTrips...." + ex.Message.ToString());
+                //throw ex;
+                //throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+                Tbl.Columns.Add("Code");
+                Tbl.Columns.Add("description");
+                DataRow dr = Tbl.NewRow();
+                dr[0] = "ERR001";
+                dr[1] = ex.Message;
+                Tbl.Rows.Add(dr);
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
+            }
+            return Tbl;
+
+        }
+
+        
+
+
+
     }
 }
