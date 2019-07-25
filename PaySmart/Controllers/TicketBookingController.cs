@@ -422,7 +422,8 @@ namespace Paysmart.Controllers
                         //SqlDataAdapter ds1 = new SqlDataAdapter(PnrDeatilscmd);
 
                        conn.Open();
-                       PnrDeatilscmd.ExecuteScalar();
+                        SqlDataAdapter ds1 = new SqlDataAdapter(PnrDeatilscmd); 
+                       //PnrDeatilscmd.ExecuteScalar();
                        conn.Close();
                        string pTd = string.Format("<tr width='100%' style='text-align:left;background:#f7f9ff;padding-left:8px'><td align='center'>{0}</td><td align='center'>{1}</td><td align='center'>{2}</td><td align='center'>{3}</td><td align='center'>{4}</td></tr>", b.FName + " " + b.LName, b.Age, b.PassengerType, b.Gender, b.SeatNo);
 
@@ -548,6 +549,7 @@ namespace Paysmart.Controllers
                    PnrDeatilscmd.Parameters.Add(binsupddelflag);
 
                    PnrDeatilscmd.ExecuteScalar();
+                    SqlDataAdapter ds2 = new SqlDataAdapter(PnrDeatilscmd);
 
                    
                }
@@ -569,10 +571,9 @@ namespace Paysmart.Controllers
 
                #region Make payment and get the payment ID
                int btposTransId = -1;
+                
 
-
-
-               try
+                try
                {
                    //INSERT INTO [POSDashboard].[dbo].[BookingPaymentDetails]
                    //       ([TicketNo]
@@ -657,7 +658,9 @@ namespace Paysmart.Controllers
                        conn.Open();
                    }
 
-                   object val = cmd1.ExecuteScalar();
+                    //object val = cmd1.ExecuteScalar();
+                    string id = Tbl.Rows[0]["id"].ToString();
+                   
 
                    conn.Close();
 
@@ -675,15 +678,17 @@ namespace Paysmart.Controllers
 
                    cmd1.Parameters["@insupddelflag"].Value = "U";
                    cmd1.Parameters["@GateWayTransId"].Value = gatewayTransId;
-                   cmd1.Parameters.Add("@Id", SqlDbType.Int).Value = val;
+                   cmd1.Parameters.Add("@Id", SqlDbType.Int).Value = id;
 
 
                    if (conn != null && conn.State != ConnectionState.Open)
                    {
                        conn.Open();
                    }
-
-                   cmd1.ExecuteNonQuery();
+                    
+                    //cmd1.ExecuteNonQuery();
+                    SqlDataAdapter vs = new SqlDataAdapter(cmd1);                    
+                    //Tbl.Fill(ds);
 
                    conn.Close();
                    #endregion update transagain
