@@ -1296,9 +1296,10 @@ namespace Paysmart.Models
         public int UserId { get; set; }
         public string Customer { get; set; }
         public DateTime? EffectiveFrom { get; set; }
-        public DateTime? EffectiveTo { get; set; }
+        public string EffectiveTo { get; set; }
         public string insupdflag { get; set; }
-       
+        public string CVV { get; set; }
+
     }
     public class airlines
     {
@@ -1430,7 +1431,9 @@ namespace Paysmart.Models
         public string Mobileno { set; get; }
         public string emailid { set; get; }
         public string seatno { set; get; }
-        
+        public string Source { set; get; }
+        public string Destination { set; get; }
+
 
     }
     public class FBTra

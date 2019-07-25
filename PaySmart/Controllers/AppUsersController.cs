@@ -144,9 +144,11 @@ namespace Paysmart.Controllers
                 cgEffectiveFrom.Value = cg.EffectiveFrom;
                 cmd.Parameters.Add(cgEffectiveFrom);
 
+                cmd.Parameters.Add(new SqlParameter("@cvv", SqlDbType.VarChar, 100)).SqlValue = cg.CVV;
+
                 SqlParameter cgEffectiveTo = new SqlParameter();
                 cgEffectiveTo.ParameterName = "@EffectiveTo";
-                cgEffectiveTo.SqlDbType = SqlDbType.DateTime;
+                cgEffectiveTo.SqlDbType = SqlDbType.VarChar;
                 cgEffectiveTo.Value = cg.EffectiveTo;
                 cmd.Parameters.Add(cgEffectiveTo);
 

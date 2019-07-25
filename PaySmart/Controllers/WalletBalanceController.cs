@@ -496,5 +496,63 @@ namespace Paysmart.Controllers
             }
             return dt;
         }
+
+
+        [HttpGet]
+        [Route("api/WalletBalance/GetCustomerEwalletHistoy")]
+
+        public DataTable GetCustomerEwalletHistoy(string mobileno)
+        {
+            DataTable dt = new DataTable();
+            LogTraceWriter traceWriter = new LogTraceWriter();
+            SqlConnection conn = new SqlConnection();
+            StringBuilder str = new StringBuilder();
+            try
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Get Ewallet History....");
+
+                str.Append("Mobilenumber:" + mobileno + ",");
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Input sent...." + str.ToString());
+
+
+                conn.ConnectionString = ConfigurationManager.ConnectionStrings["btposdb"].ToString();
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandText = "PSGetCustomerEwalletHistory";
+                cmd.Connection = conn;
+
+                SqlParameter cmpid = new SqlParameter("@Mobilenumber", SqlDbType.VarChar, 20);
+                cmpid.Value = mobileno;
+                cmd.Parameters.Add(cmpid);
+
+
+                SqlDataAdapter db = new SqlDataAdapter(cmd);
+                db.Fill(dt);
+
+
+                traceWriter.Trace(Request, "0", TraceLevel.Info, "{0}", "Get Ewallet History successful....");
+            }
+            catch (Exception ex)
+            {
+                traceWriter.Trace(Request, "0", TraceLevel.Error, "{0}", "Get Ewallet History...." + ex.Message.ToString());
+                //throw ex;
+                // throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+                dt.Columns.Add("Code");
+                dt.Columns.Add("description");
+                DataRow dr = dt.NewRow();
+                dr[0] = "ERR001";
+                dr[1] = ex.Message;
+                dt.Rows.Add(dr);
+            }
+            finally
+            {
+                conn.Close();
+                conn.Dispose();
+                SqlConnection.ClearPool(conn);
+            }
+            return dt;
+
+        }
     }
 }
