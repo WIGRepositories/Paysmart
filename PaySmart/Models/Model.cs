@@ -1296,9 +1296,10 @@ namespace Paysmart.Models
         public int UserId { get; set; }
         public string Customer { get; set; }
         public DateTime? EffectiveFrom { get; set; }
-        public DateTime? EffectiveTo { get; set; }
+        public string EffectiveTo { get; set; }
         public string insupdflag { get; set; }
-       
+        public string CVV { get; set; }
+
     }
     public class airlines
     {
